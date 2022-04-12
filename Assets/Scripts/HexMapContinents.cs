@@ -8,8 +8,11 @@ public class HexMapContinents : HexMap
     [SerializeField] int minContinents = 2;
     [Range(1, 3)]
     [SerializeField] int maxContinents = 2;
+    [SerializeField] int territorySize = 40;
 
     int numContinents;
+    int territoryNumber = 1;
+    Queue<Hex> territoryHexes;
 
     void Start()
     {
@@ -18,11 +21,12 @@ public class HexMapContinents : HexMap
 
     public void GenerateMap()
     {
-        GenerateOcean();
+        GenerateTiles();
+
         GenerateContinents();
-        // ElevateArea(GetHexAt(0, 20), 5, 0);
 
         UpdateHexVisuals();
+        SetLabels();
     }
 
     void GenerateContinents()
@@ -37,89 +41,160 @@ public class HexMapContinents : HexMap
 
     void GenerateContinent(int continentNumber)
     {
-        CentralHex continentCenter = GenerateContinentCenterHex(continentNumber);
+        int numTerritories = Random.Range(5, 7);
 
-        int numSplats = Random.Range(4, 15 - 3 * numContinents);
+        int centralQ = Width / numContinents * continentNumber;
+        int centralR = Height / 2;
+        Hex centralHex = GetHexAt(centralQ, centralR);
 
-        while (numSplats > 0)
-        {
-            if (GenerateTerrainAroundContinentCenter(continentCenter, continentNumber))
-            {
-                numSplats--;
-            }
-        }
+        GenerateTerritory(centralHex);
+        numTerritories--;
+        territoryNumber++;
+
+        // while (numTerritories > 0)
+        // {
+        //     GenerateTerritory(centralQ, centralR);
+        //     territoryNumber++;
+        //     numTerritories--;
+        // }
     }
 
-    CentralHex GenerateContinentCenterHex(int continentNumber)
+    void GenerateTerritory(Hex hex)
     {
-        Hex hex = GetHexAt(Width / numContinents * continentNumber, Height / 2);
+        territoryHexes = new Queue<Hex>();
 
-        CentralHex centralHex = new CentralHex(hex, 20);
-        centralHex.ContinentNumber = continentNumber;
-        ElevateArea(centralHex, continentNumber);
-
-        return centralHex;
-    }
-
-    bool GenerateTerrainAroundContinentCenter(CentralHex continentCenter, int continentNumber)
-    {
-        int q = Random.Range(
-            continentCenter.Q - continentCenter.Range, 
-            continentCenter.Q + continentCenter.Range
-            );
-        int r = Random.Range(
-            continentCenter.R - continentCenter.Range, 
-            continentCenter.R + continentCenter.Range
-            );
-
-        Hex augmentationCenterHex = GetHexAt(q, r);
-
-        if ((augmentationCenterHex == null) || (augmentationCenterHex.Elevation > 0))
-        {
-            return false;
-        }
-
-        int range = (Random.Range(7, 23 - 3 * numContinents));
-
-        ElevateArea(augmentationCenterHex, range, continentNumber);
-        return true;
-    }
-
-    void ElevateArea(CentralHex centralHex, int continentNumber)
-    {
-        ElevateArea(centralHex, centralHex.Range, continentNumber);
-    }
-
-    void ElevateArea(Hex elevationCenterHex, int range, int continentNumber, float centerHeight = 1.5f)
-    {
+        GiveTerritoryNumber(hex);
         
-        Hex[] areaHexes = GetHexesWithinRangeOf(elevationCenterHex, range);
+        int expandJumps = territorySize;
 
-        foreach (Hex hex in areaHexes)
+        Expand(hex, expandJumps);
+    }
+
+    void Expand(Hex hex, int jumpsCount)
+    {
+        List<Hex> neighbors = GetNeighbors(hex);
+
+        ExpandOnNeighbors(hex, neighbors, 0, jumpsCount);
+
+        while (jumpsCount > 0)
         {
-            if (hex != null)
+            hex = territoryHexes.Peek();
+
+            while (!HasEmptyTerritoryAround(hex))
             {
-                // if another continent
-                // if ((hex.ContinentNumber != continentNumber) && (hex.ContinentNumber != -1))
-                // {
-                //     hex.Elevation = -0.5f;
-                //     hex.ContinentNumber = -1;
-                // }
-                // else
-                {
-                    hex.Elevation += Mathf.Lerp(
-                        0f, 
-                        centerHeight, 
-                        range / Mathf.Pow(Distance(elevationCenterHex, hex), 2)
-                        );
-                    Debug.Log("(" + hex.Q + ", " + hex.R + ") " + hex.Elevation + "\n"+
-                        Distance(elevationCenterHex, hex));
-                    float noise = Random.Range(0, 0.5f);
-                    hex.Elevation += noise;
-                    hex.ContinentNumber = continentNumber;
-                }
-                
+                territoryHexes.Dequeue();
+                hex = territoryHexes.Peek();
+            }
+
+            neighbors = GetNeighbors(hex);
+            ExpandOnNeighbors(hex, neighbors, 0, jumpsCount);
+
+            jumpsCount--;
+        }
+    }
+
+    void ExpandOnNeighbors(Hex hex, List<Hex> neighbors, int expanded, int jumpsCount)
+    {
+        if (neighbors.Count == 0)
+            return;
+
+        int neighbor = Random.Range(0, neighbors.Count - 1);
+
+        Hex nextHex = neighbors[neighbor];
+
+        if (nextHex.Territory == -1)
+        {
+            AddNextHex(hex, nextHex, neighbors, neighbor, expanded, jumpsCount);
+        }
+        else
+        {
+            neighbors.RemoveAt(neighbor);
+            ExpandOnNeighbors(hex, neighbors, expanded, jumpsCount);
+        }
+    }
+
+    void AddNextHex(Hex hex, Hex nextHex, List<Hex> neighbors, int neighbor,
+        int expanded, int jumpsCount)
+    {
+        GiveTerritoryNumber(nextHex);
+
+        neighbors.RemoveAt(neighbor);
+        expanded++;
+        // int expandAmount = Random.Range(22, 39) / 10;
+        if (expanded < 3)
+        {
+            ExpandOnNeighbors(hex, neighbors, expanded, jumpsCount);
+        }
+    }
+
+    // void Jump(Hex nextHex, int jumpsCount)
+    // {
+    //     jumpsCount--;
+
+    //     Debug.Log(jumpsCount);
+    //     Debug.Log(nextHex.Q + ", " + nextHex.R);
+
+    //     List<Hex> nextNeighbors = GetNeighbors(nextHex);
+
+    //     if (!HasEmptyTerritoryAround(nextNeighbors))
+    //     {
+    //         nextHex = territoryHexes[0];
+    //         territoryHexes.RemoveAt(0);
+    //         Debug.Log("Has no empty territories around\n" +
+    //             "nextHex: " + nextHex.Q + ", " + nextHex.R);
+    //     }
+
+    //     ExpandOnNeighbors(nextHex, GetNeighbors(nextHex), 0, jumpsCount);
+    // }
+
+    bool HasEmptyTerritoryAround(Hex hex)
+    {
+        foreach (Hex neighbor in GetNeighbors(hex))
+        {
+            if (neighbor.Territory == -1)
+            {
+                return true;
             }
         }
+
+        return false;
+    }
+
+    List<Hex> GetNeighbors(Hex hex)
+    {
+        int q = hex.Q;
+        int r = hex.R;
+        List<Hex> neighbors = new List<Hex>();
+
+        neighbors.Add(GetHexAt(q - 1, r));
+
+        if (r < Height)
+        {
+            neighbors.Add(GetHexAt(q - 1, r + 1));
+            neighbors.Add(GetHexAt(q, r + 1));
+        }
+
+        if (r > 0)
+        {
+            neighbors.Add(GetHexAt(q, r - 1));
+            neighbors.Add(GetHexAt(q + 1, r - 1));
+        }
+
+        neighbors.Add(GetHexAt(q + 1, r));
+
+        return neighbors;
+    }
+
+    void GiveTerritoryNumber(Hex hex)
+    {
+        hex.Territory = territoryNumber;
+        territoryHexes.Enqueue(hex);
+        hex.Elevation = 1;
+        // Debug.Log("Territory added: " + hex.Q + ", " + hex.R);
+    }
+
+    void PrintCoordinates(Hex hex)
+    {
+        Debug.Log(hex.Q + ", " + hex.R);
     }
 }

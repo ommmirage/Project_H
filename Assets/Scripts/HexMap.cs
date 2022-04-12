@@ -6,18 +6,16 @@ public class HexMap : MonoBehaviour
 {
     [SerializeField] GameObject hexPrefab;
 
-    [SerializeField] int width = 110;
+    [SerializeField] int width = 85;
     public int Width { get { return width; } }
 
-    [SerializeField] int height = 65;
+    [SerializeField] int height = 50;
     public int Height { get { return height; } }
 
     [SerializeField] Material matOcean;
     [SerializeField] Material matPlains;
     [SerializeField] Material matGrasslands;
     [SerializeField] Material matMountains;
-
-    // [SerializeField] Mesh meshWater;
 
     GameObject[,] hexObjects;
 
@@ -45,7 +43,7 @@ public class HexMap : MonoBehaviour
         return hexes[x, y];
     }
 
-    protected void GenerateOcean()
+    protected void GenerateTiles()
     {
         hexObjects = new GameObject[width, height];
         hexes = new Hex[width, height];
@@ -67,9 +65,24 @@ public class HexMap : MonoBehaviour
                     transform
                 );
 
-                hexObject.GetComponentInChildren<TextMesh>().text = x + ", " + y;
-
                 hexObjects[x, y] = hexObject;
+            }
+        }
+    }
+
+    protected void SetLabels()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                hexObjects[x, y].GetComponentInChildren<TextMesh>().text = x + ", " + y;
+                if (GetHexAt(x, y).Territory != -1)
+                {
+                    hexObjects[x, y].GetComponentInChildren<TextMesh>().text = 
+                        GetHexAt(x, y).Territory.ToString();
+                }
+                
             }
         }
     }
@@ -113,9 +126,6 @@ public class HexMap : MonoBehaviour
                 {
                     meshRenderer.material = matOcean;
                 }
-
-                // MeshFilter meshFilter = hexObject.GetComponentInChildren<MeshFilter>();
-                // meshFilter.mesh = meshWater;
             }
         }
     }

@@ -20,7 +20,8 @@ public class Hex
 
     public float Elevation = -0.5f;
 
-    public int ContinentNumber = -1;
+    public int Continent = -1;
+    public int Territory = -1;
 
     public Hex(int q, int r) {
         this.Q = q;

@@ -294,7 +294,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 59.7, y: 88, z: 47}
+  m_LocalPosition: {x: 59.7, y: 72, z: 36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -342,14 +342,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hexPrefab: {fileID: 1140593474924348687, guid: 832c97036eb60bb47af951bec71d3e62, type: 3}
-  width: 110
-  height: 65
+  width: 85
+  height: 50
   matOcean: {fileID: 2100000, guid: f47cb81a50d103546a6271506c42cbb1, type: 2}
   matPlains: {fileID: 2100000, guid: b9cea59829f6d0843864d88828f075d7, type: 2}
   matGrasslands: {fileID: 2100000, guid: e6eae830bc063cd4e94f609b455be2d3, type: 2}
   matMountains: {fileID: 2100000, guid: f0f04cb1a9b2c80408b7010fadcc0b96, type: 2}
-  minContinents: 2
-  maxContinents: 2
+  minContinents: 1
+  maxContinents: 1
 --- !u!4 &1412781723
 Transform:
   m_ObjectHideFlags: 0
