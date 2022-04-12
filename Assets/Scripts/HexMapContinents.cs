@@ -131,26 +131,6 @@ public class HexMapContinents : HexMap
         }
     }
 
-    // void Jump(Hex nextHex, int jumpsCount)
-    // {
-    //     jumpsCount--;
-
-    //     Debug.Log(jumpsCount);
-    //     Debug.Log(nextHex.Q + ", " + nextHex.R);
-
-    //     List<Hex> nextNeighbors = GetNeighbors(nextHex);
-
-    //     if (!HasEmptyTerritoryAround(nextNeighbors))
-    //     {
-    //         nextHex = territoryHexes[0];
-    //         territoryHexes.RemoveAt(0);
-    //         Debug.Log("Has no empty territories around\n" +
-    //             "nextHex: " + nextHex.Q + ", " + nextHex.R);
-    //     }
-
-    //     ExpandOnNeighbors(nextHex, GetNeighbors(nextHex), 0, jumpsCount);
-    // }
-
     bool HasEmptyTerritoryAround(Hex hex)
     {
         foreach (Hex neighbor in GetNeighbors(hex))
@@ -195,7 +175,6 @@ public class HexMapContinents : HexMap
         territoryHexes.Enqueue(hex);
         hex.Elevation = 1;
         // Debug.Log("Territory " + territoryNumber + " added: " + hex.Q + ", " + hex.R);
-        Debug.Log(territoryHexes.Count);
     }
 
     void PrintCoordinates(Hex hex)
