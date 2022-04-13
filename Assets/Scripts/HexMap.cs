@@ -77,13 +77,7 @@ public class HexMap : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                hexObjects[x, y].GetComponentInChildren<TextMesh>().text = x + ", " + y;
-                if (GetHexAt(x, y).Territory != -1)
-                {
-                    hexObjects[x, y].GetComponentInChildren<TextMesh>().text = 
-                        GetHexAt(x, y).Territory.ToString();
-                }
-                
+                hexObjects[x, y].GetComponentInChildren<TextMesh>().text = x + ", " + y;                
             }
         }
     }
