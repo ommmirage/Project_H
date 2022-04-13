@@ -161,4 +161,43 @@ public class HexMap : MonoBehaviour
 
         return (dq + Mathf.Abs(a.R - b.R) + ds) / 2;
     }
+
+    protected void DrawBorders()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CheckRightBorders(GetHexAt(x, y));
+            }
+        }
+    }
+
+    void CheckRightBorders(Hex hex)
+    {
+        int territory = hex.Territory;
+        int q = hex.Q;
+        int r = hex.R;
+
+        Hex upRightHex = GetHexAt(q, r + 1);
+        if ((upRightHex != null) && (upRightHex.Territory != territory))
+        {
+            Transform upRightBorder = hexObjects[q, r].transform.GetChild(2).GetChild(0);
+            upRightBorder.gameObject.SetActive(true);
+        }
+        
+        Hex right = GetHexAt(q + 1, r);
+        if ((right != null) && (right.Territory != territory))
+        {
+            Transform rightBorder = hexObjects[q, r].transform.GetChild(2).GetChild(1);
+            rightBorder.gameObject.SetActive(true);
+        }
+
+        Hex downRight = GetHexAt(q + 1, r - 1);
+        if ((downRight != null) && (downRight.Territory != territory))
+        {
+            Transform downRightBorder = hexObjects[q, r].transform.GetChild(2).GetChild(2);
+            downRightBorder.gameObject.SetActive(true);
+        }
+    }
 }

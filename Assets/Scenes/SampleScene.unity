@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5272e5c668a52ae4c875803082b17fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hexPrefab: {fileID: 1140593474924348687, guid: 832c97036eb60bb47af951bec71d3e62, type: 3}
+  hexPrefab: {fileID: 451703646889873012, guid: 7e1e51dbaaf1b774c9f854694253f735, type: 3}
   width: 85
   height: 50
   matOcean: {fileID: 2100000, guid: f47cb81a50d103546a6271506c42cbb1, type: 2}
@@ -350,6 +350,7 @@ MonoBehaviour:
   matMountains: {fileID: 2100000, guid: f0f04cb1a9b2c80408b7010fadcc0b96, type: 2}
   minContinents: 1
   maxContinents: 1
+  territorySize: 40
 --- !u!4 &1412781723
 Transform:
   m_ObjectHideFlags: 0

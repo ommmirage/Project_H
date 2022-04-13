@@ -27,6 +27,7 @@ public class HexMapContinents : HexMap
 
         UpdateHexVisuals();
         SetLabels();
+        DrawBorders();
     }
 
     void GenerateContinents()
