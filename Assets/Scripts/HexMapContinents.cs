@@ -12,6 +12,7 @@ public class HexMapContinents : HexMap
 
     int numContinents;
     int territoryNumber = 1;
+    int continentNumber = 0;
     Queue<Hex> territoryHexes;
     Queue<Queue<Hex>> territories;
 
@@ -35,9 +36,10 @@ public class HexMapContinents : HexMap
     {
         numContinents = Random.Range(minContinents, maxContinents);
 
-        for (int i = 0; i < numContinents; i++)
+        while(numContinents > continentNumber)
         {
-            GenerateContinent(i);
+            GenerateContinent(continentNumber);
+            continentNumber++;
         }
     }
 
@@ -59,8 +61,6 @@ public class HexMapContinents : HexMap
 
         while (numTerritories > 0)
         {
-            // Debug.Log("Territory: " + territoryNumber);
-
             startHex = GetStartHex();
             GenerateTerritory(startHex);
             territoryNumber++;
@@ -157,6 +157,15 @@ public class HexMapContinents : HexMap
         if (nextHex.Territory == -1)
         {
             AddNextHex(hex, nextHex, neighbors, neighbor, expanded, jumpsCount);
+        }
+        else if ((nextHex.Continent != continentNumber) && (nextHex.Continent != -1))
+        {
+            // Separate continent
+            
+            hex.Territory = -1;
+            hex.Elevation = -1;
+            neighbors.RemoveAt(neighbor);
+            ExpandOnNeighbors(hex, neighbors, expanded, jumpsCount);
         }
         else
         {
