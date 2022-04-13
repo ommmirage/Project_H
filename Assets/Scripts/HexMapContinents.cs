@@ -13,6 +13,7 @@ public class HexMapContinents : HexMap
     int numContinents;
     int territoryNumber = 1;
     Queue<Hex> territoryHexes;
+    Queue<Queue<Hex>> territories;
 
     void Start()
     {
@@ -42,11 +43,15 @@ public class HexMapContinents : HexMap
 
     void GenerateContinent(int continentNumber)
     {
-        int numTerritories = Random.Range(5, 7);
+        territories = new Queue<Queue<Hex>>();
+
+        int numTerritories = Random.Range(18, 23);
 
         int startQ = Width / numContinents * continentNumber;
         int startR = Height / 2;
         Hex startHex = GetHexAt(startQ, startR);
+
+        Debug.Log("Continent: " + startHex.Continent);
 
         GenerateTerritory(startHex);
         numTerritories--;
@@ -54,15 +59,37 @@ public class HexMapContinents : HexMap
 
         while (numTerritories > 0)
         {
-            startHex = territoryHexes.Dequeue();
+            // Debug.Log("Territory: " + territoryNumber);
+
+            startHex = GetStartHex();
+            GenerateTerritory(startHex);
+            territoryNumber++;
+            numTerritories--;
+        }
+    }
+
+    Hex GetStartHex()
+    {
+        territoryHexes = territories.Dequeue();
+
+        try
+        {
+            Hex startHex = territoryHexes.Dequeue();
             while (!HasEmptyTerritoryAround(startHex))
             {
                 startHex = territoryHexes.Dequeue();
             }
-            // PrintCoordinates(startHex);
-            GenerateTerritory(startHex);
-            territoryNumber++;
-            numTerritories--;
+
+            if (!HasEmptyTerritoryAround(startHex))
+            {
+                return GetStartHex();
+            }
+
+            return startHex;
+        }
+        catch(System.InvalidOperationException) 
+        {
+            return GetStartHex();
         }
     }
 
@@ -73,6 +100,9 @@ public class HexMapContinents : HexMap
         GiveTerritoryNumber(hex);
 
         Expand(hex, territorySize);
+
+        territories.Enqueue(territoryHexes);
+        territories.Enqueue(territoryHexes);
     }
 
     void Expand(Hex hex, int jumpsCount)
@@ -83,19 +113,36 @@ public class HexMapContinents : HexMap
 
         while (jumpsCount > 0)
         {
-            hex = territoryHexes.Peek();
+            hex = GetNextHex();
 
-            while (!HasEmptyTerritoryAround(hex))
+            if (hex != null)
             {
-                territoryHexes.Dequeue();
-                hex = territoryHexes.Peek();
+                neighbors = GetNeighbors(hex);
+                ExpandOnNeighbors(hex, neighbors, 0, jumpsCount);
             }
-
-            neighbors = GetNeighbors(hex);
-            ExpandOnNeighbors(hex, neighbors, 0, jumpsCount);
 
             jumpsCount--;
         }
+    }
+
+    Hex GetNextHex()
+    {
+        if (territoryHexes.Count == 0)
+            return null;
+
+        Hex hex = territoryHexes.Peek();
+
+        while (!HasEmptyTerritoryAround(hex))
+        {
+            territoryHexes.Dequeue();
+
+            if (territoryHexes.Count == 0)
+                return null;
+
+            hex = territoryHexes.Peek();
+        }
+
+        return hex;
     }
 
     void ExpandOnNeighbors(Hex hex, List<Hex> neighbors, int expanded, int jumpsCount)
@@ -153,7 +200,7 @@ public class HexMapContinents : HexMap
 
         neighbors.Add(GetHexAt(q - 1, r));
 
-        if (r < Height)
+        if (r < Height - 1)
         {
             neighbors.Add(GetHexAt(q - 1, r + 1));
             neighbors.Add(GetHexAt(q, r + 1));
@@ -175,7 +222,6 @@ public class HexMapContinents : HexMap
         hex.Territory = territoryNumber;
         territoryHexes.Enqueue(hex);
         hex.Elevation = 1;
-        // Debug.Log("Territory " + territoryNumber + " added: " + hex.Q + ", " + hex.R);
     }
 
     void PrintCoordinates(Hex hex)
