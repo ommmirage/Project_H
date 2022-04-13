@@ -53,8 +53,6 @@ public class HexMapContinents : HexMap
         int startR = Height / 2;
         Hex startHex = GetHexAt(startQ, startR);
 
-        Debug.Log("Continent: " + startHex.Continent);
-
         GenerateTerritory(startHex);
         numTerritories--;
         territoryNumber++;
@@ -97,7 +95,7 @@ public class HexMapContinents : HexMap
     {
         territoryHexes = new Queue<Hex>();
 
-        GiveTerritoryNumber(hex);
+        NumberAndSowHex(hex);
 
         Expand(hex, territorySize);
 
@@ -161,7 +159,7 @@ public class HexMapContinents : HexMap
         else if ((nextHex.Continent != continentNumber) && (nextHex.Continent != -1))
         {
             // Separate continent
-            
+
             hex.Territory = -1;
             hex.Elevation = -1;
             neighbors.RemoveAt(neighbor);
@@ -177,7 +175,7 @@ public class HexMapContinents : HexMap
     void AddNextHex(Hex hex, Hex nextHex, List<Hex> neighbors, int neighbor,
         int expanded, int jumpsCount)
     {
-        GiveTerritoryNumber(nextHex);
+        NumberAndSowHex(nextHex);
 
         neighbors.RemoveAt(neighbor);
         expanded++;
@@ -226,11 +224,16 @@ public class HexMapContinents : HexMap
         return neighbors;
     }
 
-    void GiveTerritoryNumber(Hex hex)
+    void NumberAndSowHex(Hex hex)
     {
         hex.Territory = territoryNumber;
         territoryHexes.Enqueue(hex);
         hex.Elevation = 1;
+
+        if (Random.Range(0, 2) == 1)
+        {
+            hex.IsForest = true;
+        }
     }
 
     void PrintCoordinates(Hex hex)

@@ -13,16 +13,17 @@ public class HexMap : MonoBehaviour
     public int Height { get { return height; } }
 
     [SerializeField] Material matOcean;
-    [SerializeField] Material matPlains;
+    // [SerializeField] Material matPlains;
     [SerializeField] Material matGrasslands;
-    [SerializeField] Material matMountains;
+    // [SerializeField] Material matMountains;
+    [SerializeField] GameObject ForestPrefab;
 
     GameObject[,] hexObjects;
 
     Hex[,] hexes;
 
-    float MountainHeight = 1.3f;
-    float HillHeight = 0.75f;
+    // float MountainHeight = 1.3f;
+    // float HillHeight = 0.75f;
 
     public Hex GetHexAt(int x, int y)
     {
@@ -110,21 +111,32 @@ public class HexMap : MonoBehaviour
 
                 MeshRenderer meshRenderer = hexObject.GetComponentInChildren<MeshRenderer>();
 
-                if (hex.Elevation > MountainHeight)
-                {
-                    meshRenderer.material = matMountains;
-                }
-                else if (hex.Elevation > HillHeight)
-                {
-                    meshRenderer.material = matPlains;
-                }
-                else if (hex.Elevation > 0)
+                // if (hex.Elevation > MountainHeight)
+                // {
+                //     meshRenderer.material = matMountains;
+                // }
+                // else if (hex.Elevation > HillHeight)
+                // {
+                //     meshRenderer.material = matPlains;
+                // }
+                // else 
+                if (hex.Elevation > 0)
                 {
                     meshRenderer.material = matGrasslands;
                 }
                 else
                 {
                     meshRenderer.material = matOcean;
+                }
+
+                if (hex.IsForest)
+                {
+                    GameObject.Instantiate(
+                        ForestPrefab, 
+                        hexObject.gameObject.transform.position,
+                        new Quaternion(),
+                        hexObject.gameObject.transform
+                        );
                 }
             }
         }

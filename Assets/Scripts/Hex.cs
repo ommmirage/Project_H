@@ -23,6 +23,8 @@ public class Hex
     public int Continent = -1;
     public int Territory = -1;
 
+    public bool IsForest = false;
+
     public Hex(int q, int r) {
         this.Q = q;
         this.R = r;
