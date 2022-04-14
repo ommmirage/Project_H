@@ -16,7 +16,9 @@ public class HexMap : MonoBehaviour
     // [SerializeField] Material matPlains;
     [SerializeField] Material matGrasslands;
     // [SerializeField] Material matMountains;
-    [SerializeField] GameObject ForestPrefab;
+    [SerializeField] GameObject forestPrefab;
+
+    [SerializeField] GameObject unitKnightPrefab;
 
     GameObject[,] hexObjects;
 
@@ -123,7 +125,7 @@ public class HexMap : MonoBehaviour
                 if (hex.IsForest)
                 {
                     GameObject.Instantiate(
-                        ForestPrefab, 
+                        forestPrefab, 
                         hexObject.gameObject.transform.position,
                         new Quaternion(),
                         hexObject.gameObject.transform
@@ -131,6 +133,7 @@ public class HexMap : MonoBehaviour
                 }
             }
         }
+        SpawnUnitAt(unitKnightPrefab, 0, 0);
     }
 
     public Hex[] GetHexesWithinRangeOf(Hex centralHex, int range)
@@ -202,5 +205,11 @@ public class HexMap : MonoBehaviour
             Transform downRightBorder = hexObjects[q, r].transform.GetChild(2).GetChild(2);
             downRightBorder.gameObject.SetActive(true);
         }
+    }
+
+    protected void SpawnUnitAt(GameObject prefab, int x, int y)
+    {
+        GameObject hex = hexObjects[x, y];
+        Instantiate(prefab, hex.transform.position, new Quaternion(), hex.transform);
     }
 }
