@@ -354,15 +354,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5272e5c668a52ae4c875803082b17fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hexPrefab: {fileID: 451703646889873012, guid: 7e1e51dbaaf1b774c9f854694253f735, type: 3}
-  width: 85
-  height: 50
+  hexPrefab: {fileID: 451703646889873012, guid: cc173da095e6c6f45b8dd35aeef14f51, type: 3}
   matOcean: {fileID: 2100000, guid: f47cb81a50d103546a6271506c42cbb1, type: 2}
-  matGrasslands: {fileID: 2100000, guid: e6eae830bc063cd4e94f609b455be2d3, type: 2}
+  matGrasslands: {fileID: 2100000, guid: 0971ddc3dcc3f514bb964d389799c7dc, type: 2}
   ForestPrefab: {fileID: 1638819778573062, guid: 500f568e51516ae49adf4637df6c168e, type: 3}
-  minContinents: 2
-  maxContinents: 2
-  territorySize: 40
 --- !u!4 &1412781723
 Transform:
   m_ObjectHideFlags: 0

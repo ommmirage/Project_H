@@ -104,6 +104,7 @@ public class HexMap : MonoBehaviour
                 Hex hex = hexes[x, y];
 
                 MeshRenderer meshRenderer = hexObject.GetComponentInChildren<MeshRenderer>();
+                MeshFilter meshFilter = hexObject.GetComponentInChildren<MeshFilter>();
 
                 // if (hex.Elevation > MountainHeight)
                 // {
@@ -114,11 +115,7 @@ public class HexMap : MonoBehaviour
                 //     meshRenderer.material = matPlains;
                 // }
                 // else 
-                if (hex.Elevation > 0)
-                {
-                    meshRenderer.material = matGrasslands;
-                }
-                else
+                if (hex.Elevation < 0)
                 {
                     meshRenderer.material = matOcean;
                 }
