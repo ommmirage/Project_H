@@ -57,7 +57,7 @@ public class HexMap : MonoBehaviour
 
                 hexes[x, y] = hex;
 
-                Vector3 inworldPos = hex.PositionFromCamera(width, height);
+                Vector3 inworldPos = hex.PositionFromCamera(width);
 
                 GameObject hexObject = Instantiate(
                     hexPrefab, 
@@ -88,7 +88,7 @@ public class HexMap : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Vector3 newPosition = hexes[x, y].PositionFromCamera(width, height);
+                Vector3 newPosition = GetHexAt(x, y).PositionFromCamera(width);
                 hexObjects[x, y].transform.position = newPosition;
             }
         }

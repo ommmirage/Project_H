@@ -23,6 +23,18 @@ public class CameraMouseController : MonoBehaviour
         {
             isDraggingCamera = false;
         }
+        else if (Input.mouseScrollDelta.y != 0)
+        {
+            float cameraY = Camera.main.transform.position.y;
+            float zoomModifyer = Mathf.Sqrt(cameraY) / 3;
+            float newCameraY = zoomModifyer * Input.mouseScrollDelta.y;
+            Vector3 zoom = new Vector3(0, -newCameraY , 0);
+
+            if ( (cameraY > 4) && (zoom.y < 0) || (cameraY < 40) && (zoom.y > 0) )
+            {
+                Camera.main.transform.Translate(zoom, Space.World);
+            }
+        }
 
         if (isDraggingCamera)
         {
@@ -33,5 +45,6 @@ public class CameraMouseController : MonoBehaviour
             rayLength = mouseRay.origin.y / mouseRay.direction.y;
             lastMousePosition = mouseRay.origin - (mouseRay.direction * rayLength);
         }
+
     }
 }

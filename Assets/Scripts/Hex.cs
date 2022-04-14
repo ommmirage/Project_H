@@ -64,23 +64,26 @@ public class Hex
         return Width();
     }
 
-    public Vector3 PositionFromCamera(float numColumns, float numRows)
+    public Vector3 PositionFromCamera(float width)
     {
         Vector3 position = Position();
 
-        float mapWidth = numColumns * HorizontalSpacing();
+        float mapWidth = width * HorizontalSpacing();
 
         float cameraPosX = Camera.main.transform.position.x;
 
         float mapWidthsFromCenter = (position.x - cameraPosX) / mapWidth;
 
+        if (Q == 84)
+            Debug.Log(mapWidthsFromCenter);
+
         // We want widthAmountFromCamera to be in [-0,5; 0,5]
-        if (mapWidthsFromCenter > 0.5f)
+        while (mapWidthsFromCenter > 0.5f)
         {
             mapWidthsFromCenter -= 1f;
             position.x = mapWidthsFromCenter * mapWidth + cameraPosX;
         }
-        else if (mapWidthsFromCenter < -0.5f)
+        while (mapWidthsFromCenter < -0.5f)
         {
             mapWidthsFromCenter += 1f;
             position.x = mapWidthsFromCenter * mapWidth  + cameraPosX;
