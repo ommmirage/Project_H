@@ -25,6 +25,10 @@ public class Hex
 
     public bool IsForest = false;
 
+    public GameObject HexGameObject;
+
+    Unit unit;
+
     public Hex(int q, int r) {
         this.Q = q;
         this.R = r;
@@ -87,5 +91,17 @@ public class Hex
         }
 
         return position;
+    }
+
+    public void AddUnit(Unit unit)
+    {
+        this.unit = unit;
+        unit.SetHex(this);
+    }
+
+    public void RemoveUnit()
+    {
+        unit = null;
+        unit.SetHex(null);
     }
 }

@@ -20,9 +20,9 @@ public class HexMap : MonoBehaviour
 
     [SerializeField] GameObject unitKnightPrefab;
 
-    GameObject[,] hexObjects;
-
     Hex[,] hexes;
+    GameObject[,] hexObjects;
+    Unit[,] units;
 
     // float MountainHeight = 1.3f;
     // float HillHeight = 0.75f;
@@ -68,6 +68,7 @@ public class HexMap : MonoBehaviour
                     transform
                 );
 
+                // hex.HexGameObject = hexObject;
                 hexObjects[x, y] = hexObject;
             }
         }
@@ -133,7 +134,9 @@ public class HexMap : MonoBehaviour
                 }
             }
         }
-        SpawnUnitAt(unitKnightPrefab, 0, 0);
+
+        Unit knight = new Knight();
+        // SpawnUnitAt(knight, unitKnightPrefab, 0, 0);
     }
 
     public Hex[] GetHexesWithinRangeOf(Hex centralHex, int range)
@@ -207,9 +210,17 @@ public class HexMap : MonoBehaviour
         }
     }
 
-    protected void SpawnUnitAt(GameObject prefab, int x, int y)
+    protected void SpawnUnitAt(Unit unit, GameObject prefab, int x, int y)
     {
-        GameObject hex = hexObjects[x, y];
-        Instantiate(prefab, hex.transform.position, new Quaternion(), hex.transform);
+        if (units[x, y] == null)
+        {
+            GameObject unitObject = Instantiate(
+                prefab, 
+                hexObjects[x, y].transform.position, 
+                new Quaternion(), 
+                hexObjects[x, y].transform
+            );
+            units[x, y] = unit;
+        }
     }
 }
