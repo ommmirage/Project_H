@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class HexMapContinents : HexMap
 {
-    [Range(1, 3)]
-    [SerializeField] int minContinents = 2;
-    [Range(1, 3)]
-    [SerializeField] int maxContinents = 2;
-    [SerializeField] int territorySize = 40;
+    int minContinents = 2;
+    int maxContinents = 2;
+    int territorySize = 40;
 
     int numContinents;
     int territoryNumber = 1;

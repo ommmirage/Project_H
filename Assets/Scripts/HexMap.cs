@@ -6,10 +6,10 @@ public class HexMap : MonoBehaviour
 {
     [SerializeField] GameObject hexPrefab;
 
-    [SerializeField] int width = 85;
+    int width = 85;
     public int Width { get { return width; } }
 
-    [SerializeField] int height = 50;
+    int height = 50;
     public int Height { get { return height; } }
 
     [SerializeField] Material matOcean;

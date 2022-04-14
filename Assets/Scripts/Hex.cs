@@ -74,9 +74,6 @@ public class Hex
 
         float mapWidthsFromCenter = (position.x - cameraPosX) / mapWidth;
 
-        if (Q == 84)
-            Debug.Log(mapWidthsFromCenter);
-
         // We want widthAmountFromCamera to be in [-0,5; 0,5]
         while (mapWidthsFromCenter > 0.5f)
         {
