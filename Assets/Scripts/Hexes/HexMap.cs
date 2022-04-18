@@ -21,45 +21,41 @@ public class HexMap : MonoBehaviour
     [SerializeField] GameObject unitKnightPrefab;
 
     Hex[,] hexes;
-    // GameObject[,] hexObjects;
-    Unit[,] units;
+    HashSet<Unit> units;
+    Dictionary<Hex, Unit> hexUnitDictionary;
 
     // float MountainHeight = 1.3f;
     // float HillHeight = 0.75f;
 
-    public Hex GetHexAt(int x, int y)
+    void Update()
     {
-        if (hexes == null)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.LogError("Hexes array is not yet instantiated.");
-            return null;
+            if (units != null)
+            {
+                foreach (Unit unit in units)
+                {
+                    unit.DoTurn();
+                }
+            }
         }
-
-        if ((y < 0) || (y >= height))
-            return null;
-
-        if (x < 0)
-            x += width;
-        else
-            x = x % width;
-        
-        return hexes[x, y];
     }
 
     protected void GenerateTiles()
     {
-        // hexObjects = new GameObject[width, height];
         hexes = new Hex[width, height];
+        units = new HashSet<Unit>();
+        hexUnitDictionary = new Dictionary<Hex, Unit>();
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Hex hex = new Hex(x, y);
+                Hex hex = new Hex(this, x, y);
 
                 hexes[x, y] = hex;
 
-                Vector3 inworldPos = hex.PositionFromCamera(width);
+                Vector3 inworldPos = hex.PositionFromCamera();
 
                 GameObject hexObject = Instantiate(
                     hexPrefab, 
@@ -69,7 +65,6 @@ public class HexMap : MonoBehaviour
                 );
 
                 hex.HexGameObject = hexObject;
-                // hexObjects[x, y] = hexObject;
             }
         }
     }
@@ -93,7 +88,7 @@ public class HexMap : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Hex hex = hexes[x, y];
-                Vector3 newPosition = hex.PositionFromCamera(width);
+                Vector3 newPosition = hex.PositionFromCamera();
                 hex.HexGameObject.transform.position = newPosition;
             }
         }
@@ -128,7 +123,26 @@ public class HexMap : MonoBehaviour
         }
 
         Unit knight = new Knight();
-        // SpawnUnitAt(knight, unitKnightPrefab, 0, 0);
+        SpawnUnitAt(knight, unitKnightPrefab, 0, 0);
+    }
+
+    public Hex GetHexAt(int x, int y)
+    {
+        if (hexes == null)
+        {
+            Debug.LogError("Hexes array is not yet instantiated.");
+            return null;
+        }
+
+        if ((y < 0) || (y >= height))
+            return null;
+
+        if (x < 0)
+            x += width;
+        else
+            x = x % width;
+        
+        return hexes[x, y];
     }
 
     public Hex[] GetHexesWithinRangeOf(Hex centralHex, int range)
@@ -204,16 +218,20 @@ public class HexMap : MonoBehaviour
 
     protected void SpawnUnitAt(Unit unit, GameObject prefab, int x, int y)
     {
-        if (units[x, y] == null)
-        {
-            Hex hex = hexes[x, y];
-            GameObject unitObject = Instantiate(
+        Hex hex = GetHexAt(x, y);
+        unit.SetHex(hex);
+
+        GameObject unitGameObject = Instantiate(
                 prefab, 
                 hex.HexGameObject.transform.position, 
                 new Quaternion(), 
                 hex.HexGameObject.transform
-            );
-            units[x, y] = unit;
-        }
+                );
+
+        // Регистрируем функцию UnitView.OnUnitMoved() в событие Unit.UnitMoved 
+        unit.UnitMoved += unitGameObject.GetComponent<UnitView>().OnUnitMoved;
+        
+        units.Add(unit);
+        unit.SetUnitGameObject(unitGameObject);
     }
 }

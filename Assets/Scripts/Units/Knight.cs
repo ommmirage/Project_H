@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Knight : Unit
 {
-    void Start()
+    public Knight()
     {
-        name = "Knight";
         hp = 100;
         strength = 8;
         movement = 2;

@@ -25,11 +25,13 @@ public class Hex
 
     public bool IsForest = false;
 
+    HexMap hexMap;
+    Unit unit;
     public GameObject HexGameObject;
 
-    Unit unit;
+    public Hex(HexMap hexMap, int q, int r) {
+        this.hexMap = hexMap;
 
-    public Hex(int q, int r) {
         this.Q = q;
         this.R = r;
         S = -(q + r);
@@ -68,11 +70,11 @@ public class Hex
         return Width();
     }
 
-    public Vector3 PositionFromCamera(float width)
+    public Vector3 PositionFromCamera()
     {
         Vector3 position = Position();
 
-        float mapWidth = width * HorizontalSpacing();
+        float mapWidth = hexMap.Width * HorizontalSpacing();
 
         float cameraPosX = Camera.main.transform.position.x;
 
@@ -96,12 +98,10 @@ public class Hex
     public void AddUnit(Unit unit)
     {
         this.unit = unit;
-        unit.SetHex(this);
     }
 
     public void RemoveUnit()
     {
         unit = null;
-        unit.SetHex(null);
     }
 }
