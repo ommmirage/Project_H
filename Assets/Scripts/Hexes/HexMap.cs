@@ -27,20 +27,6 @@ public class HexMap : MonoBehaviour
     // float MountainHeight = 1.3f;
     // float HillHeight = 0.75f;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (units != null)
-            {
-                foreach (Unit unit in units)
-                {
-                    unit.DoTurn();
-                }
-            }
-        }
-    }
-
     protected void GenerateTiles()
     {
         hexes = new Hex[width, height];
@@ -233,5 +219,16 @@ public class HexMap : MonoBehaviour
         
         units.Add(unit);
         unit.SetUnitGameObject(unitGameObject);
+    }
+
+    public void DoTurn()
+    {
+        if (units != null)
+            {
+                foreach (Unit unit in units)
+                {
+                    unit.DoTurn();
+                }
+            }
     }
 }

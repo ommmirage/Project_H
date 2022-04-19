@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class CameraKeyboardController : MonoBehaviour
 {
+    HexMap hexMap;
+
     float moveSpeed = 20f;
+
+    void Start()
+    {
+        hexMap = Object.FindObjectOfType<HexMap>();
+    }
 
     void Update()
     {
@@ -15,5 +22,10 @@ public class CameraKeyboardController : MonoBehaviour
             );
 
         transform.Translate( translate * moveSpeed * Time.deltaTime, Space.World);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            hexMap.DoTurn();
+        }
     }
 }
