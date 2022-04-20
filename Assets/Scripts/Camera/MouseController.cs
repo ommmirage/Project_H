@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
+	[SerializeField] LayerMask layerMask;
+
 	// Variables for units selecting
 	Vector3 lastMousePosition;
 
 	// Camera moving variables
     Vector3 lastMouseGroundPlanePosition;
 	Vector3 cameraTargetOffset;
-	int mouseDragThreshold = 1;
+	int mouseDragThreshold = 2;
 
 	delegate void UpdateFunc();
 	UpdateFunc Update_CurrentFunc;
 
-	Unit selectedUnit;
+	Unit selectedUnit = null;
 	// HexMap hexMap;
 
 	void Start()
@@ -40,15 +42,16 @@ public class MouseController : MonoBehaviour
 	void Update_DetectModeStart()
 	{
 		float mousePositionDiff = Vector3.Distance(Input.mousePosition, lastMousePosition);
-		if ( Input.GetMouseButton(0) && (mousePositionDiff > mouseDragThreshold) )
+
+		if (Input.GetMouseButtonUp(0))
+		{
+			SelectUnit();
+		}
+		else if ( Input.GetMouseButton(0) && (mousePositionDiff > mouseDragThreshold) )
 		{
 			Update_CurrentFunc = Update_CameraDrag;
 			lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
 			Update_CurrentFunc();
-		}
-		else if (Input.GetMouseButtonUp(0) && (mousePositionDiff < mouseDragThreshold) )
-		{
-			SelectUnit();
 		}
 	}
 
@@ -113,18 +116,31 @@ public class MouseController : MonoBehaviour
 
 	Vector3 MouseToGroundPlane(Vector3 mousePos)
 	{
-		Ray mouseRay = Camera.main.ScreenPointToRay (Input.mousePosition);
+		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
 		// What is the point at which the mouse ray intersects Y=0
-		// if (mouseRay.direction.y >= 0) {
-		// 	return new Vector3();
-		// }
-		float rayLength = (mouseRay.origin.y / mouseRay.direction.y);
+		float rayLength = mouseRay.origin.y / mouseRay.direction.y;
 		return mouseRay.origin - (mouseRay.direction * rayLength);
 	}
 
     Unit SelectUnit()
 	{
-		Debug.Log(MouseToGroundPlane(Input.mousePosition).x);
+		Debug.Log(3);
+		MouseToHex();
+
+		return null;
+	}
+
+	Hex MouseToHex()
+	{
+		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hitInfo;
+
+		if (Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, layerMask.value))
+		{
+			Debug.Log(hitInfo.collider.name);
+		}
+
 		return null;
 	}
 }
