@@ -18,11 +18,12 @@ public class MouseController : MonoBehaviour
 	UpdateFunc Update_CurrentFunc;
 
 	Unit selectedUnit = null;
-	// HexMap hexMap;
+	Hex selectedHex = null;
+	HexMap hexMap;
 
 	void Start()
 	{
-		// hexMap = Object.FindObjectOfType<HexMap>();
+		hexMap = Object.FindObjectOfType<HexMap>();
 		Update_CurrentFunc = Update_DetectModeStart;
 	}
 
@@ -52,6 +53,10 @@ public class MouseController : MonoBehaviour
 			Update_CurrentFunc = Update_CameraDrag;
 			lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
 			Update_CurrentFunc();
+		}
+		else if ( Input.GetMouseButton(1) && (selectedUnit != null) )
+		{
+			Debug.Log("Show track");
 		}
 	}
 
@@ -123,12 +128,20 @@ public class MouseController : MonoBehaviour
 		return mouseRay.origin - (mouseRay.direction * rayLength);
 	}
 
-    Unit SelectUnit()
+    void SelectUnit()
 	{
-		Debug.Log(3);
-		MouseToHex();
+		if (selectedHex != null)
+		{
+			selectedHex.SetSelected(false);
+		}
 
-		return null;
+		Hex hex = MouseToHex();
+		selectedUnit = hex.GetUnit();
+		if (selectedUnit != null)
+		{
+			selectedHex = hex;
+			hex.SetSelected(true);
+		}
 	}
 
 	Hex MouseToHex()
@@ -138,7 +151,10 @@ public class MouseController : MonoBehaviour
 
 		if (Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, layerMask.value))
 		{
-			Debug.Log(hitInfo.collider.name);
+			GameObject hexGameObject = hitInfo.transform.parent.gameObject;
+			Hex hex = hexMap.GameObjectToHexDictionary[hexGameObject];
+			return hex;
+			
 		}
 
 		return null;

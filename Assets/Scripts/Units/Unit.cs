@@ -11,11 +11,12 @@ public class Unit
     
     HexMap hexMap;
 
-    Hex hex;
-    GameObject unitGameObject;
-
     public delegate void UnitMovedDelegate(Hex oldHex, Hex newHex);
     public event UnitMovedDelegate UnitMoved;
+
+    Hex hex;
+    public GameObject UnitGameObject;
+    Queue<Hex> path;
 
     public Unit()
     {
@@ -40,16 +41,22 @@ public class Unit
         }
     }
 
-    public void SetUnitGameObject(GameObject unitGameObject)
-    {
-        this.unitGameObject = unitGameObject;
-    }
-
     public void DoTurn()
     {
-        Hex oldHex = hex;
-        Hex newHex = hexMap.GetHexAt(hex.Q + 1, hex.R);
+        if ( path == null || path.Count == 0 )
+        {
+            return;
+        }
 
-        SetHex(newHex);
+        while (movementRemaining > 0)
+        {
+            Hex newHex = path.Dequeue();
+            SetHex(newHex);
+        }
     }
+
+    // public float TurnsToEnterHex(Hex hex, float turnsToDate)
+    // {
+    //     float turnsRemaining = movementRemaining / movement;
+    // }
 }

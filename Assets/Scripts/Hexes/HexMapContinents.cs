@@ -231,6 +231,7 @@ public class HexMapContinents : HexMap
         if (Random.Range(0, 2) == 1)
         {
             hex.IsForest = true;
+            hex.MovementCost = 2;
         }
     }
 

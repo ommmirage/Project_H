@@ -22,7 +22,9 @@ public class HexMap : MonoBehaviour
 
     Hex[,] hexes;
     HashSet<Unit> units;
-    Dictionary<Hex, Unit> hexUnitDictionary;
+    // Dictionary<Hex, Unit> hexUnitDictionary;
+    public Dictionary<Hex, GameObject> HexToGameObjectDictionary;
+    public Dictionary<GameObject, Hex> GameObjectToHexDictionary;
 
     // float MountainHeight = 1.3f;
     // float HillHeight = 0.75f;
@@ -31,7 +33,9 @@ public class HexMap : MonoBehaviour
     {
         hexes = new Hex[width, height];
         units = new HashSet<Unit>();
-        hexUnitDictionary = new Dictionary<Hex, Unit>();
+        // hexUnitDictionary = new Dictionary<Hex, Unit>();
+        HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
+        GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
 
         for (int x = 0; x < width; x++)
         {
@@ -43,14 +47,15 @@ public class HexMap : MonoBehaviour
 
                 Vector3 inworldPos = hex.PositionFromCamera();
 
-                GameObject hexObject = Instantiate(
+                GameObject hexGameObject = Instantiate(
                     hexPrefab, 
                     inworldPos,
                     new Quaternion(),
                     transform
                 );
 
-                hex.HexGameObject = hexObject;
+                HexToGameObjectDictionary.Add(hex, hexGameObject);
+                GameObjectToHexDictionary.Add(hexGameObject, hex);
             }
         }
     }
@@ -61,7 +66,7 @@ public class HexMap : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                GameObject hexGameObject = hexes[x, y].HexGameObject;
+                GameObject hexGameObject = HexToGameObjectDictionary[hexes[x, y]];
                 hexGameObject.GetComponentInChildren<TextMesh>().text = x + ", " + y;                
             }
         }
@@ -75,7 +80,8 @@ public class HexMap : MonoBehaviour
             {
                 Hex hex = hexes[x, y];
                 Vector3 newPosition = hex.PositionFromCamera();
-                hex.HexGameObject.transform.position = newPosition;
+                GameObject hexGameObject = HexToGameObjectDictionary[hex];
+                hexGameObject.transform.position = newPosition;
             }
         }
     }
@@ -88,8 +94,9 @@ public class HexMap : MonoBehaviour
             {
                 Hex hex = hexes[x, y];
 
-                MeshRenderer meshRenderer = hex.HexGameObject.GetComponentInChildren<MeshRenderer>();
-                MeshFilter meshFilter = hex.HexGameObject.GetComponentInChildren<MeshFilter>();
+                GameObject hexGameObject = HexToGameObjectDictionary[hex];
+                MeshRenderer meshRenderer = hexGameObject.GetComponentInChildren<MeshRenderer>();
+                MeshFilter meshFilter = hexGameObject.GetComponentInChildren<MeshFilter>();
 
                 if (hex.Elevation < 0)
                 {
@@ -100,9 +107,9 @@ public class HexMap : MonoBehaviour
                 {
                     GameObject.Instantiate(
                         forestPrefab, 
-                        hex.HexGameObject.gameObject.transform.position,
+                        hexGameObject.gameObject.transform.position,
                         new Quaternion(),
-                        hex.HexGameObject.gameObject.transform
+                        hexGameObject.gameObject.transform
                         );
                 }
             }
@@ -180,24 +187,26 @@ public class HexMap : MonoBehaviour
         int q = hex.Q;
         int r = hex.R;
 
+        GameObject hexGameObject = HexToGameObjectDictionary[hex];
+
         Hex upRightHex = GetHexAt(q, r + 1);
         if ((upRightHex != null) && (upRightHex.Territory != territory))
         {
-            Transform upRightBorder = hex.HexGameObject.transform.GetChild(2).GetChild(0);
+            Transform upRightBorder = hexGameObject.transform.GetChild(2).GetChild(0);
             upRightBorder.gameObject.SetActive(true);
         }
         
         Hex right = GetHexAt(q + 1, r);
         if ((right != null) && (right.Territory != territory))
         {
-            Transform rightBorder = hex.HexGameObject.transform.GetChild(2).GetChild(1);
+            Transform rightBorder = hexGameObject.transform.GetChild(2).GetChild(1);
             rightBorder.gameObject.SetActive(true);
         }
 
         Hex downRight = GetHexAt(q + 1, r - 1);
         if ((downRight != null) && (downRight.Territory != territory))
         {
-            Transform downRightBorder = hex.HexGameObject.transform.GetChild(2).GetChild(2);
+            Transform downRightBorder = hexGameObject.transform.GetChild(2).GetChild(2);
             downRightBorder.gameObject.SetActive(true);
         }
     }
@@ -207,18 +216,20 @@ public class HexMap : MonoBehaviour
         Hex hex = GetHexAt(x, y);
         unit.SetHex(hex);
 
+        GameObject hexGameObject = HexToGameObjectDictionary[hex];
+
         GameObject unitGameObject = Instantiate(
                 prefab, 
-                hex.HexGameObject.transform.position, 
+                hexGameObject.transform.position, 
                 new Quaternion(), 
-                hex.HexGameObject.transform
+                hexGameObject.transform
                 );
 
         // Регистрируем функцию UnitView.OnUnitMoved() в событие Unit.UnitMoved 
         unit.UnitMoved += unitGameObject.GetComponent<UnitView>().OnUnitMoved;
         
         units.Add(unit);
-        unit.SetUnitGameObject(unitGameObject);
+        unit.UnitGameObject = unitGameObject;
     }
 
     public void DoTurn()

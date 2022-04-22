@@ -23,11 +23,12 @@ public class Hex
     public int Continent = -1;
     public int Territory = -1;
 
+    public int MovementCost = 1;
+
     public bool IsForest = false;
 
     HexMap hexMap;
     Unit unit;
-    public GameObject HexGameObject;
 
     public Hex(HexMap hexMap, int q, int r) {
         this.hexMap = hexMap;
@@ -95,6 +96,11 @@ public class Hex
         return position;
     }
 
+    public Unit GetUnit()
+    {
+        return unit;
+    }
+
     public void AddUnit(Unit unit)
     {
         this.unit = unit;
@@ -103,5 +109,19 @@ public class Hex
     public void RemoveUnit()
     {
         unit = null;
+    }
+
+    public void SetSelected(bool isSelected)
+    {
+		GameObject HexGameObject = hexMap.HexToGameObjectDictionary[this];
+        foreach(Transform border in HexGameObject.transform.GetChild(3))
+        {
+            border.gameObject.SetActive(isSelected);
+        }
+    }
+
+    public override string ToString()
+    {
+        return Q + ", "+ R;
     }
 }
