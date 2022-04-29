@@ -19,7 +19,7 @@ public class Hex
     // Heuristic cost to reach End Hex
     public int HCost;
     public int FCost;
-    public Hex CameFromHex = null;
+    public Hex CameFromHex;
 
     // static means that const belongs to the type, not the object
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;

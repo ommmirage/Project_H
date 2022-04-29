@@ -8,9 +8,9 @@ public class Pathfinding
     List<Hex> closedList;
     HexMap hexMap;
 
-    public Pathfinding()
+    public Pathfinding(HexMap hexMap)
     {
-        hexMap = GameObject.FindObjectOfType<HexMap>();
+        this.hexMap = hexMap;
     }
 
     public List<Hex> FindPath(int startX, int startY, int endX, int endY)
@@ -26,12 +26,14 @@ public class Pathfinding
             for (int y = 0; y < hexMap.Height; y++)
             {
                 Hex hex = hexMap.GetHexAt(x, y);
+                hex.GCost = int.MaxValue;
                 hex.CalculateFCost();
+                hex.CameFromHex = null;
             }
         }
 
         startHex.GCost = 0;
-        startHex.HCost = CalculateDistanceCost(startHex, endHex);
+        startHex.HCost = hexMap.Distance(startHex, endHex);
         startHex.CalculateFCost();
 
         while (openList.Count > 0)
@@ -44,6 +46,7 @@ public class Pathfinding
 
             openList.Remove(currentHex);
             closedList.Add(currentHex);
+            // Debug.Log(currentHex);
 
             foreach (Hex neighbor in GetNeighborList(currentHex))
             {
@@ -54,6 +57,8 @@ public class Pathfinding
 
                 // предварительный
                 int tentativeGCost = currentHex.GCost + hexMap.Distance(currentHex, neighbor);
+            // Debug.Log(neighbor + ", TentaniveGCost: " + tentativeGCost + ", GCost: " + neighbor.GCost);
+
                 if (tentativeGCost < neighbor.GCost)
                 {
                     neighbor.CameFromHex = currentHex;
@@ -70,16 +75,6 @@ public class Pathfinding
         }
 
         return null;
-    }
-
-    int CalculateDistanceCost(Hex a, Hex b)
-    {
-        int dq = Mathf.Abs(a.Q - b.Q);
-        if (dq > hexMap.Width / 2)
-        {
-            dq = dq - hexMap.Width / 2;
-        }
-        return ( + Mathf.Abs(a.R - b.R) + Mathf.Abs(a.S - b.S)) / 2;
     }
 
     Hex GetLowestFCostHex(List<Hex> pathHexList)
