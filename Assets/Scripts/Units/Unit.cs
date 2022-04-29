@@ -8,6 +8,8 @@ public class Unit
     protected int strength;
     protected int movement;
     protected int movementRemaining;
+    protected string type;
+    public string Type { get { return type; } }
     
     HexMap hexMap;
 

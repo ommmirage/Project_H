@@ -8,16 +8,13 @@ public class Pathfinding
     List<Hex> closedList;
     HexMap hexMap;
 
-    public Pathfinding(HexMap hexMap)
+    public Pathfinding()
     {
-        this.hexMap = hexMap;
+        hexMap = Object.FindObjectOfType<HexMap>();
     }
 
-    public List<Hex> FindPath(int startX, int startY, int endX, int endY)
+    public List<Hex> FindPath(string unitType, Hex startHex, Hex endHex)
     {
-        Hex startHex = hexMap.GetHexAt(startX, startY);
-        Hex endHex = hexMap.GetHexAt(endX, endY);
-
         openList = new List<Hex> { startHex };
         closedList = new List<Hex>();
 
@@ -29,6 +26,7 @@ public class Pathfinding
                 hex.GCost = int.MaxValue;
                 hex.CalculateFCost();
                 hex.CameFromHex = null;
+                hex.SetWalkable(unitType);
             }
         }
 
@@ -46,7 +44,6 @@ public class Pathfinding
 
             openList.Remove(currentHex);
             closedList.Add(currentHex);
-            // Debug.Log(currentHex);
 
             foreach (Hex neighbor in GetNeighborList(currentHex))
             {
@@ -54,10 +51,14 @@ public class Pathfinding
                 {
                     continue;
                 }
+                if (!neighbor.IsWalkable)
+                {
+                    closedList.Add(neighbor);
+                    continue;
+                }
 
                 // предварительный
                 int tentativeGCost = currentHex.GCost + hexMap.Distance(currentHex, neighbor);
-            // Debug.Log(neighbor + ", TentaniveGCost: " + tentativeGCost + ", GCost: " + neighbor.GCost);
 
                 if (tentativeGCost < neighbor.GCost)
                 {

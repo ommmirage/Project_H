@@ -56,9 +56,9 @@ public class MouseController : MonoBehaviour
 		}
 		else if ( Input.GetMouseButtonUp(1) && (selectedUnit != null) )
 		{
-			Pathfinding pathfinding = new Pathfinding(hexMap);
+			Pathfinding pathfinding = new Pathfinding();
 			Hex endHex = MouseToHex();
-			List<Hex> path = pathfinding.FindPath(selectedHex.Q, selectedHex.R, endHex.Q, endHex.R);
+			List<Hex> path = pathfinding.FindPath(selectedUnit.Type, selectedHex, endHex);
 			Debug.Log(path[0]);
 			Debug.Log(path[1]);
 			Debug.Log(path[2]);

@@ -20,6 +20,7 @@ public class Hex
     public int HCost;
     public int FCost;
     public Hex CameFromHex;
+    public bool IsWalkable = true;
 
     // static means that const belongs to the type, not the object
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
@@ -136,5 +137,17 @@ public class Hex
     public void CalculateFCost()
     {
         FCost = GCost + HCost;
+    }
+
+    public void SetWalkable(string unitType)
+    {
+        if (unitType.Equals("land"))
+        {
+            if (Elevation < 0)
+            {
+                IsWalkable = false;
+            }
+        }
+        // else if (unitType)
     }
 }

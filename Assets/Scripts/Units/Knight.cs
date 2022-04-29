@@ -10,5 +10,6 @@ public class Knight : Unit
         strength = 8;
         movement = 2;
         movementRemaining = movement;
+        type = "land";
     }
 }

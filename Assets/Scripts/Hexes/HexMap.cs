@@ -116,7 +116,7 @@ public class HexMap : MonoBehaviour
         }
 
         Unit knight = new Knight();
-        SpawnUnitAt(knight, unitKnightPrefab, 0, 0);
+        SpawnUnitAt(knight, unitKnightPrefab, 0, 10);
     }
 
     public Hex GetHexAt(int x, int y)
