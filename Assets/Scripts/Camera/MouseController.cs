@@ -54,9 +54,14 @@ public class MouseController : MonoBehaviour
 			lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
 			Update_CurrentFunc();
 		}
-		else if ( Input.GetMouseButton(1) && (selectedUnit != null) )
+		else if ( Input.GetMouseButtonUp(1) && (selectedUnit != null) )
 		{
-			Debug.Log("Show track");
+			Pathfinding pathfinding = new Pathfinding();
+			Hex endHex = MouseToHex();
+			List<Hex> path = pathfinding.FindPath(selectedHex.Q, selectedHex.R, endHex.Q, endHex.R);
+			Debug.Log(path[0]);
+			Debug.Log(path[1]);
+			Debug.Log(path[2]);
 		}
 	}
 
@@ -154,7 +159,6 @@ public class MouseController : MonoBehaviour
 			GameObject hexGameObject = hitInfo.transform.parent.gameObject;
 			Hex hex = hexMap.GameObjectToHexDictionary[hexGameObject];
 			return hex;
-			
 		}
 
 		return null;

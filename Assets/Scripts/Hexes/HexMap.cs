@@ -153,12 +153,12 @@ public class HexMap : MonoBehaviour
         return results.ToArray();
     }
 
-    public float Distance(Hex a, Hex b)
+    public int Distance(Hex a, Hex b)
     {
         int dq = Mathf.Abs(a.Q - b.Q);
         if (dq > width / 2)
         {
-            dq = width - dq;
+            dq = Mathf.Abs(width - dq);
         }
 
         int ds = Mathf.Abs(a.S - b.S);

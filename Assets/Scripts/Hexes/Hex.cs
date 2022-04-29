@@ -13,6 +13,14 @@ public class Hex
     public readonly int R;
     public readonly int S;
 
+    // Walking cost from the start hex
+    // Why max value?
+    public int GCost = int.MaxValue;
+    // Heuristic cost to reach End Hex
+    public int HCost;
+    public int FCost;
+    public Hex CameFromHex = null;
+
     // static means that const belongs to the type, not the object
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
@@ -123,5 +131,10 @@ public class Hex
     public override string ToString()
     {
         return Q + ", "+ R;
+    }
+
+    public void CalculateFCost()
+    {
+        FCost = GCost + HCost;
     }
 }
