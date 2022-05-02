@@ -58,7 +58,10 @@ public class MouseController : MonoBehaviour
 		{
 			Pathfinding pathfinding = new Pathfinding();
 			Hex endHex = MouseToHex();
-			List<Hex> path = pathfinding.FindPath(selectedUnit.Type, selectedHex, endHex);
+			// System.DateTime time1 = System.DateTime.UtcNow;
+			List<Hex> path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
+			// System.TimeSpan dt = System.DateTime.UtcNow - time1;
+			// Debug.Log(dt.Milliseconds);
 			Debug.Log(path[0]);
 			Debug.Log(path[1]);
 			Debug.Log(path[2]);

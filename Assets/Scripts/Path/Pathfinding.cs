@@ -8,12 +8,13 @@ public class Pathfinding
     List<Hex> closedList;
     HexMap hexMap;
 
+
     public Pathfinding()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
     }
 
-    public List<Hex> FindPath(string unitType, Hex startHex, Hex endHex)
+    public List<Hex> FindPath(Unit unit, Hex startHex, Hex endHex)
     {
         openList = new List<Hex> { startHex };
         closedList = new List<Hex>();
@@ -26,7 +27,7 @@ public class Pathfinding
                 hex.GCost = int.MaxValue;
                 hex.CalculateFCost();
                 hex.CameFromHex = null;
-                hex.SetWalkable(unitType);
+                hex.SetWalkable(unit.Type);
             }
         }
 
@@ -45,31 +46,35 @@ public class Pathfinding
             openList.Remove(currentHex);
             closedList.Add(currentHex);
 
-            foreach (Hex neighbor in GetNeighborList(currentHex))
+            foreach (Hex neighbour in GetNeighborList(currentHex))
             {
-                if (closedList.Contains(neighbor)) 
+                if (closedList.Contains(neighbour)) 
                 {
                     continue;
                 }
-                if (!neighbor.IsWalkable)
+                if (!neighbour.IsWalkable)
                 {
-                    closedList.Add(neighbor);
+                    closedList.Add(neighbour);
                     continue;
                 }
 
                 // предварительный
-                int tentativeGCost = currentHex.GCost + hexMap.Distance(currentHex, neighbor);
+                int tentativeGCost = currentHex.GCost + neighbour.MovementCost;
 
-                if (tentativeGCost < neighbor.GCost)
+                if (tentativeGCost < neighbour.GCost)
                 {
-                    neighbor.CameFromHex = currentHex;
-                    neighbor.GCost = tentativeGCost;
-                    neighbor.HCost = hexMap.Distance(neighbor, endHex);
-                    neighbor.CalculateFCost();
-
-                    if (!openList.Contains(neighbor))
+                    neighbour.CameFromHex = currentHex;
+                    neighbour.GCost = tentativeGCost;
+                    neighbour.HCost = hexMap.Distance(neighbour, endHex);
+                    neighbour.CalculateFCost();
+                    if (unit.movementRemaining == 0)
                     {
-                        openList.Add(neighbor);
+                        unit.movementRemaining = unit.Movement;
+                    }
+
+                    if (!openList.Contains(neighbour))
+                    {
+                        openList.Add(neighbour);
                     }
                 }
             }

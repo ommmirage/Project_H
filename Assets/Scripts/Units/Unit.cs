@@ -7,7 +7,8 @@ public class Unit
     protected int hp;
     protected int strength;
     protected int movement;
-    protected int movementRemaining;
+    public int Movement { get { return movement; } }
+    public int movementRemaining;
     protected string type;
     public string Type { get { return type; } }
     
@@ -23,6 +24,7 @@ public class Unit
     public Unit()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
+        movementRemaining = movement;
     }
 
     public void SetHex(Hex newHex)
