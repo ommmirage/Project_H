@@ -9,7 +9,7 @@ public class Knight : Unit
         hp = 100;
         strength = 8;
         movement = 2;
-        movementRemaining = movement;
+        MovementRemaining = movement;
         type = "land";
     }
 }

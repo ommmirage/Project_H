@@ -24,14 +24,14 @@ public class Pathfinding
             for (int y = 0; y < hexMap.Height; y++)
             {
                 Hex hex = hexMap.GetHexAt(x, y);
-                hex.GCost = int.MaxValue;
+                hex.MoveSpent = int.MaxValue;
                 hex.CalculateFCost();
                 hex.CameFromHex = null;
                 hex.SetWalkable(unit.Type);
             }
         }
 
-        startHex.GCost = 0;
+        startHex.MoveSpent = 0;
         startHex.HCost = hexMap.Distance(startHex, endHex);
         startHex.CalculateFCost();
 
@@ -58,18 +58,35 @@ public class Pathfinding
                     continue;
                 }
 
-                // предварительный
-                int tentativeGCost = currentHex.GCost + neighbour.MovementCost;
+                float moveSpent;
+                if (unit.MovementRemaining >= neighbour.MovementCost)
+                {
+                    moveSpent = neighbour.MovementCost / unit.Movement;
+                    Debug.Log("In forest." + neighbour.MovementCost);
+                }
+                else
+                {
+                    moveSpent = unit.MovementRemaining / unit.Movement;
+                }
+                unit.MovementRemaining -= neighbour.MovementCost;
 
-                if (tentativeGCost < neighbour.GCost)
+                if (unit.MovementRemaining <= 0)
+                {
+                    unit.MovementRemaining = unit.Movement;
+                }
+
+                // предварительный
+                float tentativeMoveSpent = currentHex.MoveSpent + moveSpent;
+
+                if (tentativeMoveSpent < neighbour.MoveSpent)
                 {
                     neighbour.CameFromHex = currentHex;
-                    neighbour.GCost = tentativeGCost;
+                    neighbour.MoveSpent = tentativeMoveSpent;
                     neighbour.HCost = hexMap.Distance(neighbour, endHex);
                     neighbour.CalculateFCost();
-                    if (unit.movementRemaining == 0)
+                    if (unit.MovementRemaining == 0)
                     {
-                        unit.movementRemaining = unit.Movement;
+                        unit.MovementRemaining = unit.Movement;
                     }
 
                     if (!openList.Contains(neighbour))

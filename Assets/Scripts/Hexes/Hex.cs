@@ -14,11 +14,10 @@ public class Hex
     public readonly int S;
 
     // Walking cost from the start hex
-    // Why max value?
-    public int GCost = int.MaxValue;
+    public float MoveSpent;
     // Heuristic cost to reach End Hex
-    public int HCost;
-    public int FCost;
+    public float HCost;
+    public float FCost;
     public Hex CameFromHex;
     public bool IsWalkable = true;
 
@@ -32,7 +31,7 @@ public class Hex
     public int Continent = -1;
     public int Territory = -1;
 
-    public int MovementCost = 1;
+    public float MovementCost = 1;
 
     public bool IsForest = false;
 
@@ -136,7 +135,7 @@ public class Hex
 
     public void CalculateFCost()
     {
-        FCost = GCost + HCost;
+        FCost = MoveSpent + HCost;
     }
 
     public void SetWalkable(string unitType)
