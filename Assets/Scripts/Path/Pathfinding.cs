@@ -48,7 +48,7 @@ public class Pathfinding
 
             foreach (Hex neighbour in GetNeighborList(currentHex))
             {
-                if (closedList.Contains(neighbour)) 
+                if (closedList.Contains(neighbour))
                 {
                     continue;
                 }
@@ -58,16 +58,7 @@ public class Pathfinding
                     continue;
                 }
 
-                float moveSpent;
-                if (unit.MovementRemaining >= neighbour.MovementCost)
-                {
-                    moveSpent = neighbour.MovementCost / unit.Movement;
-                    Debug.Log("In forest." + neighbour.MovementCost);
-                }
-                else
-                {
-                    moveSpent = unit.MovementRemaining / unit.Movement;
-                }
+                float moveSpent = HowManyMovesWillBeSpent(unit, neighbour);
                 unit.MovementRemaining -= neighbour.MovementCost;
 
                 if (unit.MovementRemaining <= 0)
@@ -98,6 +89,21 @@ public class Pathfinding
         }
 
         return null;
+    }
+
+    float HowManyMovesWillBeSpent(Unit unit, Hex neighbour)
+    {
+        float moveSpent;
+        if (unit.MovementRemaining >= neighbour.MovementCost)
+        {
+            moveSpent = neighbour.MovementCost / unit.Movement;
+        }
+        else
+        {
+            moveSpent = unit.MovementRemaining / unit.Movement;
+        }
+
+        return moveSpent;
     }
 
     Hex GetLowestFCostHex(List<Hex> pathHexList)

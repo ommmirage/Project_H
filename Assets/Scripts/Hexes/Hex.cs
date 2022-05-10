@@ -147,6 +147,5 @@ public class Hex
                 IsWalkable = false;
             }
         }
-        // else if (unitType)
     }
 }
