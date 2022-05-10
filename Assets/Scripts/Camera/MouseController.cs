@@ -21,6 +21,7 @@ public class MouseController : MonoBehaviour
 	Hex selectedHex = null;
 	HexMap hexMap;
 	Hex previousEndHex;
+	List<Hex> path = new List<Hex>();
 
 	void Start()
 	{
@@ -61,18 +62,16 @@ public class MouseController : MonoBehaviour
 			if (previousEndHex != endHex)
 			{
 				previousEndHex = endHex;
+				ClearPath(path);
 				Pathfinding pathfinding = new Pathfinding();
-				List<Hex> path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
-				BuildPath(path);
-				// Debug.Log(path[0] + "\n" + path[0].MoveSpent);
-				// Debug.Log(path[1] + "\n" + path[1].MoveSpent);
-				// Debug.Log(path[2] + "\n" + path[2].MoveSpent);
+				path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
+				DrawPath(path);
 			}
 			
 		}
 	}
 
-	void BuildPath(List<Hex> path)
+	void DrawPath(List<Hex> path)
 	{
 		for (int i = 0; i < path.Count - 1; i++)
 		{
@@ -84,26 +83,58 @@ public class MouseController : MonoBehaviour
 			{
 				if (nextHex.R > hex.R)
 				{
-					hexPath.GetChild(2).gameObject.SetActive(true);
-					nextHexPath.GetChild(3).gameObject.SetActive(true);
+					if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+					{
+						hexPath.GetChild(3).gameObject.SetActive(true);
+						nextHexPath.GetChild(2).gameObject.SetActive(true);
+					}
+					else
+					{
+						hexPath.GetChild(2).gameObject.SetActive(true);
+						nextHexPath.GetChild(3).gameObject.SetActive(true);
+					}
 				}
 				else
 				{
-					hexPath.GetChild(3).gameObject.SetActive(true);
-					nextHexPath.GetChild(2).gameObject.SetActive(true);
+					if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+					{
+						hexPath.GetChild(2).gameObject.SetActive(true);
+						nextHexPath.GetChild(3).gameObject.SetActive(true);
+					}
+					else
+					{
+						hexPath.GetChild(3).gameObject.SetActive(true);
+						nextHexPath.GetChild(2).gameObject.SetActive(true);
+					}
 				}
 			}
 			else if (nextHex.R == hex.R)
 			{
 				if (nextHex.Q > hex.Q)
 				{
-					hexPath.GetChild(4).gameObject.SetActive(true);
-					nextHexPath.GetChild(5).gameObject.SetActive(true);
+					if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+					{
+						hexPath.GetChild(5).gameObject.SetActive(true);
+						nextHexPath.GetChild(4).gameObject.SetActive(true);
+					}
+					else
+					{
+						hexPath.GetChild(4).gameObject.SetActive(true);
+						nextHexPath.GetChild(5).gameObject.SetActive(true);
+					}
 				}
 				else
 				{
-					hexPath.GetChild(5).gameObject.SetActive(true);
-					nextHexPath.GetChild(4).gameObject.SetActive(true);
+					if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+					{
+						hexPath.GetChild(4).gameObject.SetActive(true);
+						nextHexPath.GetChild(5).gameObject.SetActive(true);
+					}
+					else
+					{
+						hexPath.GetChild(5).gameObject.SetActive(true);
+						nextHexPath.GetChild(4).gameObject.SetActive(true);
+					}
 				}
 			}
 			else if (nextHex.Q < hex.Q)
@@ -131,6 +162,18 @@ public class MouseController : MonoBehaviour
 					hexPath.GetChild(1).gameObject.SetActive(true);
 					nextHexPath.GetChild(0).gameObject.SetActive(true);
 				}
+			}
+		}
+	}
+
+	void ClearPath(List<Hex> path)
+	{
+		foreach (Hex hex in path)
+		{
+			Transform hexPath = hexMap.HexToGameObjectDictionary[hex].gameObject.transform.GetChild(4);
+			foreach (Transform road in hexPath)
+			{
+				road.gameObject.SetActive(false);
 			}
 		}
 	}
