@@ -6,9 +6,9 @@ public class Unit
 {
     protected int hp;
     protected int strength;
-    protected float movement;
-    public float Movement { get { return movement; } }
-    public float MovementRemaining;
+    protected int moves;
+    public int Moves { get { return moves; } }
+    public int MovesRemaining;
     protected string type;
     public string Type { get { return type; } }
     
@@ -24,7 +24,7 @@ public class Unit
     public Unit()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
-        MovementRemaining = movement;
+        MovesRemaining = moves;
     }
 
     public void SetHex(Hex newHex)
@@ -52,7 +52,7 @@ public class Unit
             return;
         }
 
-        while (MovementRemaining > 0)
+        while (MovesRemaining > 0)
         {
             Hex newHex = path.Dequeue();
             SetHex(newHex);

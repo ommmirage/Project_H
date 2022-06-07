@@ -14,11 +14,12 @@ public class Hex
     public readonly int S;
 
     // Walking cost from the start hex
-    public float MoveSpent;
+    public float GCost;
     // Heuristic cost to reach End Hex
     public float HCost;
     public float FCost;
     public Hex CameFromHex;
+    public int turns;
     public bool IsWalkable = true;
 
     // static means that const belongs to the type, not the object
@@ -31,7 +32,7 @@ public class Hex
     public int Continent = -1;
     public int Territory = -1;
 
-    public float MovementCost = 1;
+    public int MovementCost = 1;
 
     public bool IsForest = false;
 
@@ -135,7 +136,7 @@ public class Hex
 
     public void CalculateFCost()
     {
-        FCost = MoveSpent + HCost;
+        FCost = GCost + HCost;
     }
 
     public void SetWalkable(string unitType)
