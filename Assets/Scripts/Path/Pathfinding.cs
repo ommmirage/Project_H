@@ -160,133 +160,169 @@ public class Pathfinding
 
     public void DrawPath(List<Hex> path, Unit unit)
 	{
+        int movesRemaining = unit.MovesRemaining;
+        int movesCount = 0;
+
 		for (int i = 0; i < path.Count - 1; i++)
 		{
 			Hex hex = path[i];
-			Hex nextHex = path[i + 1];
-            Transform hexPathLine;
-            Transform nextHexPathLine;
+            Hex nextHex = path[i + 1];
+            GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
+            Transform hexLongLines = hexGameObject.transform.GetChild(4);
 
-            int movesRemaining = unit.MovesRemaining;
-            
-            movesRemaining -= hex.MovementCost;
+            DrawLongLines(hex, nextHex, hexLongLines);
+
+            if (i > 0)
+                movesRemaining -= hex.MovementCost;
+
             if (movesRemaining <= 0)
             {
-                // Choose short lines
-                hexPathLine = hexMap.HexToGameObjectDictionary[hex].gameObject.transform.GetChild(5);
-                nextHexPathLine = hexMap.HexToGameObjectDictionary[nextHex].gameObject.transform.GetChild(5);
+                movesCount++;
+
+                DrawMovesCount(hexGameObject, hexLongLines, movesCount);
 
                 movesRemaining = unit.Moves;
             }
-            else
-            {
-                // Choose long lines
-                hexPathLine = hexMap.HexToGameObjectDictionary[hex].gameObject.transform.GetChild(4);
-                nextHexPathLine = hexMap.HexToGameObjectDictionary[nextHex].gameObject.transform.GetChild(4);
-            }
+        }
 
-            if (nextHex.Q == hex.Q)
+        movesCount++;
+        Hex lastHex = path[path.Count - 1];
+        DrawLastMove(movesCount, lastHex);
+	}
+
+    void DrawLastMove(int movesCount, Hex hex)
+    {
+        GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
+        Transform hexLongLines = hexGameObject.transform.GetChild(4);
+        
+        DrawMovesCount(hexGameObject, hexLongLines, movesCount);
+    }
+
+    void DrawMovesCount(GameObject hexGameObject, Transform hexLongLines, int movesCount)
+    {
+        Transform hexShortLines = hexGameObject.transform.GetChild(5);
+
+        for (int i = 0; i < 6; i++)
+        {
+            GameObject longLineGameObject = hexLongLines.GetChild(i).gameObject;
+            if (longLineGameObject.activeSelf)
             {
-                if (nextHex.R > hex.R)
-                {
-                    if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
-                    {
-                        hexPathLine.GetChild(3).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(2).gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hexPathLine.GetChild(2).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(3).gameObject.SetActive(true);
-                    }
-                }
-                else
-                {
-                    if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
-                    {
-                        hexPathLine.GetChild(2).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(3).gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hexPathLine.GetChild(3).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(2).gameObject.SetActive(true);
-                    }
-                }
+                longLineGameObject.SetActive(false);
+                hexShortLines.GetChild(i).gameObject.SetActive(true);
+
+                hexGameObject.transform.GetChild(6).gameObject.GetComponentInChildren<TextMesh>().text = movesCount.ToString();                
             }
-            else if (nextHex.R == hex.R)
-            {
-                if (nextHex.Q > hex.Q)
-                {
-                    if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
-                    {
-                        hexPathLine.GetChild(5).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(4).gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hexPathLine.GetChild(4).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(5).gameObject.SetActive(true);
-                    }
-                }
-                else
-                {
-                    if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
-                    {
-                        hexPathLine.GetChild(4).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(5).gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hexPathLine.GetChild(5).gameObject.SetActive(true);
-                        nextHexPathLine.GetChild(4).gameObject.SetActive(true);
-                    }
-                }
-            }
-            else if (nextHex.Q < hex.Q)
+        }
+    }
+
+    void DrawLongLines(Hex hex, Hex nextHex, Transform hexLongLines)
+    {
+        Transform nextHexLongLines = hexMap.HexToGameObjectDictionary[nextHex].gameObject.transform.GetChild(4);
+
+        if (nextHex.Q == hex.Q)
+        {
+            if (nextHex.R > hex.R)
             {
                 if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
                 {
-                    hexPathLine.GetChild(1).gameObject.SetActive(true);
-                    nextHexPathLine.GetChild(0).gameObject.SetActive(true);
+                    hexLongLines.GetChild(3).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(2).gameObject.SetActive(true);
                 }
                 else
                 {
-                    hexPathLine.GetChild(0).gameObject.SetActive(true);
-                    nextHexPathLine.GetChild(1).gameObject.SetActive(true);
+                    hexLongLines.GetChild(2).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(3).gameObject.SetActive(true);
                 }
             }
             else
             {
                 if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
                 {
-                    hexPathLine.GetChild(0).gameObject.SetActive(true);
-                    nextHexPathLine.GetChild(1).gameObject.SetActive(true);
+                    hexLongLines.GetChild(2).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(3).gameObject.SetActive(true);
                 }
                 else
                 {
-                    hexPathLine.GetChild(1).gameObject.SetActive(true);
-                    nextHexPathLine.GetChild(0).gameObject.SetActive(true);
+                    hexLongLines.GetChild(3).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(2).gameObject.SetActive(true);
                 }
             }
-		}
-	}
+        }
+        else if (nextHex.R == hex.R)
+        {
+            if (nextHex.Q > hex.Q)
+            {
+                if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+                {
+                    hexLongLines.GetChild(5).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(4).gameObject.SetActive(true);
+                }
+                else
+                {
+                    hexLongLines.GetChild(4).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(5).gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+                {
+                    hexLongLines.GetChild(4).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(5).gameObject.SetActive(true);
+                }
+                else
+                {
+                    hexLongLines.GetChild(5).gameObject.SetActive(true);
+                    nextHexLongLines.GetChild(4).gameObject.SetActive(true);
+                }
+            }
+        }
+        else if (nextHex.Q < hex.Q)
+        {
+            if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+            {
+                hexLongLines.GetChild(1).gameObject.SetActive(true);
+                nextHexLongLines.GetChild(0).gameObject.SetActive(true);
+            }
+            else
+            {
+                hexLongLines.GetChild(0).gameObject.SetActive(true);
+                nextHexLongLines.GetChild(1).gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            if ((hex.Q == 0 && nextHex.Q == 84) || (hex.Q == 84 && nextHex.Q == 0))
+            {
+                hexLongLines.GetChild(0).gameObject.SetActive(true);
+                nextHexLongLines.GetChild(1).gameObject.SetActive(true);
+            }
+            else
+            {
+                hexLongLines.GetChild(1).gameObject.SetActive(true);
+                nextHexLongLines.GetChild(0).gameObject.SetActive(true);
+            }
+        }
+    }
 
 	public void ClearPath(List<Hex> path)
 	{
 		foreach (Hex hex in path)
 		{
-			Transform longLines = hexMap.HexToGameObjectDictionary[hex].gameObject.transform.GetChild(4);
+            GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
+			Transform longLines = hexGameObject.transform.GetChild(4);
 			foreach (Transform road in longLines)
 			{
 				road.gameObject.SetActive(false);
 			}
 
-            Transform shortLines = hexMap.HexToGameObjectDictionary[hex].gameObject.transform.GetChild(5);
-			foreach (Transform road in longLines)
+            Transform shortLines = hexGameObject.transform.GetChild(5);
+			foreach (Transform road in shortLines)
 			{
 				road.gameObject.SetActive(false);
 			}
+
+            hexGameObject.transform.GetChild(6).gameObject.GetComponentInChildren<TextMesh>().text = "";
 		}
 	}
 }
