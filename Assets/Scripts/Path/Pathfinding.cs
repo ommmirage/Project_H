@@ -8,7 +8,6 @@ public class Pathfinding
     List<Hex> closedList;
     HexMap hexMap;
 
-
     public Pathfinding()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
@@ -55,6 +54,7 @@ public class Pathfinding
                 {
                     neighbour.CameFromHex = currentHex;
                     neighbour.GCost = currentHex.GCost + turnsToNeighbour;
+
                     neighbour.HCost = hexMap.Distance(neighbour, endHex);
                     neighbour.CalculateFCost();
                     if (unit.MovesRemaining == 0)
@@ -93,7 +93,7 @@ public class Pathfinding
         float turnsToNeighbour;
         if (movesRemaining >= neighbour.MovementCost)
         {
-            turnsToNeighbour = neighbour.MovementCost / moves;
+            turnsToNeighbour = (float)neighbour.MovementCost / moves;
         }
         else
         {
@@ -190,15 +190,15 @@ public class Pathfinding
         DrawLastMove(movesCount, lastHex);
 	}
 
-    void DrawLastMove(int movesCount, Hex hex)
+    void DrawLastMove(float movesCount, Hex hex)
     {
         GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
         Transform hexLongLines = hexGameObject.transform.GetChild(4);
-        
+
         DrawMovesCount(hexGameObject, hexLongLines, movesCount);
     }
 
-    void DrawMovesCount(GameObject hexGameObject, Transform hexLongLines, int movesCount)
+    void DrawMovesCount(GameObject hexGameObject, Transform hexLongLines, float movesCount)
     {
         Transform hexShortLines = hexGameObject.transform.GetChild(5);
 
