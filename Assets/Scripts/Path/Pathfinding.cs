@@ -210,9 +210,13 @@ public class Pathfinding
                 longLineGameObject.SetActive(false);
                 hexShortLines.GetChild(i).gameObject.SetActive(true);
 
-                hexGameObject.transform.GetChild(6).gameObject.GetComponentInChildren<TextMesh>().text = movesCount.ToString();                
+                GameObject unitMovesGameObject = hexGameObject.transform.GetChild(6).gameObject;
+                unitMovesGameObject.GetComponentInChildren<TextMesh>().text = movesCount.ToString();
+                unitMovesGameObject.transform.GetChild(0).gameObject.SetActive(true);           
             }
         }
+
+        // DrawCircle(hexGameObject);
     }
 
     void DrawLongLines(Hex hex, Hex nextHex, Transform hexLongLines)
@@ -322,7 +326,9 @@ public class Pathfinding
 				road.gameObject.SetActive(false);
 			}
 
-            hexGameObject.transform.GetChild(6).gameObject.GetComponentInChildren<TextMesh>().text = "";
+            GameObject unitMovesGameObject = hexGameObject.transform.GetChild(6).gameObject;
+            unitMovesGameObject.GetComponentInChildren<TextMesh>().text = "";
+            unitMovesGameObject.transform.GetChild(0).gameObject.SetActive(false);
 		}
 	}
 }
