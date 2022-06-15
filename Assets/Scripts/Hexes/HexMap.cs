@@ -13,27 +13,20 @@ public class HexMap : MonoBehaviour
     public int Height { get { return height; } }
 
     [SerializeField] Material matOcean;
-    // [SerializeField] Material matPlains;
     [SerializeField] Material matGrasslands;
-    // [SerializeField] Material matMountains;
     [SerializeField] GameObject forestPrefab;
 
     [SerializeField] GameObject unitKnightPrefab;
 
     Hex[,] hexes;
     HashSet<Unit> units;
-    // Dictionary<Hex, Unit> hexUnitDictionary;
     public Dictionary<Hex, GameObject> HexToGameObjectDictionary;
     public Dictionary<GameObject, Hex> GameObjectToHexDictionary;
-
-    // float MountainHeight = 1.3f;
-    // float HillHeight = 0.75f;
 
     protected void GenerateTiles()
     {
         hexes = new Hex[width, height];
         units = new HashSet<Unit>();
-        // hexUnitDictionary = new Dictionary<Hex, Unit>();
         HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
         GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
 

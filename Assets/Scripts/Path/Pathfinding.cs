@@ -17,6 +17,7 @@ public class Pathfinding
     {
         openList = new List<Hex> { startHex };
         closedList = new List<Hex>();
+        Hex lastHex = startHex;
 
         PrepareHexMap(unit.Type);
 
@@ -67,10 +68,12 @@ public class Pathfinding
                         openList.Add(neighbour);
                     }
                 }
+
+                lastHex = currentHex;
             }
         }
 
-        return null;
+        return CalculatePath(lastHex);
     }
 
     void PrepareHexMap(string unitType)
@@ -211,12 +214,15 @@ public class Pathfinding
                 hexShortLines.GetChild(i).gameObject.SetActive(true);
 
                 GameObject unitMovesGameObject = hexGameObject.transform.GetChild(6).gameObject;
-                unitMovesGameObject.GetComponentInChildren<TextMesh>().text = movesCount.ToString();
+                TextMesh textMesh = unitMovesGameObject.GetComponentInChildren<TextMesh>();
+                textMesh.text = movesCount.ToString();
+                if (movesCount >= 10)
+                {
+                    textMesh.characterSize = 0.55f;
+                }
                 unitMovesGameObject.transform.GetChild(0).gameObject.SetActive(true);           
             }
         }
-
-        // DrawCircle(hexGameObject);
     }
 
     void DrawLongLines(Hex hex, Hex nextHex, Transform hexLongLines)
