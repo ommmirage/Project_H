@@ -59,15 +59,21 @@ public class MouseController : MonoBehaviour
 		else if (selectedUnit != null)
 		{
 			Hex endHex = MouseToHex();
-			if (previousEndHex != endHex)
+			Pathfinding pathfinding = new Pathfinding();
+
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				selectedUnit = null;
+				selectedHex.SetSelected(false);
+				pathfinding.ClearPath(path);
+			}
+			else if (previousEndHex != endHex)
 			{
 				previousEndHex = endHex;
-				Pathfinding pathfinding = new Pathfinding();
 				pathfinding.ClearPath(path);
 				path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
 				pathfinding.DrawPath(path, selectedUnit);
 			}
-			
 		}
 	}
 
@@ -141,10 +147,10 @@ public class MouseController : MonoBehaviour
 
     void SelectUnit()
 	{
-		if (selectedHex != null)
-		{
-			selectedHex.SetSelected(false);
-		}
+		// if (selectedHex != null)
+		// {
+		// 	selectedHex.SetSelected(false);
+		// }
 
 		Hex hex = MouseToHex();
 		selectedUnit = hex.GetUnit();
