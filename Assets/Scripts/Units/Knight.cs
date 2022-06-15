@@ -8,7 +8,8 @@ public class Knight : Unit
     {
         hp = 100;
         strength = 8;
-        moves = 2;
+        moves = 3;
+        navalMoves = 2;
         MovesRemaining = moves;
         type = "land";
     }

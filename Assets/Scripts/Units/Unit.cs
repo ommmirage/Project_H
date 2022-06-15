@@ -8,7 +8,10 @@ public class Unit
     protected int strength;
     protected int moves;
     public int Moves { get { return moves; } }
+    protected int navalMoves;
+    public int NavalMoves { get { return navalMoves; } }
     public int MovesRemaining;
+    public int NavalMovesRemaining;
     protected string type;
     public string Type { get { return type; } }
     

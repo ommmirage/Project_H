@@ -21,6 +21,7 @@ public class Hex
     public Hex CameFromHex;
     public int turns;
     public bool IsWalkable = true;
+    public bool Embark = false;
 
     // static means that const belongs to the type, not the object
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;

@@ -42,14 +42,30 @@ public class Pathfinding
                 {
                     continue;
                 }
-                if (!neighbour.IsWalkable)
-                {
-                    closedList.Add(neighbour);
-                    continue;
-                }
 
                 int movesRemaining = unit.MovesRemaining;
-                float turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
+                float turnsToNeighbour = 1;
+
+                if (neighbour.IsWalkable)
+                {
+                    turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
+                }
+                else
+                {
+                    if (neighbour.Elevation < 0)
+                    {
+                        if (currentHex.IsWalkable)
+                        {
+                            movesRemaining = unit.NavalMoves;
+                            neighbour.Embark = true;
+                        }
+                    }
+                    else
+                    {
+                        closedList.Add(neighbour);
+                        continue;
+                    }
+                }
 
                 if (currentHex.GCost + turnsToNeighbour < neighbour.GCost)
                 {
@@ -177,6 +193,10 @@ public class Pathfinding
 
             if (i > 0)
                 movesRemaining -= hex.MovementCost;
+            if (hex.Embark)
+            {
+                movesRemaining = 0;
+            }
 
             if (movesRemaining <= 0)
             {
@@ -184,7 +204,14 @@ public class Pathfinding
 
                 DrawMovesCount(hexGameObject, hexLongLines, movesCount);
 
-                movesRemaining = unit.Moves;
+                if (hex.Elevation > 0)
+                {
+                    movesRemaining = unit.Moves;
+                }
+                else
+                {
+                    movesRemaining = unit.NavalMoves;
+                }
             }
         }
 
