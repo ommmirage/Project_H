@@ -19,7 +19,7 @@ public class Pathfinding
         closedList = new List<Hex>();
         Hex lastHex = startHex;
 
-        PrepareHexMap(unit.Type);
+        PrepareHexMap(unit);
 
         startHex.GCost = 0;
         startHex.HCost = hexMap.Distance(startHex, endHex);
@@ -39,34 +39,24 @@ public class Pathfinding
             foreach (Hex neighbour in GetNeighborList(currentHex))
             {
                 if (closedList.Contains(neighbour))
+                    continue;
+
+                if (!neighbour.IsWalkable)
                 {
+                    closedList.Add(neighbour);
                     continue;
                 }
 
                 int movesRemaining = unit.MovesRemaining;
                 float turnsToNeighbour = 1;
 
-                if (neighbour.IsWalkable)
+                turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
+                if (neighbour.Elevation < 0 && unit.Type == "land" && currentHex.Elevation > 0)
                 {
-                    turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
+                    movesRemaining = unit.NavalMoves;
+                    neighbour.Embark = true;
                 }
-                else
-                {
-                    if (neighbour.Elevation < 0)
-                    {
-                        if (currentHex.IsWalkable)
-                        {
-                            movesRemaining = unit.NavalMoves;
-                            neighbour.Embark = true;
-                        }
-                    }
-                    else
-                    {
-                        closedList.Add(neighbour);
-                        continue;
-                    }
-                }
-
+                    
                 if (currentHex.GCost + turnsToNeighbour < neighbour.GCost)
                 {
                     neighbour.CameFromHex = currentHex;
@@ -92,7 +82,7 @@ public class Pathfinding
         return CalculatePath(lastHex);
     }
 
-    void PrepareHexMap(string unitType)
+    void PrepareHexMap(Unit unit)
     {
         for (int x = 0; x < hexMap.Width; x++)
         {
@@ -102,7 +92,6 @@ public class Pathfinding
                 hex.GCost = int.MaxValue;
                 hex.FCost = int.MaxValue;
                 hex.CameFromHex = null;
-                hex.SetWalkable(unitType);
             }
         }
     }
@@ -193,10 +182,9 @@ public class Pathfinding
 
             if (i > 0)
                 movesRemaining -= hex.MovementCost;
+
             if (hex.Embark)
-            {
                 movesRemaining = 0;
-            }
 
             if (movesRemaining <= 0)
             {

@@ -11,6 +11,7 @@ public class Knight : Unit
         moves = 3;
         navalMoves = 2;
         MovesRemaining = moves;
+        IsEmbarked = false;
         type = "land";
     }
 }

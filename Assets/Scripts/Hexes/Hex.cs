@@ -139,15 +139,4 @@ public class Hex
     {
         FCost = GCost + HCost;
     }
-
-    public void SetWalkable(string unitType)
-    {
-        if (unitType.Equals("land"))
-        {
-            if (Elevation < 0)
-            {
-                IsWalkable = false;
-            }
-        }
-    }
 }

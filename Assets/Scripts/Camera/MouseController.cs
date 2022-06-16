@@ -57,27 +57,54 @@ public class MouseController : MonoBehaviour
 			Update_CurrentFunc();
 		}
 		else if (selectedUnit != null)
-		{
-			Hex endHex = MouseToHex();
-			Pathfinding pathfinding = new Pathfinding();
+        {
+            ProceedSelectedUnit();
+        }
+    }
 
-			if (Input.GetKeyDown(KeyCode.Escape))
+    void ProceedSelectedUnit()
+    {
+        Hex endHex = MouseToHex();
+        Pathfinding pathfinding = new Pathfinding();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            selectedUnit = null;
+            selectedHex.SetSelected(false);
+            pathfinding.ClearPath(path);
+			return;
+        }
+
+        if (previousEndHex != endHex)
+            CursorMovedToAnotherHex(endHex, pathfinding);
+
+		if (Input.GetMouseButton(1))
+		{
+			MoveUnit();
+		}
+    }
+
+	void MoveUnit()
+	{
+		if (selectedUnit.MovesRemaining > 0)
+		{
+			foreach (Hex hex in path)
 			{
-				selectedUnit = null;
-				selectedHex.SetSelected(false);
-				pathfinding.ClearPath(path);
-			}
-			else if (previousEndHex != endHex)
-			{
-				previousEndHex = endHex;
-				pathfinding.ClearPath(path);
-				path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
-				pathfinding.DrawPath(path, selectedUnit);
+				selectedUnit.SetHex(hex);
+				selectedUnit.Move();
 			}
 		}
 	}
 
-	void Update_CameraDrag()
+    void CursorMovedToAnotherHex(Hex endHex, Pathfinding pathfinding)
+    {
+        previousEndHex = endHex;
+        pathfinding.ClearPath(path);
+        path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
+        pathfinding.DrawPath(path, selectedUnit);
+    }
+
+    void Update_CameraDrag()
     {
 		if (Input.GetMouseButtonUp(0))
 		{
@@ -147,11 +174,6 @@ public class MouseController : MonoBehaviour
 
     void SelectUnit()
 	{
-		// if (selectedHex != null)
-		// {
-		// 	selectedHex.SetSelected(false);
-		// }
-
 		Hex hex = MouseToHex();
 		selectedUnit = hex.GetUnit();
 		if (selectedUnit != null)

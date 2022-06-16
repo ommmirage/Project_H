@@ -12,6 +12,7 @@ public class Unit
     public int NavalMoves { get { return navalMoves; } }
     public int MovesRemaining;
     public int NavalMovesRemaining;
+    public bool IsEmbarked;
     protected string type;
     public string Type { get { return type; } }
     
@@ -62,8 +63,8 @@ public class Unit
         }
     }
 
-    // public float TurnsToEnterHex(Hex hex, float turnsToDate)
-    // {
-    //     float turnsRemaining = movementRemaining / movement;
-    // }
+    public void Move()
+    {
+
+    }
 }
