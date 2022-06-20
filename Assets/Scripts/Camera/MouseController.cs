@@ -58,45 +58,41 @@ public class MouseController : MonoBehaviour
 		}
 		else if (unit != null)
         {
-			if (Input.GetMouseButton(1))
-			{
-            	ProceedSelectedUnit();
-			}
-			else if (Input.GetMouseButtonUp(1))
-			{
-				if (unit.FinishedMove)
-				{
-					// pathfinding.ClearPath(path);
-					// path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
-					// pathfinding.DrawPath(path, unit);
-				}
-				else
-				{
-					unit.Move(path);
-				}
-			}
+			ProceedUnit();
         }
     }
 
-    void ProceedSelectedUnit()
-    {
-        Hex endHex = MouseToHex();
+	void ProceedUnit()
+	{
+		Hex endHex = MouseToHex();
         Pathfinding pathfinding = new Pathfinding();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetMouseButton(1))
+        {
+            if ((!unit.FinishedMove) && (previousEndHex != endHex))
+                RedrawPath(endHex, pathfinding);
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            if (unit.FinishedMove)
+            {
+                pathfinding.ClearPath(path);
+                path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
+                pathfinding.DrawPath(path, unit);
+            }
+            else
+            {
+                unit.Move(path);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
             unit = null;
             selectedHex.SetSelected(false);
             pathfinding.ClearPath(path);
-			return;
+            return;
         }
-
-		
-		if ( (!unit.FinishedMove) && (previousEndHex != endHex))
-		{
-            RedrawPath(endHex, pathfinding);
-		}
-    }
+	}
 
     void RedrawPath(Hex endHex, Pathfinding pathfinding)
     {
