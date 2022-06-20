@@ -17,7 +17,7 @@ public class MouseController : MonoBehaviour
 	delegate void UpdateFunc();
 	UpdateFunc Update_CurrentFunc;
 
-	Unit selectedUnit = null;
+	Unit unit = null;
 	Hex selectedHex = null;
 	HexMap hexMap;
 	Hex previousEndHex;
@@ -56,9 +56,25 @@ public class MouseController : MonoBehaviour
 			lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
 			Update_CurrentFunc();
 		}
-		else if ( (selectedUnit != null) && (!selectedUnit.IsOnPath) )
+		else if (unit != null)
         {
-            ProceedSelectedUnit();
+			if (Input.GetMouseButton(1))
+			{
+            	ProceedSelectedUnit();
+			}
+			else if (Input.GetMouseButtonUp(1))
+			{
+				if (unit.FinishedMove)
+				{
+					// pathfinding.ClearPath(path);
+					// path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
+					// pathfinding.DrawPath(path, unit);
+				}
+				else
+				{
+					unit.Move(path);
+				}
+			}
         }
     }
 
@@ -69,32 +85,25 @@ public class MouseController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            selectedUnit = null;
+            unit = null;
             selectedHex.SetSelected(false);
             pathfinding.ClearPath(path);
 			return;
         }
 
-        if (previousEndHex != endHex)
-            CursorMovedToAnotherHex(endHex, pathfinding);
-
-		if (Input.GetMouseButton(1))
+		
+		if ( (!unit.FinishedMove) && (previousEndHex != endHex))
 		{
-			if (selectedUnit.IsOnPath)
-			{
-				
-			}
-			selectedUnit.Move(path);
-			selectedUnit.IsOnPath = true;
+            RedrawPath(endHex, pathfinding);
 		}
     }
 
-    void CursorMovedToAnotherHex(Hex endHex, Pathfinding pathfinding)
+    void RedrawPath(Hex endHex, Pathfinding pathfinding)
     {
         previousEndHex = endHex;
         pathfinding.ClearPath(path);
-        path = pathfinding.FindPath(selectedUnit, selectedHex, endHex);
-        pathfinding.DrawPath(path, selectedUnit);
+        path = pathfinding.FindPath(unit, selectedHex, endHex);
+        pathfinding.DrawPath(path, unit);
     }
 
     void Update_CameraDrag()
@@ -168,8 +177,8 @@ public class MouseController : MonoBehaviour
     void SelectUnit()
 	{
 		Hex hex = MouseToHex();
-		selectedUnit = hex.GetUnit();
-		if (selectedUnit != null)
+		unit = hex.GetUnit();
+		if (unit != null)
 		{
 			selectedHex = hex;
 			hex.SetSelected(true);

@@ -16,14 +16,14 @@ public class Unit
     protected string type;
     public string Type { get { return type; } }
     public bool FinishedMove = false;
-    public bool IsOnPath = false;
+    // public bool HasPathDrawn = false;
     
     HexMap hexMap;
 
     public delegate void UnitMovedDelegate(Hex oldHex, Hex newHex);
     public event UnitMovedDelegate UnitMoved;
 
-    Hex hex;
+    private Hex hex;
     public GameObject UnitGameObject;
     Queue<Hex> path;
 
@@ -31,6 +31,11 @@ public class Unit
     {
         hexMap = Object.FindObjectOfType<HexMap>();
         MovesRemaining = moves;
+    }
+
+    public Hex GetHex()
+    {
+        return hex;
     }
 
     public void SetHex(Hex newHex)
@@ -91,7 +96,10 @@ public class Unit
         for (int i = 1; i < path.Count; i++)
         {
             if (MovesRemaining <= 0)
+            {
+                FinishedMove = true;
                 break;
+            }
 
             hex = path[i];
             MovesRemaining -= hex.MovementCost;
@@ -100,7 +108,6 @@ public class Unit
                 MovesRemaining = 0;
 
             SetHex(hex);
-            FinishedMove = true;
             hex.Clear();
         }
 
