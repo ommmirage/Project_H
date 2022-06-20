@@ -49,7 +49,7 @@ public class Unit
         // Объявляем всем зарегистрированным в событии делегатам,
         // что оно произошло. В данном случае, у нас 
         // зарегистрирована функция UnitView.OnUnitMoved().
-        // Выполняем её.
+        // Она выполнится в HexMap OnUnitMoved().
         if (UnitMoved != null)
         {
             UnitMoved(oldHex, newHex);
@@ -83,26 +83,30 @@ public class Unit
             // FinishedMove = false;
     // }
 
-    public void Move(List<Hex> path)
+    public void Move(List<Hex> pathList)
     {   
-        Hex hex = path[0];
+        Queue<Hex> path = new Queue<Hex>(pathList);
 
         if (MovesRemaining > 0)
         {
+            path.Dequeue();
+
             hex.SetSelected(false);
             hex.Clear();
         }
 
-        for (int i = 1; i < path.Count; i++)
+        while (path.Count > 0)
         {
             if (MovesRemaining <= 0)
             {
+                Debug.Log("Finished Move");
                 FinishedMove = true;
                 break;
             }
 
-            hex = path[i];
+            hex = path.Dequeue();
             MovesRemaining -= hex.MovementCost;
+            // Debug.Log(MovesRemaining);
 
             if (hex.Embark)
                 MovesRemaining = 0;

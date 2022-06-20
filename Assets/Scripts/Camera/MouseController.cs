@@ -98,7 +98,7 @@ public class MouseController : MonoBehaviour
     {
         previousEndHex = endHex;
         pathfinding.ClearPath(path);
-        path = pathfinding.FindPath(unit, selectedHex, endHex);
+        path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
         pathfinding.DrawPath(path, unit);
     }
 

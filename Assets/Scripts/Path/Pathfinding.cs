@@ -64,9 +64,9 @@ public class Pathfinding
 
                     neighbour.HCost = hexMap.Distance(neighbour, endHex);
                     neighbour.CalculateFCost();
-                    if (unit.MovesRemaining == 0)
+                    if (movesRemaining == 0)
                     {
-                        unit.MovesRemaining = unit.Moves;
+                        movesRemaining = unit.Moves;
                     }
 
                     if (!openList.Contains(neighbour))
