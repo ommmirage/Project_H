@@ -63,25 +63,47 @@ public class Unit
     //         Hex newHex = path.Dequeue();
     //         SetHex(newHex);
     //     }
+
+            // if (movesRemaining <= 0)
+            //     {
+            //         if (hex.Elevation > 0)
+            //         {
+            //             movesRemaining = unit.Moves;
+            //         }
+            //         else
+            //         {
+            //             movesRemaining = unit.NavalMoves;
+            //         }
+            //     }
+            // FinishedMove = false;
     // }
 
     public void Move(List<Hex> path)
     {   
-        path[0].SetSelected(false);
+        Hex hex = path[0];
 
-        foreach (Hex hex in path)
+        if (MovesRemaining > 0)
         {
-            SetHex(hex);
-            GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
-            Transform circleAroundTurn1 = hexGameObject.transform.GetChild(6).transform.GetChild(0);
-            if (circleAroundTurn1.gameObject.activeSelf)
-            {
-                FinishedMove = true;
-                hex.Clear();
-                hex.SetSelected(true);
-                return;
-            }
+            hex.SetSelected(false);
             hex.Clear();
         }
+
+        for (int i = 1; i < path.Count; i++)
+        {
+            if (MovesRemaining <= 0)
+                break;
+
+            hex = path[i];
+            MovesRemaining -= hex.MovementCost;
+
+            if (hex.Embark)
+                MovesRemaining = 0;
+
+            SetHex(hex);
+            FinishedMove = true;
+            hex.Clear();
+        }
+
+        hex.SetSelected(true);
     }
 }

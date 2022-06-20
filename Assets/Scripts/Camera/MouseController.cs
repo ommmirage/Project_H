@@ -80,6 +80,10 @@ public class MouseController : MonoBehaviour
 
 		if (Input.GetMouseButton(1))
 		{
+			if (selectedUnit.IsOnPath)
+			{
+				
+			}
 			selectedUnit.Move(path);
 			selectedUnit.IsOnPath = true;
 		}
