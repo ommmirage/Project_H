@@ -15,6 +15,8 @@ public class Unit
     public bool IsEmbarked;
     protected string type;
     public string Type { get { return type; } }
+    public bool FinishedMove = false;
+    public bool IsOnPath = false;
     
     HexMap hexMap;
 
@@ -49,22 +51,37 @@ public class Unit
         }
     }
 
-    public void DoTurn()
-    {
-        if ( path == null || path.Count == 0 )
+    // public void DoTurn()
+    // {
+    //     if ( path == null || path.Count == 0 )
+    //     {
+    //         return;
+    //     }
+
+    //     while (MovesRemaining > 0)
+    //     {
+    //         Hex newHex = path.Dequeue();
+    //         SetHex(newHex);
+    //     }
+    // }
+
+    public void Move(List<Hex> path)
+    {   
+        path[0].SetSelected(false);
+
+        foreach (Hex hex in path)
         {
-            return;
+            SetHex(hex);
+            GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
+            Transform circleAroundTurn1 = hexGameObject.transform.GetChild(6).transform.GetChild(0);
+            if (circleAroundTurn1.gameObject.activeSelf)
+            {
+                FinishedMove = true;
+                hex.Clear();
+                hex.SetSelected(true);
+                return;
+            }
+            hex.Clear();
         }
-
-        while (MovesRemaining > 0)
-        {
-            Hex newHex = path.Dequeue();
-            SetHex(newHex);
-        }
-    }
-
-    public void Move()
-    {
-
     }
 }

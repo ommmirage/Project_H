@@ -333,24 +333,9 @@ public class Pathfinding
 	public void ClearPath(List<Hex> path)
 	{
 		foreach (Hex hex in path)
-		{
-            GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
-			Transform longLines = hexGameObject.transform.GetChild(4);
-			foreach (Transform road in longLines)
-			{
-				road.gameObject.SetActive(false);
-			}
-
-            Transform shortLines = hexGameObject.transform.GetChild(5);
-			foreach (Transform road in shortLines)
-			{
-				road.gameObject.SetActive(false);
-			}
-
-            GameObject unitMovesGameObject = hexGameObject.transform.GetChild(6).gameObject;
-            unitMovesGameObject.GetComponentInChildren<TextMesh>().text = "";
-            unitMovesGameObject.transform.GetChild(0).gameObject.SetActive(false);
-		}
-	}
+        {
+            hex.Clear();
+        }
+    }
 }
 

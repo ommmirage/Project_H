@@ -56,7 +56,7 @@ public class MouseController : MonoBehaviour
 			lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
 			Update_CurrentFunc();
 		}
-		else if (selectedUnit != null)
+		else if ( (selectedUnit != null) && (!selectedUnit.IsOnPath) )
         {
             ProceedSelectedUnit();
         }
@@ -80,21 +80,10 @@ public class MouseController : MonoBehaviour
 
 		if (Input.GetMouseButton(1))
 		{
-			MoveUnit();
+			selectedUnit.Move(path);
+			selectedUnit.IsOnPath = true;
 		}
     }
-
-	void MoveUnit()
-	{
-		if (selectedUnit.MovesRemaining > 0)
-		{
-			foreach (Hex hex in path)
-			{
-				selectedUnit.SetHex(hex);
-				selectedUnit.Move();
-			}
-		}
-	}
 
     void CursorMovedToAnotherHex(Hex endHex, Pathfinding pathfinding)
     {

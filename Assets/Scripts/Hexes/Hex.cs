@@ -124,10 +124,7 @@ public class Hex
     public void SetSelected(bool isSelected)
     {
 		GameObject HexGameObject = hexMap.HexToGameObjectDictionary[this];
-        foreach(Transform border in HexGameObject.transform.GetChild(3))
-        {
-            border.gameObject.SetActive(isSelected);
-        }
+        HexGameObject.transform.GetChild(3).gameObject.SetActive(isSelected);
     }
 
     public override string ToString()
@@ -138,5 +135,25 @@ public class Hex
     public void CalculateFCost()
     {
         FCost = GCost + HCost;
+    }
+
+    public void Clear()
+    {
+        GameObject hexGameObject = hexMap.HexToGameObjectDictionary[this].gameObject;
+        Transform longLines = hexGameObject.transform.GetChild(4);
+        foreach (Transform road in longLines)
+        {
+            road.gameObject.SetActive(false);
+        }
+
+        Transform shortLines = hexGameObject.transform.GetChild(5);
+        foreach (Transform road in shortLines)
+        {
+            road.gameObject.SetActive(false);
+        }
+
+        GameObject unitMovesGameObject = hexGameObject.transform.GetChild(6).gameObject;
+        unitMovesGameObject.GetComponentInChildren<TextMesh>().text = "";
+        unitMovesGameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 }
