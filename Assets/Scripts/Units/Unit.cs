@@ -11,7 +11,7 @@ public class Unit
     protected int navalMoves;
     public int NavalMoves { get { return navalMoves; } }
     public int MovesRemaining;
-    public int NavalMovesRemaining;
+    // public int NavalMovesRemaining;
     public bool IsEmbarked;
     protected string type;
     public string Type { get { return type; } }
@@ -22,14 +22,13 @@ public class Unit
     public delegate void UnitMovedDelegate(Hex oldHex, Hex newHex);
     public event UnitMovedDelegate UnitMoved;
 
-    private Hex hex;
+    protected Hex hex;
     public GameObject UnitGameObject;
     private LinkedList<Hex> path = null;
 
     public Unit()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
-        MovesRemaining = moves;
     }
 
     public Hex GetHex()
@@ -130,5 +129,17 @@ public class Unit
 
         path.AddFirst(hex);
         return hex;
+    }
+
+    public void SetMovesRemaining()
+    {
+        if (hex.Elevation > 0)
+        {
+            MovesRemaining = moves;
+        }
+        else
+        {
+            MovesRemaining = navalMoves;
+        }
     }
 }

@@ -51,15 +51,19 @@ public class Pathfinding
                 float turnsToNeighbour = 1;
 
                 turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
-                if (neighbour.Elevation < 0 && unit.Type == "land" && currentHex.Elevation > 0)
+
+                if (unit.Type == "land")
                 {
-                    movesRemaining = unit.NavalMoves;
-                    neighbour.Embark = true;
-                }
-                else if (neighbour.Elevation > 0 && unit.Type == "land" && currentHex.Elevation < 0)
-                {
-                    movesRemaining = unit.Moves;
-                    neighbour.Embark = true;
+                    if ( (currentHex.Elevation > 0) && (neighbour.Elevation < 0) )
+                    {
+                        movesRemaining = unit.NavalMoves;
+                        neighbour.Embark = true;
+                    }
+                    else if ( (currentHex.Elevation < 0) && (neighbour.Elevation > 0))
+                    {
+                        movesRemaining = unit.Moves;
+                        neighbour.Embark = true;
+                    }
                 }
                     
                 if (currentHex.GCost + turnsToNeighbour < neighbour.GCost)
@@ -69,15 +73,12 @@ public class Pathfinding
 
                     neighbour.HCost = hexMap.Distance(neighbour, endHex);
                     neighbour.CalculateFCost();
+
                     if (movesRemaining == 0)
-                    {
                         movesRemaining = unit.Moves;
-                    }
 
                     if (!openList.Contains(neighbour))
-                    {
                         openList.Add(neighbour);
-                    }
                 }
 
                 lastHex = currentHex;

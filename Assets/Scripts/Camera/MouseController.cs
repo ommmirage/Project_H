@@ -85,6 +85,10 @@ public class MouseController : MonoBehaviour
         {
             Hex newSelectedHex = unit.Move(path);
 			ChangeSelectedHex(newSelectedHex);
+			path = unit.GetPath();
+
+			if (path != null)
+				pathfinding.DrawPath(path, unit);
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {

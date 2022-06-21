@@ -210,6 +210,7 @@ public class HexMap : MonoBehaviour
     {
         Hex hex = GetHexAt(x, y);
         unit.SetHex(hex);
+        unit.SetMovesRemaining();
 
         GameObject hexGameObject = HexToGameObjectDictionary[hex];
 
