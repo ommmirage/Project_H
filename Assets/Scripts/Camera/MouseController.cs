@@ -22,11 +22,13 @@ public class MouseController : MonoBehaviour
 	HexMap hexMap;
 	Hex previousEndHex;
 	List<Hex> path = new List<Hex>();
+	Pathfinding pathfinding;
 
 	void Start()
 	{
 		hexMap = Object.FindObjectOfType<HexMap>();
 		Update_CurrentFunc = Update_DetectModeStart;
+		pathfinding = new Pathfinding();
 	}
 
 	void Update()
@@ -65,25 +67,24 @@ public class MouseController : MonoBehaviour
 	void ProceedUnit()
 	{
 		Hex endHex = MouseToHex();
-        Pathfinding pathfinding = new Pathfinding();
 
         if (Input.GetMouseButton(1))
         {
-            if ((!unit.FinishedMove) && (previousEndHex != endHex))
-                RedrawPath(endHex, pathfinding);
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            if (unit.FinishedMove)
+			if (unit.FinishedMove)
             {
                 pathfinding.ClearPath(path);
                 path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
                 pathfinding.DrawPath(path, unit);
             }
-            else
-            {
-                unit.Move(path);
-            }
+			else if (previousEndHex != endHex)
+			{
+                RedrawPath(endHex, pathfinding);
+			}
+        }
+        else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))
+        {
+            Hex newSelectedHex = unit.Move(path);
+			ChangeSelectedHex(newSelectedHex);
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -174,14 +175,30 @@ public class MouseController : MonoBehaviour
 	{
 		Hex hex = MouseToHex();
 		unit = hex.GetUnit();
+		
 		if (unit != null)
 		{
-			selectedHex = hex;
-			hex.SetSelected(true);
-		}
-	}
+			pathfinding.ClearPath(path);
+            ChangeSelectedHex(hex);
+			path = unit.GetPath();
 
-	Hex MouseToHex()
+			if (path != null)
+			{
+				pathfinding.DrawPath(path, unit);
+			}
+		}
+    }
+
+    void ChangeSelectedHex(Hex hex)
+    {
+        if (selectedHex != null)
+            selectedHex.SetSelected(false);
+
+        selectedHex = hex;
+        hex.SetSelected(true);
+    }
+
+    Hex MouseToHex()
 	{
 		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hitInfo;

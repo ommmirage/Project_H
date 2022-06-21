@@ -16,7 +16,6 @@ public class Unit
     protected string type;
     public string Type { get { return type; } }
     public bool FinishedMove = false;
-    // public bool HasPathDrawn = false;
     
     HexMap hexMap;
 
@@ -25,7 +24,7 @@ public class Unit
 
     private Hex hex;
     public GameObject UnitGameObject;
-    Queue<Hex> path;
+    private LinkedList<Hex> path = null;
 
     public Unit()
     {
@@ -56,6 +55,21 @@ public class Unit
         }
     }
 
+    public List<Hex> GetPath()
+    {
+        if (path != null)
+        {
+            if (path.Count > 0)
+            {
+                path.AddFirst(hex);
+                return new List<Hex>(path);
+            }
+        }
+            
+        return null;
+    }
+
+
     // public void DoTurn()
     // {
     //     if ( path == null || path.Count == 0 )
@@ -83,13 +97,14 @@ public class Unit
             // FinishedMove = false;
     // }
 
-    public void Move(List<Hex> pathList)
+    // Returns hex, on which unit finished move
+    public Hex Move(List<Hex> pathList)
     {   
-        Queue<Hex> path = new Queue<Hex>(pathList);
+        path = new LinkedList<Hex>(pathList);
 
         if (MovesRemaining > 0)
         {
-            path.Dequeue();
+            path.RemoveFirst();
 
             hex.SetSelected(false);
             hex.Clear();
@@ -99,14 +114,13 @@ public class Unit
         {
             if (MovesRemaining <= 0)
             {
-                Debug.Log("Finished Move");
                 FinishedMove = true;
                 break;
             }
 
-            hex = path.Dequeue();
+            hex = path.First.Value;
+            path.RemoveFirst();
             MovesRemaining -= hex.MovementCost;
-            // Debug.Log(MovesRemaining);
 
             if (hex.Embark)
                 MovesRemaining = 0;
@@ -115,6 +129,6 @@ public class Unit
             hex.Clear();
         }
 
-        hex.SetSelected(true);
+        return hex;
     }
 }

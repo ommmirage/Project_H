@@ -18,6 +18,7 @@ public class Pathfinding
         openList = new List<Hex> { startHex };
         closedList = new List<Hex>();
         Hex lastHex = startHex;
+        int movesRemaining = unit.MovesRemaining;
 
         PrepareHexMap(unit);
 
@@ -47,13 +48,17 @@ public class Pathfinding
                     continue;
                 }
 
-                int movesRemaining = unit.MovesRemaining;
                 float turnsToNeighbour = 1;
 
                 turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
                 if (neighbour.Elevation < 0 && unit.Type == "land" && currentHex.Elevation > 0)
                 {
                     movesRemaining = unit.NavalMoves;
+                    neighbour.Embark = true;
+                }
+                else if (neighbour.Elevation > 0 && unit.Type == "land" && currentHex.Elevation < 0)
+                {
+                    movesRemaining = unit.Moves;
                     neighbour.Embark = true;
                 }
                     
@@ -332,10 +337,14 @@ public class Pathfinding
 
 	public void ClearPath(List<Hex> path)
 	{
-		foreach (Hex hex in path)
+        if (path != null)
         {
-            hex.Clear();
+            foreach (Hex hex in path)
+            {
+                hex.Clear();
+            }
         }
+		
     }
 }
 

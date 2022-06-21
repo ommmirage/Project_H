@@ -157,7 +157,6 @@ public class HexMapContinents : HexMap
         else if ((nextHex.Continent != continentNumber) && (nextHex.Continent != -1))
         {
             // Separate continent
-
             hex.Territory = -1;
             hex.Elevation = -1;
             neighbors.RemoveAt(neighbor);
@@ -177,7 +176,6 @@ public class HexMapContinents : HexMap
 
         neighbors.RemoveAt(neighbor);
         expanded++;
-        // int expandAmount = Random.Range(22, 39) / 10;
         if (expanded < 3)
         {
             ExpandOnNeighbors(hex, neighbors, expanded, jumpsCount);
