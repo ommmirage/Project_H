@@ -61,8 +61,6 @@ public class Unit
         {
             if (path.Count > 0)
             {
-                if (path.First.Value != hex)
-                    path.AddFirst(hex);
                 return new List<Hex>(path);
             }
         }
@@ -130,6 +128,7 @@ public class Unit
             hex.Clear();
         }
 
+        path.AddFirst(hex);
         return hex;
     }
 }
