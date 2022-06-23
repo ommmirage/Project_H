@@ -19,10 +19,12 @@ public class MouseController : MonoBehaviour
 
 	Unit unit = null;
 	Hex selectedHex = null;
+	public Hex SelectedHex { get { return selectedHex; } }
 	HexMap hexMap;
 	Hex previousEndHex;
 	List<Hex> path = new List<Hex>();
 	Pathfinding pathfinding;
+	public bool OnPause = false;
 
 	void Start()
 	{
@@ -33,6 +35,9 @@ public class MouseController : MonoBehaviour
 
 	void Update()
 	{
+		if (OnPause)
+			return;
+
 		Update_CurrentFunc();
 		Update_Zoom();
 
