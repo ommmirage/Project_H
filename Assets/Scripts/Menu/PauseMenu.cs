@@ -27,7 +27,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    void Resume()
+    public void Resume()
     {
         pauseMenuUI.SetActive(false);
         mouseController.OnPause = false;
@@ -37,5 +37,20 @@ public class PauseMenu : MonoBehaviour
     {
         mouseController.OnPause = true;
         pauseMenuUI.SetActive(true);
+    }
+
+    public void Save()
+    {
+
+    }
+
+    public void Load()
+    {
+
+    }
+
+    public void Quit()
+    {
+        
     }
 }
