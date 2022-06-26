@@ -6,6 +6,7 @@ using UnityEngine;
 // The hex class defines the grid position, world position, size,
 // neighbors of a Hex Tile. 
 
+[System.Serializable]
 public class Hex
 {
     // readonly means that variable is only set in the contructor

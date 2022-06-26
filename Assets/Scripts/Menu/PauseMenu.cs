@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
@@ -41,16 +39,18 @@ public class PauseMenu : MonoBehaviour
 
     public void Save()
     {
-
+        Debug.Log("Save");
+        HexMap hexMap = Object.FindObjectOfType<HexMap>();
+        SaveSystem.SaveGeo(hexMap.Hexes);
     }
 
     public void Load()
     {
-
+        SaveSystem.LoadGeo();
     }
 
     public void Quit()
     {
-        
+
     }
 }

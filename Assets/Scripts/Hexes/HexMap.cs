@@ -19,6 +19,7 @@ public class HexMap : MonoBehaviour
     [SerializeField] GameObject unitKnightPrefab;
 
     Hex[,] hexes;
+    public Hex[,] Hexes { get { return hexes; } }
     HashSet<Unit> units;
     public Dictionary<Hex, GameObject> HexToGameObjectDictionary;
     public Dictionary<GameObject, Hex> GameObjectToHexDictionary;
