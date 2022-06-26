@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
 // The hex class defines the grid position, world position, size,
 // neighbors of a Hex Tile. 
 
-[System.Serializable]
 public class Hex
 {
     // readonly means that variable is only set in the contructor
@@ -24,9 +21,6 @@ public class Hex
     public bool IsWalkable = true;
     public bool Embark = false;
 
-    // static means that const belongs to the type, not the object
-    static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
-
     float radius = 0.5f;
 
     public float Elevation = -0.5f;
@@ -40,6 +34,9 @@ public class Hex
 
     HexMap hexMap;
     Unit unit;
+
+    // static means that const belongs to the type, not the object
+    static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
     public Hex(HexMap hexMap, int q, int r) {
         this.hexMap = hexMap;

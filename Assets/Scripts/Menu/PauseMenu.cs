@@ -39,7 +39,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Save()
     {
-        Debug.Log("Save");
         HexMap hexMap = Object.FindObjectOfType<HexMap>();
         SaveSystem.SaveGeo(hexMap.Hexes);
     }

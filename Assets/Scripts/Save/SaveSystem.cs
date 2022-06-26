@@ -10,10 +10,17 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/save.sav";
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        GeoData geoData = new GeoData(hexes);
+        // GeoData geoData = new GeoData(hexes);
 
-        formatter.Serialize(stream, geoData);
+        TestHex[] data = new TestHex[2];
+        data[0] = new TestHex(86, null);
+        data[1] = new TestHex(1, data[0]);
+
+
+        formatter.Serialize(stream, data);
         stream.Close();
+
+        Debug.Log("Game Saved");
     }
 
     public static GeoData LoadGeo()
@@ -24,12 +31,16 @@ public static class SaveSystem
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            GeoData geoData = formatter.Deserialize(stream) as GeoData;
+            TestHex[] data = formatter.Deserialize(stream) as TestHex[];
+            // GeoData geoData = formatter.Deserialize(stream) as GeoData;
             stream.Close();
+
+            Debug.Log(data[1].camefromHex.id);
 
             Debug.Log("Load ok");
 
-            return geoData;
+            return null;
+            // return geoData;
         }
         else
         {
