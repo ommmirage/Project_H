@@ -115,6 +115,11 @@ public class HexMap : MonoBehaviour
         SpawnUnitAt(new Knight(), unitKnightPrefab, 8, 9);
     }
 
+    public Hex GetHexAt(PathHex pathHex)
+    {
+        return GetHexAt(pathHex.Q, pathHex.R);
+    }
+
     public Hex GetHexAt(int x, int y)
     {
         if (hexes == null)
@@ -147,23 +152,6 @@ public class HexMap : MonoBehaviour
         }
         
         return results.ToArray();
-    }
-
-    public int Distance(Hex a, Hex b)
-    {
-        int dq = Mathf.Abs(a.Q - b.Q);
-        if (dq > width / 2)
-        {
-            dq = Mathf.Abs(width - dq);
-        }
-
-        int ds = Mathf.Abs(a.S - b.S);
-        if (ds > width / 2)
-        {
-            ds = Mathf.Abs(width - ds);
-        }
-
-        return (dq + Mathf.Abs(a.R - b.R) + ds) / 2;
     }
 
     protected void DrawBorders()

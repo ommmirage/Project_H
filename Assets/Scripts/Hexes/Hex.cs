@@ -9,17 +9,7 @@ public class Hex
     // readonly means that variable is only set in the contructor
     public readonly int Q;
     public readonly int R;
-    public readonly int S;
-
-    // Walking cost from the start hex
-    public float GCost;
-    // Heuristic cost to reach End Hex
-    public float HCost;
-    public float FCost;
-    public Hex CameFromHex;
-    public int turns;
-    public bool IsWalkable = true;
-    public bool Embark = false;
+    // public readonly int S;
 
     float radius = 0.5f;
 
@@ -43,7 +33,7 @@ public class Hex
 
         this.Q = q;
         this.R = r;
-        S = -(q + r);
+        // S = -(q + r);
     }
 
     // Returns the world-space position of this hex
@@ -128,11 +118,6 @@ public class Hex
     public override string ToString()
     {
         return Q + ", "+ R;
-    }
-
-    public void CalculateFCost()
-    {
-        FCost = GCost + HCost;
     }
 
     public void Clear()

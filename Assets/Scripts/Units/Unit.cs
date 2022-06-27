@@ -24,11 +24,13 @@ public class Unit
 
     protected Hex hex;
     public GameObject UnitGameObject;
-    private LinkedList<Hex> path = null;
+    private LinkedList<PathHex> path = null;
+    public PathHex[,] PathMap;
 
     public Unit()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
+        PathMap = new PathHex[hexMap.Width, hexMap.Height];
     }
 
     public Hex GetHex()
@@ -54,13 +56,31 @@ public class Unit
         }
     }
 
-    public List<Hex> GetPath()
+    public PathHex GetPathHex(Hex hex)
+    {
+        return PathMap[hex.Q, hex.R];
+    }
+
+    public PathHex GetPathHexAt(int x, int y)
+    {
+        if ((y < 0) || (y >= hexMap.Height))
+            return null;
+
+        if (x < 0)
+            x += hexMap.Width;
+        else
+            x = x % hexMap.Width;
+        
+        return PathMap[x, y];
+    }
+
+    public List<PathHex> GetPath()
     {
         if (path != null)
         {
             if (path.Count > 0)
             {
-                return new List<Hex>(path);
+                return new List<PathHex>(path);
             }
         }
             
@@ -96,9 +116,10 @@ public class Unit
     // }
 
     // Returns hex, on which unit finished move
-    public Hex Move(List<Hex> pathList)
+    public Hex Move(List<PathHex> pathList)
     {   
-        path = new LinkedList<Hex>(pathList);
+        PathHex pathHex = new PathHex(hex);
+        path = new LinkedList<PathHex>(pathList);
 
         if (MovesRemaining > 0)
         {
@@ -116,18 +137,19 @@ public class Unit
                 break;
             }
 
-            hex = path.First.Value;
+            pathHex = path.First.Value;
             path.RemoveFirst();
             MovesRemaining -= hex.MovementCost;
 
-            if (hex.Embark)
+            if (pathHex.Embark)
                 MovesRemaining = 0;
 
+            hex = hexMap.GetHexAt(pathHex);
             SetHex(hex);
             hex.Clear();
         }
 
-        path.AddFirst(hex);
+        path.AddFirst(pathHex);
         return hex;
     }
 

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Pathfinding
 {
-    List<Hex> openList;
-    List<Hex> closedList;
+    List<PathHex> openList;
+    List<PathHex> closedList;
     HexMap hexMap;
 
     public Pathfinding()
@@ -13,31 +13,34 @@ public class Pathfinding
         hexMap = Object.FindObjectOfType<HexMap>();
     }
 
-    public List<Hex> FindPath(Unit unit, Hex startHex, Hex endHex)
+    public List<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
     {
-        openList = new List<Hex> { startHex };
-        closedList = new List<Hex>();
-        Hex lastHex = startHex;
+        PreparePathMap(unit);
+
+        PathHex startPathHex = unit.GetPathHex(startHex);
+        PathHex endPathHex = unit.GetPathHex(endHex);
+
+        openList = new List<PathHex> { startPathHex };
+        closedList = new List<PathHex>();
+        PathHex lastPathHex = startPathHex;
         int movesRemaining = unit.MovesRemaining;
 
-        PrepareHexMap(unit);
-
-        startHex.GCost = 0;
-        startHex.HCost = hexMap.Distance(startHex, endHex);
-        startHex.CalculateFCost();
+        startPathHex.GCost = 0;
+        startPathHex.HCost = Distance(startPathHex, endPathHex);
+        startPathHex.CalculateFCost();
 
         while (openList.Count > 0)
         {
-            Hex currentHex = GetLowestFCostHex(openList);
-            if (currentHex == endHex)
+            PathHex currentPathHex = GetLowestFCostHex(openList);
+            if (currentPathHex == endPathHex)
             {
-                return CalculatePath(endHex);
+                return CalculatePath(endPathHex);
             }
 
-            openList.Remove(currentHex);
-            closedList.Add(currentHex);
+            openList.Remove(currentPathHex);
+            closedList.Add(currentPathHex);
 
-            foreach (Hex neighbour in GetNeighborList(currentHex))
+            foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
             {
                 if (closedList.Contains(neighbour))
                     continue;
@@ -48,61 +51,81 @@ public class Pathfinding
                     continue;
                 }
 
-                float turnsToNeighbour = 1;
-
-                turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, ref movesRemaining, neighbour);
-
-                if (unit.Type == "land")
-                {
-                    if ( (currentHex.Elevation > 0) && (neighbour.Elevation < 0) )
-                    {
-                        movesRemaining = unit.NavalMoves;
-                        neighbour.Embark = true;
-                    }
-                    else if ( (currentHex.Elevation < 0) && (neighbour.Elevation > 0))
-                    {
-                        movesRemaining = unit.Moves;
-                        neighbour.Embark = true;
-                    }
-                }
+                float turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, movesRemaining, neighbour);
                     
-                if (currentHex.GCost + turnsToNeighbour < neighbour.GCost)
+                // Debug.Log(neighbour + " " + turnsToNeighbour + " " + neighbour.GCost);
+                
+                if (currentPathHex.GCost + turnsToNeighbour < neighbour.GCost)
                 {
-                    neighbour.CameFromHex = currentHex;
-                    neighbour.GCost = currentHex.GCost + turnsToNeighbour;
+                    neighbour.CameFromPathHex = currentPathHex;
+                    neighbour.GCost = currentPathHex.GCost + turnsToNeighbour;
 
-                    neighbour.HCost = hexMap.Distance(neighbour, endHex);
+                    neighbour.HCost = Distance(neighbour, endPathHex);
                     neighbour.CalculateFCost();
 
-                    if (movesRemaining == 0)
-                        movesRemaining = unit.Moves;
-
                     if (!openList.Contains(neighbour))
+                    {
                         openList.Add(neighbour);
+                    }
+
+                    movesRemaining = CalculateMovesRemaining(unit, movesRemaining, currentPathHex, neighbour);                
                 }
 
-                lastHex = currentHex;
+                lastPathHex = currentPathHex;
             }
+
+            // Debug.Log(GetLowestFCostHex(openList) + ", " + endPathHex);
+            // Debug.Log(GetLowestFCostHex(openList) == endPathHex);
+            // return null;
+
         }
 
-        return CalculatePath(lastHex);
+        return CalculatePath(lastPathHex);
     }
 
-    void PrepareHexMap(Unit unit)
+    void PreparePathMap(Unit unit)
     {
-        for (int x = 0; x < hexMap.Width; x++)
+        for (int i = 0; i < hexMap.Width; i++)
         {
-            for (int y = 0; y < hexMap.Height; y++)
+            for (int j = 0; j < hexMap.Height; j++)
             {
-                Hex hex = hexMap.GetHexAt(x, y);
-                hex.GCost = int.MaxValue;
-                hex.FCost = int.MaxValue;
-                hex.CameFromHex = null;
+                unit.PathMap[i,j] = new PathHex(hexMap.GetHexAt(i, j));
             }
         }
     }
 
-    float CalculateTurnsToNeighbour(int moves, ref int movesRemaining, Hex neighbour)
+    int CalculateMovesRemaining(Unit unit, int movesRemaining, PathHex currentPathHex, PathHex neighbour)
+    {
+        if (unit.Type == "land")
+        {
+            if ((currentPathHex.Elevation > 0) && (neighbour.Elevation < 0))
+            {
+                movesRemaining = unit.NavalMoves;
+                neighbour.Embark = true;
+            }
+            else if ((currentPathHex.Elevation < 0) && (neighbour.Elevation > 0))
+            {
+                movesRemaining = unit.Moves;
+                neighbour.Embark = true;
+            }
+            else
+            {
+                movesRemaining -= neighbour.MovementCost;
+
+                if (movesRemaining <= 0)
+                {
+                    if (neighbour.Elevation < 0)
+                        movesRemaining = unit.NavalMoves;
+                    if (neighbour.Elevation > 0)
+                        movesRemaining = unit.Moves;
+                }
+            }
+        }
+
+        return movesRemaining;
+    }
+
+    float CalculateTurnsToNeighbour(int moves, int movesRemaining, PathHex neighbour)
     {
         float turnsToNeighbour;
         if (movesRemaining >= neighbour.MovementCost)
@@ -114,17 +137,12 @@ public class Pathfinding
             turnsToNeighbour = 1;
         }
 
-        movesRemaining -= neighbour.MovementCost;
-
-        if (movesRemaining <= 0)
-            movesRemaining = moves;
-
         return turnsToNeighbour;
     }
 
-    Hex GetLowestFCostHex(List<Hex> pathHexList)
+    PathHex GetLowestFCostHex(List<PathHex> pathHexList)
     {
-        Hex lowestFCostHex = pathHexList[0];
+        PathHex lowestFCostHex = pathHexList[0];
         for (int i = 0; i < pathHexList.Count; i++)
         {
             if (pathHexList[i].FCost < lowestFCostHex.FCost)
@@ -135,61 +153,66 @@ public class Pathfinding
         return lowestFCostHex;
     }
 
-    List<Hex> CalculatePath(Hex endHex)
+    List<PathHex> CalculatePath(PathHex endPathHex)
     {
-        List<Hex> path = new List<Hex>();
-        path.Add(endHex);
-        Hex currentHex = endHex;
-        while (currentHex.CameFromHex != null)
+        // Debug.Log(endPathHex);
+        // return null;
+
+        List<PathHex> path = new List<PathHex>();
+        path.Add(endPathHex);
+        PathHex currentPathHex = endPathHex;
+        while (currentPathHex.CameFromPathHex != null)
         {
-            path.Add(currentHex.CameFromHex);
-            currentHex = currentHex.CameFromHex;
+            path.Add(currentPathHex.CameFromPathHex);
+            currentPathHex = currentPathHex.CameFromPathHex;
         }
         path.Reverse();
 
         return path;
     }
 
-    List<Hex> GetNeighborList(Hex hex)
+    List<PathHex> GetNeighborList(Unit unit, PathHex hex)
     {
-        List<Hex> neighborList = new List<Hex>();
+        List<PathHex> neighborList = new List<PathHex>();
         int q = hex.Q;
         int r = hex.R;
 
         if (r + 1 < hexMap.Height)
         {
-            neighborList.Add(hexMap.GetHexAt(q, r + 1));
-            neighborList.Add(hexMap.GetHexAt(q - 1, r + 1));
+            neighborList.Add(unit.GetPathHexAt(q, r + 1));
+            neighborList.Add(unit.GetPathHexAt(q - 1, r + 1));
         }
         if (r != 0)
         {
-            neighborList.Add(hexMap.GetHexAt(q, r - 1));
-            neighborList.Add(hexMap.GetHexAt(q + 1, r - 1));
+            neighborList.Add(unit.GetPathHexAt(q, r - 1));
+            neighborList.Add(unit.GetPathHexAt(q + 1, r - 1));
         }
-        neighborList.Add(hexMap.GetHexAt(q + 1, r));
-        neighborList.Add(hexMap.GetHexAt(q - 1, r));
+        neighborList.Add(unit.GetPathHexAt(q + 1, r));
+        neighborList.Add(unit.GetPathHexAt(q - 1, r));
 
         return neighborList;
     }
 
-    public void DrawPath(List<Hex> path, Unit unit)
+    public void DrawPath(List<PathHex> path, Unit unit)
 	{
         int movesRemaining = unit.MovesRemaining;
         int movesCount = 0;
 
 		for (int i = 0; i < path.Count - 1; i++)
 		{
-			Hex hex = path[i];
-            Hex nextHex = path[i + 1];
+			PathHex pathHex = path[i];
+            PathHex nextPathHex = path[i + 1];
+            Hex hex = hexMap.GetHexAt(pathHex);
+            Hex nextHex = hexMap.GetHexAt(nextPathHex);
             GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex].gameObject;
             Transform hexLongLines = hexGameObject.transform.GetChild(4);
 
             DrawLongLines(hex, nextHex, hexLongLines);
 
             if (i > 0)
-                movesRemaining -= hex.MovementCost;
+                movesRemaining -= pathHex.MovementCost;
 
-            if (hex.Embark)
+            if (pathHex.Embark)
                 movesRemaining = 0;
 
             if (movesRemaining <= 0)
@@ -198,7 +221,7 @@ public class Pathfinding
 
                 DrawMovesCount(hexGameObject, hexLongLines, movesCount);
 
-                if (hex.Elevation > 0)
+                if (pathHex.Elevation > 0)
                 {
                     movesRemaining = unit.Moves;
                 }
@@ -210,7 +233,7 @@ public class Pathfinding
         }
 
         movesCount++;
-        Hex lastHex = path[path.Count - 1];
+        Hex lastHex = hexMap.GetHexAt(path[path.Count - 1]);
         DrawLastMove(movesCount, lastHex);
 	}
 
@@ -336,16 +359,33 @@ public class Pathfinding
         }
     }
 
-	public void ClearPath(List<Hex> path)
+	public void ClearPath(List<PathHex> path)
 	{
         if (path != null)
         {
-            foreach (Hex hex in path)
+            foreach (PathHex pathHex in path)
             {
-                hex.Clear();
+                hexMap.GetHexAt(pathHex).Clear();
             }
         }
 		
+    }
+
+    public int Distance(PathHex a, PathHex b)
+    {
+        int dq = Mathf.Abs(a.Q - b.Q);
+        if (dq > hexMap.Width / 2)
+        {
+            dq = Mathf.Abs(hexMap.Width - dq);
+        }
+
+        int ds = Mathf.Abs(a.S - b.S);
+        if (ds > hexMap.Width / 2)
+        {
+            ds = Mathf.Abs(hexMap.Width - ds);
+        }
+
+        return (dq + Mathf.Abs(a.R - b.R) + ds) / 2;
     }
 }
 

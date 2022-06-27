@@ -22,7 +22,7 @@ public class MouseController : MonoBehaviour
 	public Hex SelectedHex { get { return selectedHex; } }
 	HexMap hexMap;
 	Hex previousEndHex;
-	List<Hex> path = new List<Hex>();
+	List<PathHex> path = new List<PathHex>();
 	Pathfinding pathfinding;
 	public bool OnPause = false;
 
@@ -109,6 +109,7 @@ public class MouseController : MonoBehaviour
         previousEndHex = endHex;
         pathfinding.ClearPath(path);
         path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
+		// Debug.Log(path[1]);
         pathfinding.DrawPath(path, unit);
     }
 
