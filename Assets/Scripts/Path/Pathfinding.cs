@@ -34,7 +34,7 @@ public class Pathfinding
             PathHex currentPathHex = GetLowestFCostHex(openList);
             if (currentPathHex == endPathHex)
             {
-                return CalculatePath(endPathHex);
+                return CalculatePath(unit, endPathHex);
             }
 
             openList.Remove(currentPathHex);
@@ -53,8 +53,6 @@ public class Pathfinding
 
                 float turnsToNeighbour = CalculateTurnsToNeighbour(unit.Moves, movesRemaining, neighbour);
                     
-                // Debug.Log(neighbour + " " + turnsToNeighbour + " " + neighbour.GCost);
-                
                 if (currentPathHex.GCost + turnsToNeighbour < neighbour.GCost)
                 {
                     neighbour.CameFromPathHex = currentPathHex;
@@ -73,14 +71,9 @@ public class Pathfinding
 
                 lastPathHex = currentPathHex;
             }
-
-            // Debug.Log(GetLowestFCostHex(openList) + ", " + endPathHex);
-            // Debug.Log(GetLowestFCostHex(openList) == endPathHex);
-            // return null;
-
         }
 
-        return CalculatePath(lastPathHex);
+        return CalculatePath(unit, lastPathHex);
     }
 
     void PreparePathMap(Unit unit)
@@ -153,11 +146,8 @@ public class Pathfinding
         return lowestFCostHex;
     }
 
-    List<PathHex> CalculatePath(PathHex endPathHex)
+    List<PathHex> CalculatePath(Unit unit, PathHex endPathHex)
     {
-        // Debug.Log(endPathHex);
-        // return null;
-
         List<PathHex> path = new List<PathHex>();
         path.Add(endPathHex);
         PathHex currentPathHex = endPathHex;
@@ -168,6 +158,7 @@ public class Pathfinding
         }
         path.Reverse();
 
+        unit.Path = new LinkedList<PathHex>(path);
         return path;
     }
 

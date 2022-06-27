@@ -24,7 +24,7 @@ public class Unit
 
     protected Hex hex;
     public GameObject UnitGameObject;
-    private LinkedList<PathHex> path = null;
+    public LinkedList<PathHex> Path = null;
     public PathHex[,] PathMap;
 
     public Unit()
@@ -76,11 +76,11 @@ public class Unit
 
     public List<PathHex> GetPath()
     {
-        if (path != null)
+        if (Path != null)
         {
-            if (path.Count > 0)
+            if (Path.Count > 0)
             {
-                return new List<PathHex>(path);
+                return new List<PathHex>(Path);
             }
         }
             
@@ -119,17 +119,17 @@ public class Unit
     public Hex Move(List<PathHex> pathList)
     {   
         PathHex pathHex = new PathHex(hex);
-        path = new LinkedList<PathHex>(pathList);
+        Path = new LinkedList<PathHex>(pathList);
 
         if (MovesRemaining > 0)
         {
-            path.RemoveFirst();
+            Path.RemoveFirst();
 
             hex.SetSelected(false);
             hex.Clear();
         }
 
-        while (path.Count > 0)
+        while (Path.Count > 0)
         {
             if (MovesRemaining <= 0)
             {
@@ -137,8 +137,8 @@ public class Unit
                 break;
             }
 
-            pathHex = path.First.Value;
-            path.RemoveFirst();
+            pathHex = Path.First.Value;
+            Path.RemoveFirst();
             MovesRemaining -= hex.MovementCost;
 
             if (pathHex.Embark)
@@ -149,7 +149,7 @@ public class Unit
             hex.Clear();
         }
 
-        path.AddFirst(pathHex);
+        Path.AddFirst(pathHex);
         return hex;
     }
 
