@@ -127,6 +127,7 @@ public class Unit
 
             hex.SetSelected(false);
             hex.Clear();
+            hex.RemoveUnit();
         }
 
         while (Path.Count > 0)
@@ -145,9 +146,10 @@ public class Unit
                 MovesRemaining = 0;
 
             hex = hexMap.GetHexAt(pathHex);
-            SetHex(hex);
             hex.Clear();
         }
+
+        SetHex(hex);
 
         Path.AddFirst(pathHex);
         return hex;
