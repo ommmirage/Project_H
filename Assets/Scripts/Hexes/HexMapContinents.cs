@@ -14,11 +14,6 @@ public class HexMapContinents : HexMap
     Queue<Hex> territoryHexes;
     Queue<Queue<Hex>> territories;
 
-    void Start()
-    {
-        GenerateMap();
-    }
-
     public void GenerateMap()
     {
         GenerateTiles();

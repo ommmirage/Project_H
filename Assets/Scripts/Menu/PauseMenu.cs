@@ -8,6 +8,8 @@ public class PauseMenu : MonoBehaviour
     void Start()
 	{
 		mouseController = Object.FindObjectOfType<MouseController>();
+        pauseMenuUI.SetActive(true);
+        mouseController.OnPause = true;
     }
 
     void Update()
@@ -23,6 +25,15 @@ public class PauseMenu : MonoBehaviour
                 Pause();
             }
         }
+    }
+
+    public void NewGame()
+    {
+        HexMapContinents hexMapContinents = Object.FindObjectOfType<HexMapContinents>();
+        hexMapContinents.GenerateMap();
+
+        pauseMenuUI.SetActive(false);
+        mouseController.OnPause = false;
     }
 
     public void Resume()

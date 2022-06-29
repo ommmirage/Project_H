@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 
 
 // The hex class defines the grid position, world position, size,
 // neighbors of a Hex Tile. 
 
+[Serializable]
 public class Hex
 {
     // readonly means that variable is only set in the contructor
@@ -22,7 +24,9 @@ public class Hex
 
     public bool IsForest = false;
 
+    [NonSerialized]
     HexMap hexMap;
+    [NonSerialized]
     Unit unit;
 
     // static means that const belongs to the type, not the object

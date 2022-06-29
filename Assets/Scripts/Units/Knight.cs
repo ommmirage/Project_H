@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Knight : Unit
 {
-    public Knight()
+    public Knight(HexMap hexMap) : base(hexMap)
     {
         hp = 100;
         strength = 8;

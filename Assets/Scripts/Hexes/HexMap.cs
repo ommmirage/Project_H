@@ -109,10 +109,10 @@ public class HexMap : MonoBehaviour
             }
         }
 
-        SpawnUnitAt(new Knight(), unitKnightPrefab, 84, 0);
-        SpawnUnitAt(new Knight(), unitKnightPrefab, 84, 15);
-        SpawnUnitAt(new Knight(), unitKnightPrefab, 3, 12);
-        SpawnUnitAt(new Knight(), unitKnightPrefab, 8, 9);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 0);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 15);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 3, 12);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 8, 9);
     }
 
     public Hex GetHexAt(PathHex pathHex)

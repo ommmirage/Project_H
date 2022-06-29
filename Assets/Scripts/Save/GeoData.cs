@@ -5,10 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class GeoData
 {
-    public Hex[,] hexes;
+    public Hex[,] Hexes;
 
     public GeoData(Hex[,] hexes)
     {
-        this.hexes = hexes.Clone() as Hex[,];
+        this.Hexes = hexes.Clone() as Hex[,];
     }
 }

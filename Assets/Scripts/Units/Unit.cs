@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Unit
 {
     protected int hp;
@@ -17,19 +17,23 @@ public class Unit
     public string Type { get { return type; } }
     public bool FinishedMove = false;
     
+    [System.NonSerialized]
     HexMap hexMap;
 
     public delegate void UnitMovedDelegate(Hex oldHex, Hex newHex);
     public event UnitMovedDelegate UnitMoved;
 
     protected Hex hex;
+
+    [System.NonSerialized]
     public GameObject UnitGameObject;
+
     public LinkedList<PathHex> Path = null;
     public PathHex[,] PathMap;
 
-    public Unit()
+    public Unit(HexMap hexMap)
     {
-        hexMap = Object.FindObjectOfType<HexMap>();
+        this.hexMap = hexMap;
         PathMap = new PathHex[hexMap.Width, hexMap.Height];
     }
 
