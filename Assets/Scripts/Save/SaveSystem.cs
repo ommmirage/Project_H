@@ -4,20 +4,16 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveGeo(Hex[,] hexes)
+    public static void SaveGeo(HexMap hexMap)
     {
         BinaryFormatter formatter  = new BinaryFormatter();
 
         string path = Application.persistentDataPath + "/save.sav";
         FileStream stream = new FileStream(path, FileMode.OpenOrCreate);
 
-        // GeoData geoData = new GeoData(hexes);
+        GameData geoData = new GameData(hexMap);
 
-        TestHex[] data = new TestHex[2];
-        data[0] = new TestHex(86, null);
-        data[1] = new TestHex(1, data[0]);
-
-        formatter.Serialize(stream, hexes);
+        formatter.Serialize(stream, geoData);
         stream.Close();
 
         Debug.Log("Game Saved");
@@ -31,16 +27,16 @@ public static class SaveSystem
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            // TestHex[] data = formatter.Deserialize(stream) as TestHex[];
-            // GeoData geoData = formatter.Deserialize(stream) as GeoData;
-            Hex[,] hexes = formatter.Deserialize(stream) as Hex[,];
+            GameData gameData = formatter.Deserialize(stream) as GameData;
             stream.Close();
 
             Debug.Log("Load ok");
+            Debug.Log(gameData.unit.GetHex());
 
             HexMap hexMap = Object.FindObjectOfType<HexMap>();
-            SetHexMapToHexes(hexes, hexMap);
-            hexMap.LoadMap(hexes);
+
+            SetHexMapToHexes(gameData.Hexes, hexMap);
+            hexMap.LoadMap(gameData.Hexes);
         }
         else
         {

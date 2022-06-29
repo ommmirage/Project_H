@@ -4,25 +4,29 @@ using UnityEngine;
 
 public class HexMap : MonoBehaviour
 {
-    [SerializeField] GameObject hexPrefab;
-
     int width = 85;
     public int Width { get { return width; } }
-
     int height = 50;
     public int Height { get { return height; } }
-
-    [SerializeField] Material matOcean;
-    [SerializeField] Material matGrasslands;
-    [SerializeField] GameObject forestPrefab;
-
-    [SerializeField] GameObject unitKnightPrefab;
 
     Hex[,] hexes;
     public Hex[,] Hexes { get { return hexes; } }
     HashSet<Unit> units = new HashSet<Unit>();
     public Dictionary<Hex, GameObject> HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
     public Dictionary<GameObject, Hex> GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
+    
+    [SerializeField] GameObject hexPrefab;
+    [SerializeField] Material matOcean;
+    [SerializeField] Material matGrasslands;
+    [SerializeField] GameObject forestPrefab;
+
+    [Header("Units' prefabs")]
+    [SerializeField] GameObject unitKnightPrefab;
+
+    public void Start()
+    {
+        
+    }
 
     public void LoadMap(Hex[,] hexes)
     {
