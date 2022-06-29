@@ -23,7 +23,7 @@ public static class SaveSystem
         Debug.Log("Game Saved");
     }
 
-    public static GeoData LoadGeo()
+    public static void LoadGeo()
     {
         string path = Application.persistentDataPath + "/save.sav";
         if (File.Exists(path))
@@ -36,17 +36,28 @@ public static class SaveSystem
             Hex[,] hexes = formatter.Deserialize(stream) as Hex[,];
             stream.Close();
 
-            Debug.Log(hexes[1,1]);
-
             Debug.Log("Load ok");
 
-            return null;
-            // return geoData;
+            HexMap hexMap = Object.FindObjectOfType<HexMap>();
+            SetHexMapToHexes(hexes, hexMap);
+            hexMap.LoadMap(hexes);
         }
         else
         {
             Debug.Log("Save file not found in " + path);
-            return null;
+        }
+    }
+
+    static void SetHexMapToHexes(Hex[,] hexes, HexMap hexMap)
+    {
+        for (int x = 0; x < hexMap.Width; x++)
+        {
+            for (int y = 0; y < hexMap.Height; y++)
+            {
+                hexes[x, y].SetHexMap(hexMap);
+            }
         }
     }
 }
+
+

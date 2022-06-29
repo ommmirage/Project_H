@@ -40,6 +40,11 @@ public class Hex
         // S = -(q + r);
     }
 
+    public void SetHexMap(HexMap hexMap)
+    {
+        this.hexMap = hexMap;
+    }
+
     // Returns the world-space position of this hex
     public Vector3 Position()
     {

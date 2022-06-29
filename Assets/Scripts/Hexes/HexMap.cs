@@ -20,38 +20,61 @@ public class HexMap : MonoBehaviour
 
     Hex[,] hexes;
     public Hex[,] Hexes { get { return hexes; } }
-    HashSet<Unit> units;
-    public Dictionary<Hex, GameObject> HexToGameObjectDictionary;
-    public Dictionary<GameObject, Hex> GameObjectToHexDictionary;
+    HashSet<Unit> units = new HashSet<Unit>();
+    public Dictionary<Hex, GameObject> HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
+    public Dictionary<GameObject, Hex> GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
+
+    public void LoadMap(Hex[,] hexes)
+    {
+        LoadTiles(hexes);
+
+        UpdateHexVisuals();
+        SetLabels();
+        DrawBorders();
+    }
+
+    void LoadTiles(Hex[,] hexes)
+    {
+        this.hexes = hexes;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                GenerateTile(hexes[x, y], x, y);
+            }
+        }
+    }
 
     protected void GenerateTiles()
     {
         hexes = new Hex[width, height];
-        units = new HashSet<Unit>();
-        HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
-        GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 Hex hex = new Hex(this, x, y);
-
-                hexes[x, y] = hex;
-
-                Vector3 inworldPos = hex.PositionFromCamera();
-
-                GameObject hexGameObject = Instantiate(
-                    hexPrefab, 
-                    inworldPos,
-                    new Quaternion(),
-                    transform
-                );
-
-                HexToGameObjectDictionary.Add(hex, hexGameObject);
-                GameObjectToHexDictionary.Add(hexGameObject, hex);
+                GenerateTile(hex, x, y);
             }
         }
+    }
+
+    void GenerateTile(Hex hex, int x, int y)
+    {
+        hexes[x, y] = hex;
+
+        Vector3 inworldPos = hex.PositionFromCamera();
+
+        GameObject hexGameObject = Instantiate(
+            hexPrefab,
+            inworldPos,
+            new Quaternion(),
+            transform
+        );
+
+        HexToGameObjectDictionary.Add(hex, hexGameObject);
+        GameObjectToHexDictionary.Add(hexGameObject, hex);
     }
 
     protected void SetLabels()

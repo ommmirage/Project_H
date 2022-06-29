@@ -57,6 +57,8 @@ public class PauseMenu : MonoBehaviour
     public void Load()
     {
         SaveSystem.LoadGeo();
+        pauseMenuUI.SetActive(false);
+        // mouseController.OnPause = false;
     }
 
     public void Quit()
