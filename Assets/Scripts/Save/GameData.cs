@@ -11,6 +11,6 @@ public class GameData
     public GameData(HexMap hexMap)
     {
         Hexes = hexMap.Hexes.Clone() as Hex[,];
-        // Units = hexMap.Units;
+        Units = hexMap.Units;
     }
 }

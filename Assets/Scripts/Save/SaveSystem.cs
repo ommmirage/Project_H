@@ -35,8 +35,8 @@ public static class SaveSystem
 
             HexMap hexMap = Object.FindObjectOfType<HexMap>();
 
-            SetHexMapToHexes(gameData.Hexes, hexMap);
-            hexMap.LoadMap(gameData.Hexes);
+            SetHexMapToHexesAndUnits(gameData, hexMap);
+            hexMap.LoadMap(gameData);
         }
         else
         {
@@ -44,15 +44,18 @@ public static class SaveSystem
         }
     }
 
-    static void SetHexMapToHexes(Hex[,] hexes, HexMap hexMap)
+    static void SetHexMapToHexesAndUnits(GameData gameData, HexMap hexMap)
     {
         for (int x = 0; x < hexMap.Width; x++)
         {
             for (int y = 0; y < hexMap.Height; y++)
             {
-                hexes[x, y].SetHexMap(hexMap);
+                gameData.Hexes[x, y].SetHexMap(hexMap);
             }
         }
+
+        // foreach (Unit unit in gameData.Units)
+        //     unit.Set
     }
 }
 

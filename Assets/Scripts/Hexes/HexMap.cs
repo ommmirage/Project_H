@@ -24,13 +24,14 @@ public class HexMap : MonoBehaviour
     [Header("Units' prefabs")]
     [SerializeField] GameObject unitKnightPrefab;
 
-    public void LoadMap(Hex[,] hexes)
+    public void LoadMap(GameData gameData)
     {
-        LoadTiles(hexes);
+        LoadTiles(gameData.Hexes);
 
         UpdateHexVisuals();
         SetLabels();
         DrawBorders();
+        SpawnUnits(gameData.Units);
     }
 
     void LoadTiles(Hex[,] hexes)
@@ -131,11 +132,6 @@ public class HexMap : MonoBehaviour
                 }
             }
         }
-
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 0);
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 15);
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 3, 12);
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 8, 9);
     }
 
     public Hex GetHexAt(PathHex pathHex)
@@ -235,6 +231,22 @@ public class HexMap : MonoBehaviour
         
         units.Add(unit);
         unit.UnitGameObject = unitGameObject;
+    }
+
+    public void SpawnUnits()
+    {
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 0);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 15);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 3, 12);
+        SpawnUnitAt(new Knight(this), unitKnightPrefab, 8, 9);
+    }
+
+    public void SpawnUnits(List<Unit> units)
+    {
+        foreach (Unit unit in units)
+        {
+            // SpawnUnitAt(unit, )
+        }
     }
 
     public void DoTurn()

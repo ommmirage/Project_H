@@ -23,6 +23,8 @@ public class HexMapContinents : HexMap
         UpdateHexVisuals();
         SetLabels();
         DrawBorders();
+
+        SpawnUnits();
     }
 
     void GenerateContinents()
