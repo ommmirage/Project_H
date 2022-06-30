@@ -11,7 +11,8 @@ public class HexMap : MonoBehaviour
 
     Hex[,] hexes;
     public Hex[,] Hexes { get { return hexes; } }
-    HashSet<Unit> units = new HashSet<Unit>();
+    List<Unit> units = new List<Unit>();
+    public List<Unit> Units { get { return units; } }
     public Dictionary<Hex, GameObject> HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
     public Dictionary<GameObject, Hex> GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
     
@@ -22,11 +23,6 @@ public class HexMap : MonoBehaviour
 
     [Header("Units' prefabs")]
     [SerializeField] GameObject unitKnightPrefab;
-
-    public void Start()
-    {
-        
-    }
 
     public void LoadMap(Hex[,] hexes)
     {
@@ -236,9 +232,6 @@ public class HexMap : MonoBehaviour
                 new Quaternion(), 
                 hexGameObject.transform
                 );
-
-        // Регистрируем функцию UnitView.OnUnitMoved() в событие Unit.UnitMoved 
-        unit.UnitMoved += unitGameObject.GetComponent<UnitView>().OnUnitMoved;
         
         units.Add(unit);
         unit.UnitGameObject = unitGameObject;

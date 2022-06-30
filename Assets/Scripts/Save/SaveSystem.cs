@@ -31,7 +31,7 @@ public static class SaveSystem
             stream.Close();
 
             Debug.Log("Load ok");
-            Debug.Log(gameData.unit.GetHex());
+            // Debug.Log(gameData.Units[0].GetHex());
 
             HexMap hexMap = Object.FindObjectOfType<HexMap>();
 

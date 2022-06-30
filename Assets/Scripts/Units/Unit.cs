@@ -155,6 +155,9 @@ public class Unit
 
         SetHex(hex);
 
+        GameObject hexGameObject = hexMap.HexToGameObjectDictionary[hex];
+        UnitGameObject.transform.position = hexGameObject.transform.position;
+            
         Path.AddFirst(pathHex);
         return hex;
     }
