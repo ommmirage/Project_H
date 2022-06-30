@@ -23,6 +23,7 @@ public class HexMap : MonoBehaviour
 
     [Header("Units' prefabs")]
     [SerializeField] GameObject unitKnightPrefab;
+    public GameObject UnitKnightPrefab { get { return unitKnightPrefab; } }
 
     public void LoadMap(GameData gameData)
     {

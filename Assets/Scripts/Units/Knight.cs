@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class Knight : Unit
 {
+    // GameObject prefab;
+
     public Knight(HexMap hexMap) : base(hexMap)
     {
         hp = 100;
@@ -13,5 +15,6 @@ public class Knight : Unit
         type = "land";
         moves = 3;
         navalMoves = 2;
+        // prefab = hexMap.UnitKnightPrefab;
     }
 }

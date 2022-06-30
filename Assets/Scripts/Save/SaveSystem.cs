@@ -54,8 +54,8 @@ public static class SaveSystem
             }
         }
 
-        // foreach (Unit unit in gameData.Units)
-        //     unit.Set
+        foreach (Unit unit in gameData.Units)
+            unit.SetHexMap(hexMap);
     }
 }
 

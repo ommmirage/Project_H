@@ -45,6 +45,11 @@ public class Unit
         hex.AddUnit(this);
     }
 
+    public void SetHexMap(HexMap hexMap)
+    {
+        this.hexMap = hexMap;
+    }
+
     public PathHex GetPathHex(Hex hex)
     {
         return PathMap[hex.Q, hex.R];
