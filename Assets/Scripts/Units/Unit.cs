@@ -20,9 +20,6 @@ public class Unit
     [System.NonSerialized]
     HexMap hexMap;
 
-    public delegate void UnitMovedDelegate(Hex oldHex, Hex newHex);
-    public event UnitMovedDelegate UnitMoved;
-
     protected Hex hex;
 
     [System.NonSerialized]
@@ -44,20 +41,8 @@ public class Unit
 
     public void SetHex(Hex newHex)
     {
-        Hex oldHex = hex;
-
         hex = newHex;
-
         hex.AddUnit(this);
-
-        // Объявляем всем зарегистрированным в событии делегатам,
-        // что оно произошло. В данном случае, у нас 
-        // зарегистрирована функция UnitView.OnUnitMoved().
-        // Она выполнится в HexMap OnUnitMoved().
-        if (UnitMoved != null)
-        {
-            UnitMoved(oldHex, newHex);
-        }
     }
 
     public PathHex GetPathHex(Hex hex)
