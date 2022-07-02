@@ -51,12 +51,14 @@ public class PauseMenu : MonoBehaviour
     public void Save()
     {
         HexMap hexMap = Object.FindObjectOfType<HexMap>();
-        SaveSystem.SaveGeo(hexMap);
+        SaveSystem saveSystem = new SaveSystem();
+        saveSystem.SaveGame(hexMap);
     }
 
     public void Load()
     {
-        SaveSystem.LoadGeo();
+        SaveSystem saveSystem = new SaveSystem();
+        saveSystem.LoadGame();
         pauseMenuUI.SetActive(false);
         mouseController.OnPause = false;
     }

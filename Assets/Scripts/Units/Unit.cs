@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Xml.Serialization;
 
 [System.Serializable]
 public class Unit
@@ -22,16 +23,19 @@ public class Unit
 
     protected Hex hex;
 
-    [System.NonSerialized]
+    [XmlIgnore]
     public GameObject UnitGameObject;
 
+    [XmlIgnore]
     public LinkedList<PathHex> Path = null;
-    public PathHex[,] PathMap;
+    PathHex[,] pathMap;
 
+    public Unit(){}
+    
     public Unit(HexMap hexMap)
     {
         this.hexMap = hexMap;
-        PathMap = new PathHex[hexMap.Width, hexMap.Height];
+        pathMap = new PathHex[hexMap.Width, hexMap.Height];
     }
 
     public Hex GetHex()
@@ -52,7 +56,7 @@ public class Unit
 
     public PathHex GetPathHex(Hex hex)
     {
-        return PathMap[hex.Q, hex.R];
+        return pathMap[hex.Q, hex.R];
     }
 
     public PathHex GetPathHexAt(int x, int y)
@@ -65,7 +69,7 @@ public class Unit
         else
             x = x % hexMap.Width;
         
-        return PathMap[x, y];
+        return pathMap[x, y];
     }
 
     public List<PathHex> GetPath()
@@ -161,6 +165,17 @@ public class Unit
         else
         {
             MovesRemaining = navalMoves;
+        }
+    }
+
+    public void PreparePathMap()
+    {
+        for (int i = 0; i < hexMap.Width; i++)
+        {
+            for (int j = 0; j < hexMap.Height; j++)
+            {
+                pathMap[i, j] = new PathHex(hexMap.GetHexAt(i, j));
+            }
         }
     }
 }

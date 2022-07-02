@@ -15,7 +15,7 @@ public class Pathfinding
 
     public List<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
     {
-        PreparePathMap(unit);
+        unit.PreparePathMap();
 
         PathHex startPathHex = unit.GetPathHex(startHex);
         PathHex endPathHex = unit.GetPathHex(endHex);
@@ -74,17 +74,6 @@ public class Pathfinding
         }
 
         return CalculatePath(unit, lastPathHex);
-    }
-
-    void PreparePathMap(Unit unit)
-    {
-        for (int i = 0; i < hexMap.Width; i++)
-        {
-            for (int j = 0; j < hexMap.Height; j++)
-            {
-                unit.PathMap[i,j] = new PathHex(hexMap.GetHexAt(i, j));
-            }
-        }
     }
 
     int CalculateMovesRemaining(Unit unit, int movesRemaining, PathHex currentPathHex, PathHex neighbour)

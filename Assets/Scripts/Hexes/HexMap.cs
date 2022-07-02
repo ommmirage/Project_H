@@ -25,9 +25,9 @@ public class HexMap : MonoBehaviour
     [SerializeField] GameObject unitKnightPrefab;
     public GameObject UnitKnightPrefab { get { return unitKnightPrefab; } }
 
-    public void LoadMap(GameData gameData)
+    public void LoadMap(GameData gameData, Hex[,] hexes)
     {
-        LoadTiles(gameData.Hexes);
+        LoadTiles(hexes);
 
         UpdateHexVisuals();
         SetLabels();
