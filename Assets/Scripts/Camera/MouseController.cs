@@ -89,6 +89,10 @@ public class MouseController : MonoBehaviour
         else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))
         {
             Hex newSelectedHex = unit.Move(path);
+
+			if (newSelectedHex == null)
+				return;
+
 			ChangeSelectedHex(newSelectedHex);
 			path = unit.GetPath();
 

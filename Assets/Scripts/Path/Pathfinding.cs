@@ -22,6 +22,7 @@ public class Pathfinding
         while (blockList.Count > 0)
         {
             PathHex endPathHex2 = GetEndHexWithPath(unit, startHex, endHex, blockList);
+            // TODO: Wrong
             if (endPathHex2.FCost < endPathHex.FCost)
                 endPathHex = endPathHex2;
         }
@@ -165,9 +166,12 @@ public class Pathfinding
     List<PathHex> GetPathToEndHex(Unit unit, PathHex endPathHex)
     {
         List<PathHex> path = new List<PathHex>();
+
         path.Add(endPathHex);
+
         PathHex currentPathHex = endPathHex;
-        while (currentPathHex.CameFromPathHex != null)
+        while ( (currentPathHex.CameFromPathHex != null) && 
+                (currentPathHex != currentPathHex.CameFromPathHex) )
         {
             path.Add(currentPathHex.CameFromPathHex);
             currentPathHex = currentPathHex.CameFromPathHex;
@@ -202,6 +206,9 @@ public class Pathfinding
 
     public void DrawPath(List<PathHex> path, Unit unit)
 	{
+        if (path.Count == 0)
+            return;
+
         int movesRemaining = unit.MovesRemaining;
         int movesCount = 0;
 

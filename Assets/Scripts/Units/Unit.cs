@@ -54,6 +54,11 @@ public class Unit
         this.hexMap = hexMap;
     }
 
+    public PathHex GetPathHex()
+    {
+        return pathMap[hex.Q, hex.R];
+    }
+
     public PathHex GetPathHex(Hex hex)
     {
         return pathMap[hex.Q, hex.R];
@@ -117,6 +122,9 @@ public class Unit
     // Returns hex, on which unit finished move
     public Hex Move(List<PathHex> pathList)
     {   
+        if (pathList.Count == 0)
+            return null;
+
         PathHex pathHex = new PathHex(hex);
         Path = new LinkedList<PathHex>(pathList);
 
@@ -134,10 +142,7 @@ public class Unit
         while (Path.Count > 0)
         {
             if (MovesRemaining <= 0)
-            {
-                FinishedMove = true;
                 break;
-            }
 
             pathHex = Path.First.Value;
             Path.RemoveFirst();
@@ -149,6 +154,9 @@ public class Unit
 
             hex.Clear();
         }
+
+        if (MovesRemaining <= 0)
+            FinishedMove = true;
 
         SetHex(hex);
 
