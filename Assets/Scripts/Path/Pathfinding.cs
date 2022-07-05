@@ -22,7 +22,19 @@ public class Pathfinding
         while (blockList.Count > 0)
         {
             PathHex endPathHex2 = GetEndHexWithPath(unit, startHex, endHex, blockList);
-            // TODO: Wrong
+        
+            // Debug.Log("Path1");
+            // foreach (PathHex hex in GetPathToEndHex(unit, endPathHex))
+            // {
+            //     Debug.Log(hex);
+            // }
+
+            // Debug.Log("Path2");
+            // foreach (PathHex hex in GetPathToEndHex(unit, endPathHex2))
+            // {
+            //     Debug.Log(hex);
+            // }
+
             if (endPathHex2.FCost < endPathHex.FCost)
                 endPathHex = endPathHex2;
         }

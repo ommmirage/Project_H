@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Xml.Serialization;
 
 [System.Serializable]
+[XmlInclude(typeof(Knight))]
 public class Unit
 {
     protected int hp;

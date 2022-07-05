@@ -32,7 +32,7 @@ public class SaveSystem
 
     public void SaveGame(HexMap hexMap)
     {
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(Unit));
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(Knight));
 
         gameData = new GameData(hexMap);
 
@@ -46,6 +46,7 @@ public class SaveSystem
         // stream.Close();
 
         xmlSerializer.Serialize(writer, new Knight(hexMap));
+        // xmlSerializer.Serialize(writer, new Unit());
         writer.Close();
 
         Debug.Log("Game Saved");
@@ -57,10 +58,11 @@ public class SaveSystem
         if (File.Exists(path))
         {
             // BinaryFormatter formatter = new BinaryFormatter();
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Knight));
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            gameData = xmlSerializer.Deserialize(stream) as GameData;
+            Knight knight = xmlSerializer.Deserialize(stream) as Knight;
+            // Unit unit = xmlSerializer.Deserialize(stream) as Unit;
             stream.Close();
 
             Debug.Log("Load ok");

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Knight : Unit
 {
     // GameObject prefab;
+    public Knight() {}
 
     public Knight(HexMap hexMap) : base(hexMap)
     {
