@@ -99,6 +99,7 @@ public class MouseController : MonoBehaviour
         {
             unit = null;
             selectedHex.SetSelected(false);
+			selectedHex = null;
             pathfinding.ClearPath(path);
             return;
         }

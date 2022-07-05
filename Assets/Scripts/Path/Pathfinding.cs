@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Pathfinding
 {
-    List<PathHex> openList;
-    List<PathHex> closedList;
     HexMap hexMap;
 
     public Pathfinding()
@@ -17,11 +15,33 @@ public class Pathfinding
     {
         unit.PreparePathMap();
 
+        Queue<PathHex> blockList = new Queue<PathHex>();
+
+        PathHex endPathHex = GetEndHexWithPath(unit, startHex, endHex, blockList);
+
+        while (blockList.Count > 0)
+        {
+            PathHex endPathHex2 = GetEndHexWithPath(unit, startHex, endHex, blockList);
+            if (endPathHex2.FCost < endPathHex.FCost)
+                endPathHex = endPathHex2;
+        }
+
+        return GetPathToEndHex(unit, endPathHex);
+    }
+
+    public PathHex GetEndHexWithPath(Unit unit, Hex startHex, Hex endHex, Queue<PathHex> blockList)
+    {
         PathHex startPathHex = unit.GetPathHex(startHex);
         PathHex endPathHex = unit.GetPathHex(endHex);
 
-        openList = new List<PathHex> { startPathHex };
-        closedList = new List<PathHex>();
+        List<PathHex> openList = new List<PathHex> { startPathHex };
+        List<PathHex> closedList = new List<PathHex>();
+
+        if (blockList.Count > 0)
+        {
+            closedList.Add(blockList.Dequeue());
+        }
+
         PathHex lastPathHex = startPathHex;
         int movesRemaining = unit.MovesRemaining;
 
@@ -32,9 +52,16 @@ public class Pathfinding
         while (openList.Count > 0)
         {
             PathHex currentPathHex = GetLowestFCostHex(openList);
+
             if (currentPathHex == endPathHex)
+                return endPathHex;
+
+            if ( (currentPathHex.CameFromPathHex != null) && (currentPathHex.Elevation < 0) 
+                    && (currentPathHex.CameFromPathHex.Elevation > 0) 
+                    && (!closedList.Contains(currentPathHex)) )
             {
-                return CalculatePath(unit, endPathHex);
+                // Block this hex to calculate alternative path on the next iteration
+                blockList.Enqueue(currentPathHex);
             }
 
             openList.Remove(currentPathHex);
@@ -73,7 +100,7 @@ public class Pathfinding
             }
         }
 
-        return CalculatePath(unit, lastPathHex);
+        return lastPathHex;
     }
 
     int CalculateMovesRemaining(Unit unit, int movesRemaining, PathHex currentPathHex, PathHex neighbour)
@@ -135,7 +162,7 @@ public class Pathfinding
         return lowestFCostHex;
     }
 
-    List<PathHex> CalculatePath(Unit unit, PathHex endPathHex)
+    List<PathHex> GetPathToEndHex(Unit unit, PathHex endPathHex)
     {
         List<PathHex> path = new List<PathHex>();
         path.Add(endPathHex);

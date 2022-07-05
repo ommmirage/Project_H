@@ -88,6 +88,7 @@ public class Unit
 
     // public void DoTurn()
     // {
+    //     SetMovesRemaining();
     //     if ( path == null || path.Count == 0 )
     //     {
     //         return;
@@ -119,6 +120,8 @@ public class Unit
         PathHex pathHex = new PathHex(hex);
         Path = new LinkedList<PathHex>(pathList);
 
+        // First path node is set on the tile, on which
+        // unit stands
         if (MovesRemaining > 0)
         {
             Path.RemoveFirst();
@@ -138,12 +141,12 @@ public class Unit
 
             pathHex = Path.First.Value;
             Path.RemoveFirst();
+            hex = hexMap.GetHexAt(pathHex);
             MovesRemaining -= hex.MovementCost;
 
             if (pathHex.Embark)
                 MovesRemaining = 0;
 
-            hex = hexMap.GetHexAt(pathHex);
             hex.Clear();
         }
 
