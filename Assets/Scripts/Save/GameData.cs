@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.Serialization;
 
-[System.Serializable]
+[DataContract]
 public class GameData
 {
     HexMap hexMap;
     Hex[,] Hexes;
+
+    [DataMember()]
     public List<Unit> Units;
+
+    [DataMember()]
     public Serializable2d<Hex>[] SerializableArray;
 
     public GameData(){}

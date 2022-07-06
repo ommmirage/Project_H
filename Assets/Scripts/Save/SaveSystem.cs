@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.IO;
 using System.Xml.Serialization;
-using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 public class SaveSystem
 {
     HexMap hexMap;
-    Hex[,] hexes;
 
     public SaveSystem()
     {
@@ -15,20 +14,17 @@ public class SaveSystem
 
     public void SaveGame(HexMap hexMap)
     {
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
+        // XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
 
         GameData gameData = new GameData(hexMap);
 
-        // BinaryFormatter formatter  = new BinaryFormatter();
-
         string path = Application.persistentDataPath + "/save.sav";
-        // FileStream stream = new FileStream(path, FileMode.OpenOrCreate);
-        TextWriter writer = new StreamWriter(path);
+        // TextWriter writer = new StreamWriter(path);
+        FileStream writer = new FileStream(path, FileMode.Create);
 
-        // formatter.Serialize(stream, geoData);
-        // stream.Close();
+        DataContractSerializer ser = new DataContractSerializer(typeof(GameData));
 
-        xmlSerializer.Serialize(writer, gameData);
+        ser.WriteObject(writer, gameData);
         writer.Close();
 
         Debug.Log("Game Saved");
@@ -39,11 +35,11 @@ public class SaveSystem
         string path = Application.persistentDataPath + "/save.sav";
         if (File.Exists(path))
         {
-            // BinaryFormatter formatter = new BinaryFormatter();
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
+            // XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
             FileStream stream = new FileStream(path, FileMode.Open);
+            DataContractSerializer ser = new DataContractSerializer(typeof(GameData));
 
-            GameData gameData = xmlSerializer.Deserialize(stream) as GameData;
+            GameData gameData = ser.ReadObject(stream) as GameData;
             stream.Close();
 
             OnAfterDeserialize(gameData);
@@ -58,8 +54,18 @@ public class SaveSystem
 
     void OnAfterDeserialize(GameData gameData)
     {
+        Hex[,] hexes = FillHexes(gameData);
+
+        foreach (Unit unit in gameData.Units)
+            unit.SetHexMap(hexMap);
+
+        hexMap.LoadMap(gameData, hexes);
+    }
+
+    Hex[,] FillHexes(GameData gameData)
+    {
         // Convert the serializable array into 2d
-        hexes = new Hex[hexMap.Width, hexMap.Height];
+        Hex[,] hexes = new Hex[hexMap.Width, hexMap.Height];
         foreach (Serializable2d<Hex> hexWithIds in gameData.SerializableArray)
         {
             int x = hexWithIds.Dimension1;
@@ -71,15 +77,9 @@ public class SaveSystem
             hex.MovementCost = hexWithIds.hex.MovementCost;
             hex.IsForest = hexWithIds.hex.IsForest;
 
-            Debug.Log(hex);
-
             hexes[x, y] = hex;
         }
-
-        foreach (Unit unit in gameData.Units)
-            unit.SetHexMap(hexMap);
-
-        hexMap.LoadMap(gameData, hexes);
+        return hexes;
     }
 }
 

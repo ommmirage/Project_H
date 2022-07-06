@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
-[System.Serializable]
-[XmlInclude(typeof(Knight))]
+[DataContract]
+[KnownType(typeof(Knight))]
 public class Unit
 {
+    [DataMember(Name="hp")]
     protected int hp;
     protected int strength;
     protected int moves;

@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
-
+using System.Runtime.Serialization;
 
 // The hex class defines the grid position, world position, size,
 // neighbors of a Hex Tile. 
 
-[Serializable]
+[DataContract]
 public class Hex
 {
     // readonly means that variable is only set in the contructor
@@ -15,18 +15,21 @@ public class Hex
 
     float radius = 0.5f;
 
+    [DataMember()]
     public float Elevation = -0.5f;
 
+    [DataMember()]
     public int Continent = -1;
+    [DataMember()]
     public int Territory = -1;
 
+    [DataMember()]
     public int MovementCost = 1;
 
+    [DataMember()]
     public bool IsForest = false;
 
-    [NonSerialized]
     HexMap hexMap;
-    [NonSerialized]
     Unit unit;
 
     // static means that const belongs to the type, not the object
