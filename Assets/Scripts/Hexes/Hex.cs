@@ -32,6 +32,8 @@ public class Hex
     // static means that const belongs to the type, not the object
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
+    public Hex(){}
+
     public Hex(HexMap hexMap, int q, int r) {
         this.hexMap = hexMap;
 

@@ -7,23 +7,6 @@ public class SaveSystem
 {
     HexMap hexMap;
     Hex[,] hexes;
-    Serializable2d<Hex>[] serializableArray;
-    GameData gameData;
-
-    [System.Serializable]
-    struct Serializable2d<Hex>
-    {
-        public int Dimension1;
-        public int Dimension2;
-        public Hex hex;
-
-        public Serializable2d(int x, int y, Hex hex)
-        {
-            Dimension1 = x;
-            Dimension2 = y;
-            this.hex = hex;
-        }
-    }
 
     public SaveSystem()
     {
@@ -32,9 +15,9 @@ public class SaveSystem
 
     public void SaveGame(HexMap hexMap)
     {
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(Knight));
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
 
-        gameData = new GameData(hexMap);
+        GameData gameData = new GameData(hexMap);
 
         // BinaryFormatter formatter  = new BinaryFormatter();
 
@@ -45,8 +28,7 @@ public class SaveSystem
         // formatter.Serialize(stream, geoData);
         // stream.Close();
 
-        xmlSerializer.Serialize(writer, new Knight(hexMap));
-        // xmlSerializer.Serialize(writer, new Unit());
+        xmlSerializer.Serialize(writer, gameData);
         writer.Close();
 
         Debug.Log("Game Saved");
@@ -58,12 +40,13 @@ public class SaveSystem
         if (File.Exists(path))
         {
             // BinaryFormatter formatter = new BinaryFormatter();
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Knight));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            Knight knight = xmlSerializer.Deserialize(stream) as Knight;
-            // Unit unit = xmlSerializer.Deserialize(stream) as Unit;
+            GameData gameData = xmlSerializer.Deserialize(stream) as GameData;
             stream.Close();
+
+            OnAfterDeserialize(gameData);
 
             Debug.Log("Load ok");
         }
@@ -73,34 +56,22 @@ public class SaveSystem
         }
     }
 
-    public void OnBeforeSerialize()
-    {
-        // Convert unserializable 2d array into serializable
-        int width = hexMap.Width;
-        int height = hexMap.Height;
-
-        serializableArray = new Serializable2d<Hex>[width * height];
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                serializableArray[x * y] = new Serializable2d<Hex>(x, y, hexMap.Hexes[x, y]);
-            }
-        }
-    }
-
-    public void OnAfterDeserialize()
+    void OnAfterDeserialize(GameData gameData)
     {
         // Convert the serializable array into 2d
         hexes = new Hex[hexMap.Width, hexMap.Height];
-        foreach (Serializable2d<Hex> hexWithIds in serializableArray)
+        foreach (Serializable2d<Hex> hexWithIds in gameData.SerializableArray)
         {
             int x = hexWithIds.Dimension1;
             int y = hexWithIds.Dimension2;
-            Hex hex = hexWithIds.hex;
+            Hex hex = new Hex(hexMap, x, y);
+            hex.Elevation = hexWithIds.hex.Elevation;
+            hex.Continent = hexWithIds.hex.Continent;
+            hex.Territory = hexWithIds.hex.Territory;
+            hex.MovementCost = hexWithIds.hex.MovementCost;
+            hex.IsForest = hexWithIds.hex.IsForest;
 
-            hex.SetHexMap(hexMap);
+            Debug.Log(hex);
 
             hexes[x, y] = hex;
         }
