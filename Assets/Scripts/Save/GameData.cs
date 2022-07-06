@@ -8,8 +8,8 @@ public class GameData
     HexMap hexMap;
     Hex[,] Hexes;
 
-    [DataMember()]
-    public List<Unit> Units;
+    [DataMember]
+    public List<Unit> Units = new List<Unit>();
 
     [DataMember()]
     public Serializable2d<Hex>[] SerializableArray;
@@ -20,7 +20,6 @@ public class GameData
     {
         this.hexMap = hexMap;
         PackHexesToSerializableArray();
-        Units = hexMap.Units;
     }
 
     void PackHexesToSerializableArray()

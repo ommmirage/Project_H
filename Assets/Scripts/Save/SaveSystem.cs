@@ -42,7 +42,9 @@ public class SaveSystem
             GameData gameData = ser.ReadObject(stream) as GameData;
             stream.Close();
 
-            OnAfterDeserialize(gameData);
+            Hex[,] hexes = FillHexes(gameData);
+
+            hexMap.LoadMap(gameData, hexes);
 
             Debug.Log("Load ok");
         }
@@ -50,16 +52,6 @@ public class SaveSystem
         {
             Debug.Log("Save file not found in " + path);
         }
-    }
-
-    void OnAfterDeserialize(GameData gameData)
-    {
-        Hex[,] hexes = FillHexes(gameData);
-
-        foreach (Unit unit in gameData.Units)
-            unit.SetHexMap(hexMap);
-
-        hexMap.LoadMap(gameData, hexes);
     }
 
     Hex[,] FillHexes(GameData gameData)
@@ -70,14 +62,18 @@ public class SaveSystem
         {
             int x = hexWithIds.Dimension1;
             int y = hexWithIds.Dimension2;
-            Hex hex = new Hex(hexMap, x, y);
-            hex.Elevation = hexWithIds.hex.Elevation;
-            hex.Continent = hexWithIds.hex.Continent;
-            hex.Territory = hexWithIds.hex.Territory;
-            hex.MovementCost = hexWithIds.hex.MovementCost;
-            hex.IsForest = hexWithIds.hex.IsForest;
 
+            Hex hex = hexWithIds.hex;
+            hex.SetHexMap(hexMap);
+            
             hexes[x, y] = hex;
+
+            Unit unit = hex.GetUnit();
+            if (unit != null)
+            {
+                unit.SetHex(hex);
+                gameData.Units.Add(unit);
+            }
         }
         return hexes;
     }

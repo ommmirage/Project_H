@@ -7,29 +7,32 @@ using System.Runtime.Serialization;
 [KnownType(typeof(Knight))]
 public class Unit
 {
-    [DataMember(Name="hp")]
+    [DataMember]
     protected int hp;
+    [DataMember]
     protected int strength;
+    [DataMember]
     protected int moves;
     public int Moves { get { return moves; } }
+    [DataMember]
     protected int navalMoves;
     public int NavalMoves { get { return navalMoves; } }
+    [DataMember]
     public int MovesRemaining;
-    // public int NavalMovesRemaining;
+    [DataMember]
     public bool IsEmbarked;
+    [DataMember]
     protected string type;
     public string Type { get { return type; } }
+    [DataMember]
     public bool FinishedMove = false;
     
-    [System.NonSerialized]
     HexMap hexMap;
 
     protected Hex hex;
 
-    [XmlIgnore]
     public GameObject UnitGameObject;
 
-    [XmlIgnore]
     public LinkedList<PathHex> Path = null;
     PathHex[,] pathMap;
 

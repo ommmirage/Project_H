@@ -8,41 +8,44 @@ using System.Runtime.Serialization;
 [DataContract]
 public class Hex
 {
-    // readonly means that variable is only set in the contructor
-    public readonly int Q;
-    public readonly int R;
-    // public readonly int S;
+    [DataMember]
+    int q;
+    public int Q { get { return q; } }
 
-    float radius = 0.5f;
+    [DataMember]
+    int r;
+    public int R { get { return r; } }
 
-    [DataMember()]
+    [DataMember]
     public float Elevation = -0.5f;
 
-    [DataMember()]
+    [DataMember]
     public int Continent = -1;
-    [DataMember()]
+    [DataMember]
     public int Territory = -1;
 
-    [DataMember()]
+    [DataMember]
     public int MovementCost = 1;
 
-    [DataMember()]
+    [DataMember]
     public bool IsForest = false;
 
     HexMap hexMap;
+
+    [DataMember]
     Unit unit;
 
     // static means that const belongs to the type, not the object
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
+    static readonly float RADIUS = 0.5f;
 
     public Hex(){}
 
-    public Hex(HexMap hexMap, int q, int r) {
+    public Hex(HexMap hexMap, int q, int r) 
+    {
         this.hexMap = hexMap;
-
-        this.Q = q;
-        this.R = r;
-        // S = -(q + r);
+        this.q = q;
+        this.r = r;
     }
 
     public void SetHexMap(HexMap hexMap)
@@ -65,7 +68,7 @@ public class Hex
 
     public float Height()
     {
-        return radius * 2;
+        return RADIUS * 2;
     }
 
     public float Width()
