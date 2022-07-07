@@ -21,9 +21,12 @@ public class HexMap : MonoBehaviour
     [SerializeField] Material matGrasslands;
     [SerializeField] GameObject forestPrefab;
 
-    [Header("Units' prefabs")]
-    [SerializeField] GameObject unitKnightPrefab;
-    public GameObject UnitKnightPrefab { get { return unitKnightPrefab; } }
+    UnitsPrefabs unitsPrefabs;
+
+    public void Start()
+    {
+        unitsPrefabs = Object.FindObjectOfType<UnitsPrefabs>();
+    }
 
     public void LoadMap(GameData gameData, Hex[,] hexes)
     {
@@ -215,7 +218,13 @@ public class HexMap : MonoBehaviour
         }
     }
 
-    protected void SpawnUnitAt(Unit unit, GameObject prefab, int x, int y)
+    void SpawnUnitAt(Unit unit)
+    {
+        Hex hex = unit.GetHex();
+        SpawnUnitAt(unit, hex.Q, hex.R);
+    }
+
+    void SpawnUnitAt(Unit unit, int x, int y)
     {
         Hex hex = GetHexAt(x, y);
         unit.SetHex(hex);
@@ -224,7 +233,7 @@ public class HexMap : MonoBehaviour
         GameObject hexGameObject = HexToGameObjectDictionary[hex];
 
         GameObject unitGameObject = Instantiate(
-                prefab, 
+                unitsPrefabs.GetPrefab(unit), 
                 hexGameObject.transform.position, 
                 new Quaternion(), 
                 hexGameObject.transform
@@ -236,17 +245,17 @@ public class HexMap : MonoBehaviour
 
     public void SpawnUnits()
     {
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 0);
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 84, 15);
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 3, 12);
-        SpawnUnitAt(new Knight(this), unitKnightPrefab, 8, 9);
+        SpawnUnitAt(new Knight(this), 84, 0);
+        SpawnUnitAt(new Knight(this), 84, 15);
+        SpawnUnitAt(new Knight(this), 3, 12);
+        SpawnUnitAt(new Knight(this), 8, 9);
     }
 
     public void SpawnUnits(List<Unit> units)
     {
         foreach (Unit unit in units)
         {
-            // SpawnUnitAt(unit, )
+            SpawnUnitAt(unit);
         }
     }
 

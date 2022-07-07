@@ -7,26 +7,21 @@ using System.Runtime.Serialization;
 [KnownType(typeof(Knight))]
 public class Unit
 {
-    [DataMember]
     protected int hp;
-    [DataMember]
     protected int strength;
-    [DataMember]
     protected int moves;
     public int Moves { get { return moves; } }
-    [DataMember]
     protected int navalMoves;
     public int NavalMoves { get { return navalMoves; } }
     [DataMember]
     public int MovesRemaining;
     [DataMember]
     public bool IsEmbarked;
-    [DataMember]
     protected string type;
     public string Type { get { return type; } }
     [DataMember]
     public bool FinishedMove = false;
-    
+
     HexMap hexMap;
 
     protected Hex hex;
@@ -40,6 +35,7 @@ public class Unit
     
     public Unit(HexMap hexMap)
     {
+        Debug.Log(hexMap);
         this.hexMap = hexMap;
         pathMap = new PathHex[hexMap.Width, hexMap.Height];
     }

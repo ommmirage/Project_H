@@ -71,8 +71,16 @@ public class SaveSystem
             Unit unit = hex.GetUnit();
             if (unit != null)
             {
-                unit.SetHex(hex);
-                gameData.Units.Add(unit);
+                Unit newUnit = (Unit)System.Activator.CreateInstance(
+                    unit.GetType(), 
+                    12);
+
+                newUnit.SetHex(hex);
+                newUnit.MovesRemaining = unit.MovesRemaining;
+                newUnit.IsEmbarked = unit.IsEmbarked;
+                newUnit.FinishedMove = unit.FinishedMove;
+
+                gameData.Units.Add(newUnit);
             }
         }
         return hexes;
