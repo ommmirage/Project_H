@@ -1254,7 +1254,6 @@ MonoBehaviour:
   matOcean: {fileID: 2100000, guid: f47cb81a50d103546a6271506c42cbb1, type: 2}
   matGrasslands: {fileID: 2100000, guid: 0971ddc3dcc3f514bb964d389799c7dc, type: 2}
   forestPrefab: {fileID: 1638819778573062, guid: 500f568e51516ae49adf4637df6c168e, type: 3}
-  unitKnightPrefab: {fileID: 121574, guid: fe2a5bf9b4c2d4a4b9853a8506f18c40, type: 3}
 --- !u!4 &1412781723
 Transform:
   m_ObjectHideFlags: 0
@@ -1607,6 +1606,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020242685}
   m_CullTransparentMesh: 1
+--- !u!1 &2055671288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2055671290}
+  - component: {fileID: 2055671289}
+  m_Layer: 0
+  m_Name: UnitsPrefabs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2055671289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055671288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e70aeb8cca15814a8a3c26da2e36e6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  knightPrefab: {fileID: 121574, guid: fe2a5bf9b4c2d4a4b9853a8506f18c40, type: 3}
+--- !u!4 &2055671290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055671288}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 388.59467, y: 184.55652, z: -18.789444}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2068445133
 GameObject:
   m_ObjectHideFlags: 0

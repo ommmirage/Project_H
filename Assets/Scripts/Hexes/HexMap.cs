@@ -261,12 +261,12 @@ public class HexMap : MonoBehaviour
 
     public void DoTurn()
     {
-        // if (units != null)
-        // {
-        //     foreach (Unit unit in units)
-        //     {
-        //         unit.DoTurn();
-        //     }
-        // }
+        if (units != null)
+        {
+            foreach (Unit unit in units)
+            {
+                // unit.DoTurn();
+            }
+        }
     }
 }

@@ -73,7 +73,7 @@ public class SaveSystem
             {
                 Unit newUnit = (Unit)System.Activator.CreateInstance(
                     unit.GetType(), 
-                    12);
+                    new object[]{hexMap});
 
                 newUnit.SetHex(hex);
                 newUnit.MovesRemaining = unit.MovesRemaining;

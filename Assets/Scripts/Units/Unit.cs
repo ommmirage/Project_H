@@ -35,7 +35,7 @@ public class Unit
     
     public Unit(HexMap hexMap)
     {
-        Debug.Log(hexMap);
+        // Debug.Log(hexMap);
         this.hexMap = hexMap;
         pathMap = new PathHex[hexMap.Width, hexMap.Height];
     }
@@ -91,35 +91,6 @@ public class Unit
             
         return null;
     }
-
-
-    // public void DoTurn()
-    // {
-    //     SetMovesRemaining();
-    //     if ( path == null || path.Count == 0 )
-    //     {
-    //         return;
-    //     }
-
-    //     while (MovesRemaining > 0)
-    //     {
-    //         Hex newHex = path.Dequeue();
-    //         SetHex(newHex);
-    //     }
-
-            // if (movesRemaining <= 0)
-            //     {
-            //         if (hex.Elevation > 0)
-            //         {
-            //             movesRemaining = unit.Moves;
-            //         }
-            //         else
-            //         {
-            //             movesRemaining = unit.NavalMoves;
-            //         }
-            //     }
-            // FinishedMove = false;
-    // }
 
     // Returns hex, on which unit finished move
     public Hex Move(List<PathHex> pathList)
@@ -190,5 +161,19 @@ public class Unit
                 pathMap[i, j] = new PathHex(hexMap.GetHexAt(i, j));
             }
         }
+    }
+
+    public void DoTurn()
+    {
+        SetMovesRemaining();
+        
+        Hex endHex = hexMap.GetHexAt(Path.Last.Value);
+
+        if (endHex != hex)
+        {   
+            Pathfinding pathfinding = new Pathfinding();
+            Path = new LinkedList<PathHex>(pathfinding.FindPath(this, hex, endHex));
+        }
+        
     }
 }

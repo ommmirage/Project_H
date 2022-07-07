@@ -6,14 +6,9 @@ public class Knight : Unit
 {
     public Knight() {}
 
-    public Knight(int i) 
-    {
-        Debug.Log(i);
-    }
-
     public Knight(HexMap hexMap) : base(hexMap)
     {
-        Debug.Log(hexMap);
+        // Debug.Log(hexMap);
 
         hp = 100;
         strength = 8;

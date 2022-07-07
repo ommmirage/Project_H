@@ -53,7 +53,11 @@ public class MouseController : MonoBehaviour
 	{
 		float mousePositionDiff = Vector3.Distance(Input.mousePosition, lastMousePosition);
 
-		if (Input.GetMouseButtonUp(0))
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			hexMap.DoTurn();
+		}
+		else if (Input.GetMouseButtonUp(0))
 		{
 			SelectUnit();
 		}
@@ -88,16 +92,7 @@ public class MouseController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))
         {
-            Hex newSelectedHex = unit.Move(path);
-
-			if (newSelectedHex == null)
-				return;
-
-			ChangeSelectedHex(newSelectedHex);
-			path = unit.GetPath();
-
-			if (path != null)
-				pathfinding.DrawPath(path, unit);
+            MoveUnit();
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -227,5 +222,19 @@ public class MouseController : MonoBehaviour
 		}
 
 		return null;
+	}
+
+	void MoveUnit()
+	{
+		Hex newSelectedHex = unit.Move(path);
+
+		if (newSelectedHex == null)
+            return;
+
+        ChangeSelectedHex(newSelectedHex);
+        path = unit.GetPath();
+
+        if (path != null)
+            pathfinding.DrawPath(path, unit);
 	}
 }
