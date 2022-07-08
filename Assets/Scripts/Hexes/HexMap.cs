@@ -221,14 +221,16 @@ public class HexMap : MonoBehaviour
     void SpawnUnitAt(Unit unit)
     {
         Hex hex = unit.GetHex();
-        SpawnUnitAt(unit, hex.Q, hex.R);
+        SpawnUnitAt(unit, hex.Q, hex.R, false);
     }
 
-    void SpawnUnitAt(Unit unit, int x, int y)
+    void SpawnUnitAt(Unit unit, int x, int y, bool setMovesRemaining = true)
     {
         Hex hex = GetHexAt(x, y);
         unit.SetHex(hex);
-        unit.SetMovesRemaining();
+
+        if (setMovesRemaining)
+            unit.SetMovesRemaining();
 
         GameObject hexGameObject = HexToGameObjectDictionary[hex];
 
@@ -255,6 +257,7 @@ public class HexMap : MonoBehaviour
     {
         foreach (Unit unit in units)
         {
+            Debug.Log(unit.GetHex() + " " + unit.MovesRemaining);
             SpawnUnitAt(unit);
         }
     }

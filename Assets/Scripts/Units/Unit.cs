@@ -174,7 +174,7 @@ public class Unit
 
     public void DoTurn()
     {
-        SetMovesRemaining();
+        // SetMovesRemaining();
         FinishedMove = false;
 
         if ((Path == null) || (Path.Count == 0) )
