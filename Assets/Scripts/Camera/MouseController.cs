@@ -93,6 +93,7 @@ public class MouseController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
+			unit.IsSelected = false;
             unit = null;
             selectedHex.SetSelected(false);
 			selectedHex = null;
@@ -171,11 +172,14 @@ public class MouseController : MonoBehaviour
 
     void SelectUnit()
 	{
+		UnselectPreviousUnit();
+
 		Hex hex = MouseToHex();
 		unit = hex.GetUnit();
 		
 		if (unit != null)
 		{
+			unit.IsSelected = true;
 			pathfinding.ClearPath(path);
             ChangeSelectedHex(hex);
 			path = unit.GetPath();
@@ -186,6 +190,12 @@ public class MouseController : MonoBehaviour
 			}
 		}
     }
+
+	void UnselectPreviousUnit()
+	{
+		if (unit != null)
+			unit.IsSelected = false;
+	}
 
     void ChangeSelectedHex(Hex hex)
     {

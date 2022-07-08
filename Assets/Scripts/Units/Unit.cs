@@ -21,6 +21,7 @@ public class Unit
     public string Type { get { return type; } }
     [DataMember]
     public bool FinishedMove = false;
+    public bool IsSelected = false;
 
     HexMap hexMap;
 
@@ -185,11 +186,15 @@ public class Unit
         {   
             Pathfinding pathfinding = new Pathfinding();
             Path = new LinkedList<PathHex>(pathfinding.FindPath(this, hex, endHex));
-            pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex);
+
+            if (IsSelected)
+            {
+                Debug.Log(hex);
+                pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex);
+
+            }
+
             Move(Path);
-
-        //    Debug.Log(MovesRemaining);
-
         }
     }
 }
