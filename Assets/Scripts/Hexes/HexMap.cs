@@ -265,7 +265,7 @@ public class HexMap : MonoBehaviour
         {
             foreach (Unit unit in units)
             {
-                // unit.DoTurn();
+                unit.DoTurn();
             }
         }
     }

@@ -53,11 +53,7 @@ public class MouseController : MonoBehaviour
 	{
 		float mousePositionDiff = Vector3.Distance(Input.mousePosition, lastMousePosition);
 
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			hexMap.DoTurn();
-		}
-		else if (Input.GetMouseButtonUp(0))
+		if (Input.GetMouseButtonUp(0))
 		{
 			SelectUnit();
 		}
@@ -87,11 +83,12 @@ public class MouseController : MonoBehaviour
             }
 			else if (previousEndHex != endHex)
 			{
-                RedrawPath(endHex, pathfinding);
+                path = pathfinding.RedrawPath(path, unit, endHex);
 			}
         }
         else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))
         {
+        	previousEndHex = endHex;
             MoveUnit();
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
@@ -103,15 +100,6 @@ public class MouseController : MonoBehaviour
             return;
         }
 	}
-
-    void RedrawPath(Hex endHex, Pathfinding pathfinding)
-    {
-        previousEndHex = endHex;
-        pathfinding.ClearPath(path);
-        path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
-		// Debug.Log(path[1]);
-        pathfinding.DrawPath(path, unit);
-    }
 
     void Update_CameraDrag()
     {

@@ -92,17 +92,23 @@ public class Unit
         return null;
     }
 
-    // Returns hex, on which unit finished move
     public Hex Move(List<PathHex> pathList)
+    { 
+        Path = new LinkedList<PathHex>(pathList);
+        return Move(Path);
+    }
+
+    // Returns hex, on which unit finished move
+    public Hex Move(LinkedList<PathHex> pathList)
     {   
         if (pathList.Count == 0)
             return null;
 
         PathHex pathHex = new PathHex(hex);
-        Path = new LinkedList<PathHex>(pathList);
 
         // First path node is set on the tile, on which
         // unit stands
+
         if (MovesRemaining > 0)
         {
             Path.RemoveFirst();
@@ -115,7 +121,9 @@ public class Unit
         while (Path.Count > 0)
         {
             if (MovesRemaining <= 0)
+            {
                 break;
+            }
 
             pathHex = Path.First.Value;
             Path.RemoveFirst();
@@ -166,14 +174,22 @@ public class Unit
     public void DoTurn()
     {
         SetMovesRemaining();
-        
+        FinishedMove = false;
+
+        if ((Path == null) || (Path.Count == 0) )
+            return;
+
         Hex endHex = hexMap.GetHexAt(Path.Last.Value);
 
         if (endHex != hex)
         {   
             Pathfinding pathfinding = new Pathfinding();
             Path = new LinkedList<PathHex>(pathfinding.FindPath(this, hex, endHex));
+            pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex);
+            Move(Path);
+
+        //    Debug.Log(MovesRemaining);
+
         }
-        
     }
 }

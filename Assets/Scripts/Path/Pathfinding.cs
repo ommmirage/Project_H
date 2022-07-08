@@ -394,7 +394,6 @@ public class Pathfinding
                 hexMap.GetHexAt(pathHex).Clear();
             }
         }
-		
     }
 
     public int Distance(PathHex a, PathHex b)
@@ -412,6 +411,15 @@ public class Pathfinding
         }
 
         return (dq + Mathf.Abs(a.R - b.R) + ds) / 2;
+    }
+
+    public List<PathHex> RedrawPath(List<PathHex> path, Unit unit, Hex endHex)
+    {
+        ClearPath(path);
+        path = FindPath(unit, unit.GetHex(), endHex);
+        DrawPath(path, unit);
+
+        return path;
     }
 }
 
