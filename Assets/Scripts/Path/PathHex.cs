@@ -16,9 +16,6 @@ public class PathHex
 
     // Walking cost from the start hex
     public float GCost = int.MaxValue;
-    // Heuristic cost to reach End Hex
-    public float HCost;
-    public float FCost = int.MaxValue;
     public PathHex CameFromPathHex = null;
     public int turns;
     public bool IsWalkable = true;
@@ -31,11 +28,6 @@ public class PathHex
         S = -(Q + R);
         Elevation = hex.Elevation;
         MovementCost = hex.MovementCost;
-    }
-
-    public void CalculateFCost()
-    {
-        FCost = GCost + HCost;
     }
 
     public override string ToString()
