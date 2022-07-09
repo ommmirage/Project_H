@@ -78,7 +78,19 @@ public class MouseController : MonoBehaviour
 			if (unit.FinishedMove)
             {
                 pathfinding.ClearPath(path);
+
+				// Debug.Log("RB");
+				// Debug.Log(unit.GetHex());
+				// Debug.Log(endHex);
+
                 path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
+
+				// Debug.Log("Path after right button");
+				// foreach (PathHex hex in path)
+				// {
+				// 	Debug.Log(hex);
+				// }
+
                 pathfinding.DrawPath(path, unit);
             }
 			else if (previousEndHex != endHex)
@@ -89,6 +101,7 @@ public class MouseController : MonoBehaviour
         else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))
         {
         	previousEndHex = endHex;
+			path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
             MoveUnit();
         }
         else if (Input.GetKeyDown(KeyCode.Escape))

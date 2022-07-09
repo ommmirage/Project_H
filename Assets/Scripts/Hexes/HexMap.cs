@@ -257,7 +257,6 @@ public class HexMap : MonoBehaviour
     {
         foreach (Unit unit in units)
         {
-            Debug.Log(unit.GetHex() + " " + unit.MovesRemaining);
             SpawnUnitAt(unit);
         }
     }

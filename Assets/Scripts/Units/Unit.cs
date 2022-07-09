@@ -174,7 +174,7 @@ public class Unit
 
     public void DoTurn()
     {
-        // SetMovesRemaining();
+        SetMovesRemaining();
         FinishedMove = false;
 
         if ((Path == null) || (Path.Count == 0) )
@@ -185,13 +185,24 @@ public class Unit
         if (endHex != hex)
         {   
             Pathfinding pathfinding = new Pathfinding();
+
+            // Debug.Log("RB");
+			// Debug.Log(hex);
+			// Debug.Log(endHex);
+
+            List<PathHex> path = pathfinding.FindPath(this, hex, endHex);
+
+            Debug.Log("Path after unit.DoTurn()");
+            foreach (PathHex hex in path)
+            {
+                Debug.Log(hex);
+            }
+
             Path = new LinkedList<PathHex>(pathfinding.FindPath(this, hex, endHex));
 
             if (IsSelected)
             {
-                Debug.Log(hex);
                 pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex);
-
             }
 
             Move(Path);
