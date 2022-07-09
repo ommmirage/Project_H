@@ -198,11 +198,10 @@ public class Unit
                 Debug.Log(hex);
             }
 
-            Path = new LinkedList<PathHex>(pathfinding.FindPath(this, hex, endHex));
-
             if (IsSelected)
             {
-                pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex);
+                Path = new LinkedList<PathHex>(
+                    pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex));
             }
 
             Move(Path);
