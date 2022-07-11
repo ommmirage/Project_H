@@ -80,19 +80,6 @@ public class Unit
         return pathMap[x, y];
     }
 
-    public List<PathHex> GetPath()
-    {
-        if (Path != null)
-        {
-            if (Path.Count > 0)
-            {
-                return new List<PathHex>(Path);
-            }
-        }
-            
-        return null;
-    }
-
     public Hex Move(List<PathHex> pathList)
     { 
         Path = new LinkedList<PathHex>(pathList);
@@ -186,22 +173,11 @@ public class Unit
         {   
             Pathfinding pathfinding = new Pathfinding();
 
-            // Debug.Log("RB");
-			// Debug.Log(hex);
-			// Debug.Log(endHex);
-
-            List<PathHex> path = pathfinding.FindPath(this, hex, endHex);
-
-            Debug.Log("Path after unit.DoTurn()");
-            foreach (PathHex hex in path)
-            {
-                Debug.Log(hex);
-            }
+            LinkedList<PathHex> path = pathfinding.FindPath(this, hex, endHex);            
 
             if (IsSelected)
             {
-                Path = new LinkedList<PathHex>(
-                    pathfinding.RedrawPath(new List<PathHex>(Path), this, endHex));
+                Path = new LinkedList<PathHex>(pathfinding.RedrawPath(Path, this, endHex));
             }
 
             Move(Path);

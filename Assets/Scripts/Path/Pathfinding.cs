@@ -11,28 +11,30 @@ public class Pathfinding
         hexMap = Object.FindObjectOfType<HexMap>();
     }
 
-    public List<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
+    public LinkedList<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
     {
         unit.PreparePathMap();
 
         PathHex startPathHex = unit.GetPathHex(startHex);
         PathHex endPathHex = unit.GetPathHex(endHex);
 
-        List<PathHex> openList = new List<PathHex> { startPathHex };
+        Queue<PathHex> openQueue = new Queue<PathHex>();
         List<PathHex> closedList = new List<PathHex>();
+
+        openQueue.Enqueue(startPathHex);
 
         int movesRemaining = unit.MovesRemaining;
 
         startPathHex.GCost = 0;
 
-        while (openList.Count > 0)
+        while (openQueue.Count > 0)
         {
-            PathHex currentPathHex = GetLowestGCostHex(openList);
+            PathHex currentPathHex = openQueue.Peek();
 
             if (currentPathHex == endPathHex)
                 return GetPathToEndHex(unit, endPathHex);
 
-            openList.Remove(currentPathHex);
+            openQueue.Dequeue();
             closedList.Add(currentPathHex);
 
             foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
@@ -54,9 +56,9 @@ public class Pathfinding
                     neighbour.CameFromPathHex = currentPathHex;
                     neighbour.GCost = currentPathHex.GCost + turnsToNeighbour;
 
-                    if (!openList.Contains(neighbour))
+                    if (!openQueue.Contains(neighbour))
                     {
-                        openList.Add(neighbour);
+                        openQueue.Enqueue(neighbour);
                     }
 
                     movesRemaining = CalculateMovesRemaining(unit, movesRemaining, currentPathHex, neighbour);                
@@ -122,35 +124,22 @@ public class Pathfinding
         return movesRemaining;
     }
 
-    PathHex GetLowestGCostHex(List<PathHex> pathHexList)
+    LinkedList<PathHex> GetPathToEndHex(Unit unit, PathHex endPathHex)
     {
-        PathHex lowestGCostHex = pathHexList[0];
-        for (int i = 0; i < pathHexList.Count; i++)
-        {
-            if (pathHexList[i].GCost < lowestGCostHex.GCost)
-            {
-                lowestGCostHex = pathHexList[i];
-            }
-        }
-        return lowestGCostHex;
-    }
+        LinkedList<PathHex> path = new LinkedList<PathHex>();
 
-    List<PathHex> GetPathToEndHex(Unit unit, PathHex endPathHex)
-    {
-        List<PathHex> path = new List<PathHex>();
-
-        path.Add(endPathHex);
+        path.AddLast(endPathHex);
 
         PathHex currentPathHex = endPathHex;
         while ( (currentPathHex.CameFromPathHex != null) && 
                 (currentPathHex != currentPathHex.CameFromPathHex) )
         {
-            path.Add(currentPathHex.CameFromPathHex);
+            path.AddLast(currentPathHex.CameFromPathHex);
             currentPathHex = currentPathHex.CameFromPathHex;
         }
-        path.Reverse();
+        Reverse(ref path);
 
-        unit.Path = new LinkedList<PathHex>(path);
+        unit.Path = path;
         return path;
     }
 
@@ -176,10 +165,12 @@ public class Pathfinding
         return neighborList;
     }
 
-    public void DrawPath(List<PathHex> path, Unit unit)
+    public void DrawPath(LinkedList<PathHex> pathLinked, Unit unit)
 	{
-        if (path.Count == 0)
+        if (pathLinked.Count == 0)
             return;
+
+        List<PathHex> path = new List<PathHex>(pathLinked);
 
         int movesRemaining = unit.MovesRemaining;
         int movesCount = 0;
@@ -345,7 +336,7 @@ public class Pathfinding
         }
     }
 
-	public void ClearPath(List<PathHex> path)
+	public void ClearPath(LinkedList<PathHex> path)
 	{
         if (path != null)
         {
@@ -356,30 +347,28 @@ public class Pathfinding
         }
     }
 
-    public int Distance(PathHex a, PathHex b)
-    {
-        int dq = Mathf.Abs(a.Q - b.Q);
-        if (dq > hexMap.Width / 2)
-        {
-            dq = Mathf.Abs(hexMap.Width - dq);
-        }
-
-        int ds = Mathf.Abs(a.S - b.S);
-        if (ds > hexMap.Width / 2)
-        {
-            ds = Mathf.Abs(hexMap.Width - ds);
-        }
-
-        return (dq + Mathf.Abs(a.R - b.R) + ds) / 2;
-    }
-
-    public List<PathHex> RedrawPath(List<PathHex> path, Unit unit, Hex endHex)
+    public LinkedList<PathHex> RedrawPath(LinkedList<PathHex> path, Unit unit, Hex endHex)
     {
         ClearPath(path);
         path = FindPath(unit, unit.GetHex(), endHex);
         DrawPath(path, unit);
 
         return path;
+    }
+
+    void Reverse(ref LinkedList<PathHex> path) 
+    {
+        LinkedList<PathHex> copyList = new LinkedList<PathHex>();
+
+        LinkedListNode<PathHex> start = path.Last;
+
+        while (start != null)
+        {
+            copyList.AddLast(start.Value);
+            start = start.Previous;
+        }
+
+        path = copyList;
     }
 }
 
