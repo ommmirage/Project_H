@@ -59,7 +59,7 @@ public class Pathfinding
 
                 float turnsToNeighbour = CalculateTurnsToNeighbour(
                     currentPathHex, neighbour, unit, movesRemaining);
-                    
+
                 if (currentPathHex.GCost + turnsToNeighbour < neighbour.GCost)
                 {
                     neighbour.CameFromPathHex = currentPathHex;
@@ -98,11 +98,11 @@ public class Pathfinding
 
         if ((hex.Elevation > 0) && (neighbour.Elevation < 0))
         {
-            turnsToNeighbour = 1;
+            turnsToNeighbour = movesRemaining / unit.Moves;
         }
         else if ((hex.Elevation < 0) && (neighbour.Elevation > 0))
         {
-            turnsToNeighbour = 1;
+            turnsToNeighbour = movesRemaining / unit.NavalMoves;
         }
         else if (movesRemaining >= neighbour.MovementCost)
         {
@@ -171,6 +171,9 @@ public class Pathfinding
         Reverse(ref path);
 
         unit.Path = path;
+
+        // Debug.Log(unit.GetPathHexAt(0,16).GCost);
+        // Debug.Log(unit.GetPathHexAt(0,17).GCost);
 
         return path;
     }
