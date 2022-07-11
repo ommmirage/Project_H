@@ -30,7 +30,7 @@ public class Pathfinding
         int destinatedEnd = 0;
         int pathsAvailable = PathsAvailable(unit, endPathHex);
 
-        while ( (openQueue.Count > 0) || (destinatedEnd == pathsAvailable) )
+        while ( (openQueue.Count > 0) && (destinatedEnd < pathsAvailable) )
         {
             PathHex currentPathHex = openQueue.Dequeue();
 
@@ -38,7 +38,7 @@ public class Pathfinding
             {
                 if (openQueue.Count == 1)
                     return GetPathToEndHex(unit, endPathHex);
-                    
+
                 openQueue.Enqueue(currentPathHex);
                 destinatedEnd++;
                 currentPathHex = openQueue.Dequeue();
@@ -70,13 +70,12 @@ public class Pathfinding
                         openQueue.Enqueue(neighbour);
                     }
 
-                    // Debug.Log(neighbour);
-
                     movesRemaining = CalculateMovesRemaining(
                         unit, movesRemaining, currentPathHex, neighbour);                
                 }
             }
         }
+
         return GetPathToEndHex(unit, endPathHex);
     }
 
@@ -173,8 +172,6 @@ public class Pathfinding
 
         unit.Path = path;
 
-        // Debug.Log(unit.PathMap[0, 16].GCost);
-        // Debug.Log(unit.PathMap[0, 17].GCost);
         return path;
     }
 
@@ -202,7 +199,7 @@ public class Pathfinding
 
     public void DrawPath(LinkedList<PathHex> pathLinked, Unit unit)
 	{
-        if (pathLinked.Count == 0)
+        if ( (pathLinked == null) || (pathLinked.Count == 0) )
             return;
 
         List<PathHex> path = new List<PathHex>(pathLinked);
