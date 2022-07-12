@@ -173,11 +173,13 @@ public class Unit
         {   
             Pathfinding pathfinding = new Pathfinding();
 
-            LinkedList<PathHex> path = pathfinding.FindPath(this, hex, endHex);            
-
             if (IsSelected)
             {
-                Path = new LinkedList<PathHex>(pathfinding.RedrawPath(Path, this, endHex));
+                Path = pathfinding.RedrawPath(Path, this, endHex);
+            }
+            else
+            {
+                Path = pathfinding.FindPath(this, hex, endHex);            
             }
 
             Move(Path);

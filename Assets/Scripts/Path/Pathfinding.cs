@@ -13,6 +13,10 @@ public class Pathfinding
 
     public LinkedList<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
     {
+        Debug.Log("");
+        Debug.Log("Find path");
+        Debug.Log("");
+        
         unit.PreparePathMap();
 
         PathHex startPathHex = unit.GetPathHex(startHex);
@@ -23,7 +27,7 @@ public class Pathfinding
 
         openQueue.Enqueue(startPathHex);
 
-        int movesRemaining = unit.MovesRemaining;
+        startPathHex.MovesRemaining = unit.MovesRemaining;
 
         startPathHex.GCost = 0;
 
@@ -46,6 +50,9 @@ public class Pathfinding
             
             closedList.Add(currentPathHex);
 
+            if ( (currentPathHex == unit.GetPathHexAt(2, 16)) )//|| (currentPathHex == unit.GetPathHexAt(1, 16)) )
+                Debug.Log("currentPathHex: " + currentPathHex + "; GCost: " + currentPathHex.GCost);
+
             foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
             {
                 if (closedList.Contains(neighbour))
@@ -57,8 +64,13 @@ public class Pathfinding
                     continue;
                 }
 
-                float turnsToNeighbour = CalculateTurnsToNeighbour(
-                    currentPathHex, neighbour, unit, movesRemaining);
+                float turnsToNeighbour = CalculateTurnsToNeighbour(currentPathHex, neighbour, unit);
+
+                if ( (neighbour == unit.GetPathHexAt(2, 15)) )
+                Debug.Log("neighbour: " + neighbour + " " + 
+                        "GCost: " + neighbour.GCost + "\n" + 
+                        "turnsToNeighbour: " + turnsToNeighbour + " " +
+                        "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
 
                 if (currentPathHex.GCost + turnsToNeighbour < neighbour.GCost)
                 {
@@ -70,13 +82,26 @@ public class Pathfinding
                         openQueue.Enqueue(neighbour);
                     }
 
-                    movesRemaining = CalculateMovesRemaining(
-                        unit, movesRemaining, currentPathHex, neighbour);                
+                    CalculateMovesRemaining(unit, currentPathHex, neighbour);                
                 }
+
+                // Debug.Log(neighbour + ". " + "movesRemaining: " + neighbour.MovesRemaining);
+
             }
         }
-
         return GetPathToEndHex(unit, endPathHex);
+    }
+
+    int SetMovesRemaining(PathHex pathHex, Unit unit)
+    {
+        if (pathHex.Elevation > 0)
+        {
+            return unit.Moves;
+        }
+        else
+        {
+            return unit.NavalMoves;
+        }
     }
 
     int PathsAvailable(Unit unit, PathHex hex)
@@ -91,20 +116,24 @@ public class Pathfinding
         return pathsAvailable;
     }
 
-    float CalculateTurnsToNeighbour(PathHex hex, PathHex neighbour, 
-                                    Unit unit, int movesRemaining)
+    float CalculateTurnsToNeighbour(PathHex hex, PathHex neighbour, Unit unit)
     {
         float turnsToNeighbour;
 
+        if ( (hex.MovesRemaining == 0) && unit.FinishedMove )
+        {
+            hex.MovesRemaining = SetMovesRemaining(hex, unit);
+        }
+
         if ((hex.Elevation > 0) && (neighbour.Elevation < 0))
         {
-            turnsToNeighbour = movesRemaining / unit.Moves;
+            turnsToNeighbour = hex.MovesRemaining / unit.Moves;
         }
         else if ((hex.Elevation < 0) && (neighbour.Elevation > 0))
         {
-            turnsToNeighbour = movesRemaining / unit.NavalMoves;
+            turnsToNeighbour = hex.MovesRemaining / unit.NavalMoves;
         }
-        else if (movesRemaining >= neighbour.MovementCost)
+        else if (hex.MovesRemaining >= neighbour.MovementCost)
         {
             if (hex.Elevation > 0)
             {
@@ -123,36 +152,35 @@ public class Pathfinding
         return turnsToNeighbour;
     }
 
-    int CalculateMovesRemaining(Unit unit, int movesRemaining, PathHex currentPathHex, PathHex neighbour)
+    void CalculateMovesRemaining(Unit unit, PathHex currentPathHex, PathHex neighbour)
     {
+        Debug.Log(neighbour + "; " + currentPathHex.MovesRemaining);
         if (unit.Type == "land")
         {
             if ((currentPathHex.Elevation > 0) && (neighbour.Elevation < 0))
             {
-                movesRemaining = unit.NavalMoves;
+                neighbour.MovesRemaining = unit.NavalMoves;
                 neighbour.Embark = true;
             }
             else if ((currentPathHex.Elevation < 0) && (neighbour.Elevation > 0))
             {
-                movesRemaining = unit.Moves;
+                neighbour.MovesRemaining = unit.Moves;
                 neighbour.Embark = true;
             }
             else
             {
                 neighbour.Embark = false;
-                movesRemaining -= neighbour.MovementCost;
+                neighbour.MovesRemaining = currentPathHex.MovesRemaining - neighbour.MovementCost;
 
-                if (movesRemaining <= 0)
+                if (currentPathHex.MovesRemaining <= 0)
                 {
                     if (neighbour.Elevation < 0)
-                        movesRemaining = unit.NavalMoves;
+                        neighbour.MovesRemaining = unit.NavalMoves;
                     if (neighbour.Elevation > 0)
-                        movesRemaining = unit.Moves;
+                        neighbour.MovesRemaining = unit.Moves;
                 }
             }
         }
-
-        return movesRemaining;
     }
 
     LinkedList<PathHex> GetPathToEndHex(Unit unit, PathHex endPathHex)
@@ -171,9 +199,6 @@ public class Pathfinding
         Reverse(ref path);
 
         unit.Path = path;
-
-        // Debug.Log(unit.GetPathHexAt(0,16).GCost);
-        // Debug.Log(unit.GetPathHexAt(0,17).GCost);
 
         return path;
     }
@@ -384,8 +409,21 @@ public class Pathfinding
 
     public LinkedList<PathHex> RedrawPath(LinkedList<PathHex> path, Unit unit, Hex endHex)
     {
+        // Debug.Log("old path");
+        // foreach (PathHex hex in path)
+        // {
+        //     Debug.Log(hex);
+        // }
+
         ClearPath(path);
         path = FindPath(unit, unit.GetHex(), endHex);
+
+        // Debug.Log("new path");
+        // foreach (PathHex hex in path)
+        // {
+        //     Debug.Log(hex);
+        // }
+
         DrawPath(path, unit);
 
         return path;

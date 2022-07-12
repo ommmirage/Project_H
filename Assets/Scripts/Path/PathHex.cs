@@ -20,6 +20,7 @@ public class PathHex
     public int turns;
     public bool IsWalkable = true;
     public bool Embark = false;
+    public int MovesRemaining;
 
     public PathHex(Hex hex)
     {
