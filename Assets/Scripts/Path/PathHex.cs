@@ -17,7 +17,6 @@ public class PathHex
     // Walking cost from the start hex
     public float GCost = int.MaxValue;
     public PathHex CameFromPathHex = null;
-    public int turns;
     public bool IsWalkable = true;
     public bool Embark = false;
     public int MovesRemaining;
@@ -34,5 +33,15 @@ public class PathHex
     public override string ToString()
     {
         return Q + ", "+ R;
+    }
+
+    public int CalculateSteps()
+    {
+        int steps = 0;
+
+        while (CameFromPathHex != null)
+            steps++;
+
+        return steps;
     }
 }

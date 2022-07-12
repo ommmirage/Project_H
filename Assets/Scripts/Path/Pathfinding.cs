@@ -13,9 +13,9 @@ public class Pathfinding
 
     public LinkedList<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
     {
-        Debug.Log("");
-        Debug.Log("Find path");
-        Debug.Log("");
+        // Debug.Log("");
+        // Debug.Log("Find path");
+        // Debug.Log("");
         
         unit.PreparePathMap();
 
@@ -50,8 +50,8 @@ public class Pathfinding
             
             closedList.Add(currentPathHex);
 
-            if ( (currentPathHex == unit.GetPathHexAt(2, 16)) )//|| (currentPathHex == unit.GetPathHexAt(1, 16)) )
-                Debug.Log("currentPathHex: " + currentPathHex + "; GCost: " + currentPathHex.GCost);
+            // if ( (currentPathHex == unit.GetPathHexAt(2, 16)) )//|| (currentPathHex == unit.GetPathHexAt(2, 17)) )
+            //     Debug.Log("currentPathHex: " + currentPathHex + "; GCost: " + currentPathHex.GCost);
 
             foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
             {
@@ -64,18 +64,29 @@ public class Pathfinding
                     continue;
                 }
 
+                // if (neighbour == unit.GetPathHexAt(1, 17))
+                // {
+                //     Debug.Log("neighbour: " + neighbour + " " + 
+                //         "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
+                // }
+
                 float turnsToNeighbour = CalculateTurnsToNeighbour(currentPathHex, neighbour, unit);
 
-                if ( (neighbour == unit.GetPathHexAt(2, 15)) )
-                Debug.Log("neighbour: " + neighbour + " " + 
-                        "GCost: " + neighbour.GCost + "\n" + 
-                        "turnsToNeighbour: " + turnsToNeighbour + " " +
-                        "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
+                float newGCost = currentPathHex.GCost + turnsToNeighbour;
 
-                if (currentPathHex.GCost + turnsToNeighbour < neighbour.GCost)
+
+                // if (neighbour == unit.GetPathHexAt(1, 17))
+                // {
+                //     Debug.Log("neighbour: " + neighbour + " " + 
+                //         "GCost: " + neighbour.GCost + "\n" + 
+                //         "turnsToNeighbour: " + turnsToNeighbour + " " +
+                //         "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
+                // }
+
+                if ( (newGCost < neighbour.GCost) )
                 {
                     neighbour.CameFromPathHex = currentPathHex;
-                    neighbour.GCost = currentPathHex.GCost + turnsToNeighbour;
+                    neighbour.GCost = newGCost;
 
                     if (!openQueue.Contains(neighbour))
                     {
@@ -127,11 +138,11 @@ public class Pathfinding
 
         if ((hex.Elevation > 0) && (neighbour.Elevation < 0))
         {
-            turnsToNeighbour = hex.MovesRemaining / unit.Moves;
+            turnsToNeighbour = (float)hex.MovesRemaining / unit.Moves;
         }
         else if ((hex.Elevation < 0) && (neighbour.Elevation > 0))
         {
-            turnsToNeighbour = hex.MovesRemaining / unit.NavalMoves;
+            turnsToNeighbour = (float)hex.MovesRemaining / unit.NavalMoves;
         }
         else if (hex.MovesRemaining >= neighbour.MovementCost)
         {
@@ -154,7 +165,6 @@ public class Pathfinding
 
     void CalculateMovesRemaining(Unit unit, PathHex currentPathHex, PathHex neighbour)
     {
-        Debug.Log(neighbour + "; " + currentPathHex.MovesRemaining);
         if (unit.Type == "land")
         {
             if ((currentPathHex.Elevation > 0) && (neighbour.Elevation < 0))
