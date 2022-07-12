@@ -50,7 +50,8 @@ public class Pathfinding
             
             closedList.Add(currentPathHex);
 
-            // if ( (currentPathHex == unit.GetPathHexAt(2, 16)) )//|| (currentPathHex == unit.GetPathHexAt(2, 17)) )
+            // if ( (currentPathHex == unit.GetPathHexAt(84, 16)) 
+            //     || (currentPathHex == unit.GetPathHexAt(84, 17)) )
             //     Debug.Log("currentPathHex: " + currentPathHex + "; GCost: " + currentPathHex.GCost);
 
             foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
@@ -64,7 +65,7 @@ public class Pathfinding
                     continue;
                 }
 
-                // if (neighbour == unit.GetPathHexAt(1, 17))
+                // if (neighbour == unit.GetPathHexAt(0, 16))
                 // {
                 //     Debug.Log("neighbour: " + neighbour + " " + 
                 //         "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
@@ -75,7 +76,7 @@ public class Pathfinding
                 float newGCost = currentPathHex.GCost + turnsToNeighbour;
 
 
-                // if (neighbour == unit.GetPathHexAt(1, 17))
+                // if ( (neighbour == unit.GetPathHexAt(83, 17)) )//|| (neighbour == unit.GetPathHexAt(84, 16)) )
                 // {
                 //     Debug.Log("neighbour: " + neighbour + " " + 
                 //         "GCost: " + neighbour.GCost + "\n" + 
@@ -182,7 +183,7 @@ public class Pathfinding
                 neighbour.Embark = false;
                 neighbour.MovesRemaining = currentPathHex.MovesRemaining - neighbour.MovementCost;
 
-                if (currentPathHex.MovesRemaining <= 0)
+                if (neighbour.MovesRemaining <= 0)
                 {
                     if (neighbour.Elevation < 0)
                         neighbour.MovesRemaining = unit.NavalMoves;
