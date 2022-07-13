@@ -8,7 +8,7 @@ Project H is a turn-based strategy game written on Unity engine.
 
 # Implemented features #
 
-- Map generation
+- Random map generation
   - Map size setup
   - Continents amount setup
   - Land percentage setup
