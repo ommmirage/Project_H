@@ -29,6 +29,7 @@ public class Unit
 
     public GameObject UnitGameObject;
 
+    [DataMember]
     public LinkedList<PathHex> Path = null;
     PathHex[,] pathMap;
 

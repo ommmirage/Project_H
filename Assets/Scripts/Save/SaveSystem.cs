@@ -79,6 +79,7 @@ public class SaveSystem
                 newUnit.MovesRemaining = unit.MovesRemaining;
                 newUnit.IsEmbarked = unit.IsEmbarked;
                 newUnit.FinishedMove = unit.FinishedMove;
+                newUnit.Path = unit.Path;
 
                 gameData.Units.Add(newUnit);
             }

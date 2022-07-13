@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.Serialization;
 
-[System.Serializable]
+[DataContract]
 public class PathHex
 {
-    // readonly means that variable is only set in the contructor
-    public readonly int Q;
-    public readonly int R;
-    public readonly int S;
+    [DataMember]
+    int q;
+    public int Q { get { return q; } }
+    [DataMember]
+    int r;
+    public int R { get { return r; } }
 
     public float Elevation;
 
@@ -23,9 +23,8 @@ public class PathHex
 
     public PathHex(Hex hex)
     {
-        Q = hex.Q;
-        R = hex.R;
-        S = -(Q + R);
+        q = hex.Q;
+        r = hex.R;
         Elevation = hex.Elevation;
         MovementCost = hex.MovementCost;
     }
