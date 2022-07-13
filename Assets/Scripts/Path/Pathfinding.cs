@@ -244,6 +244,7 @@ public class Pathfinding
         List<PathHex> path = new List<PathHex>(pathLinked);
 
         int movesRemaining = unit.MovesRemaining;
+
         int movesCount = 0;
 
 		for (int i = 0; i < path.Count - 1; i++)
@@ -266,7 +267,7 @@ public class Pathfinding
             if (movesRemaining <= 0)
             {
                 movesCount++;
-
+                
                 DrawMovesCount(hexGameObject, hexLongLines, movesCount);
 
                 if (pathHex.Elevation > 0)

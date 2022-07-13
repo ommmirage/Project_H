@@ -10,8 +10,10 @@ public class PathHex
     int r;
     public int R { get { return r; } }
 
+    [DataMember]
     public float Elevation;
 
+    [DataMember]
     public int MovementCost;
 
     // Walking cost from the start hex
