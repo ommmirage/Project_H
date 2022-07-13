@@ -4,7 +4,7 @@
 
 # Description #
 
-Project H is a turn-based strategy game.
+Project H is a turn-based strategy game written on Unity engine.
 
 # Implemented features #
 
