@@ -50,8 +50,8 @@ public class Pathfinding
             
             closedList.Add(currentPathHex);
 
-            // if ( (currentPathHex == unit.GetPathHexAt(84, 16)) 
-            //     || (currentPathHex == unit.GetPathHexAt(84, 17)) )
+            // if ( (currentPathHex == unit.GetPathHexAt(23, 23)) 
+            //     || (currentPathHex == unit.GetPathHexAt(24, 22)) )
             //     Debug.Log("currentPathHex: " + currentPathHex + "; GCost: " + currentPathHex.GCost);
 
             foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
@@ -76,7 +76,8 @@ public class Pathfinding
                 float newGCost = currentPathHex.GCost + turnsToNeighbour;
 
 
-                // if ( (neighbour == unit.GetPathHexAt(83, 17)) )//|| (neighbour == unit.GetPathHexAt(84, 16)) )
+                // if ( (neighbour == unit.GetPathHexAt(24, 23)) )
+                //     // || (neighbour == unit.GetPathHexAt(24, 22)) )
                 // {
                 //     Debug.Log("neighbour: " + neighbour + " " + 
                 //         "GCost: " + neighbour.GCost + "\n" + 
@@ -158,7 +159,14 @@ public class Pathfinding
         }
         else
         {
-            turnsToNeighbour = 1;
+            if (hex.Elevation > 0)
+            {
+                turnsToNeighbour = (float)hex.MovesRemaining / unit.Moves;
+            }
+            else
+            {
+                turnsToNeighbour = (float)hex.MovesRemaining / unit.NavalMoves;
+            }
         }
 
         return turnsToNeighbour;
