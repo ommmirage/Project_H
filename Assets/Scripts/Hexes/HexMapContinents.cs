@@ -17,13 +17,16 @@ public class HexMapContinents : HexMap
     int maxTerritories = 23;
 
     int numContinents;
-    int territoryNumber = 1;
-    int continentNumber = 0;
+    int territoryNumber;
+    int continentNumber;
     Queue<Hex> territoryHexes;
     Queue<Queue<Hex>> territories;
 
     public void GenerateMap()
     {
+        territoryNumber = 1;
+        continentNumber = 0;
+
         GenerateTiles();
 
         GenerateContinents();

@@ -30,6 +30,8 @@ public class PauseMenu : MonoBehaviour
     public void NewGame()
     {
         HexMapContinents hexMapContinents = Object.FindObjectOfType<HexMapContinents>();
+
+        hexMapContinents.ClearMap();
         hexMapContinents.GenerateMap();
 
         pauseMenuUI.SetActive(false);
@@ -57,6 +59,9 @@ public class PauseMenu : MonoBehaviour
 
     public void Load()
     {
+        HexMap hexMap = Object.FindObjectOfType<HexMap>();
+        hexMap.ClearMap();
+        
         SaveSystem saveSystem = new SaveSystem();
         saveSystem.LoadGame();
         pauseMenuUI.SetActive(false);
@@ -65,5 +70,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Quit()
     {
+
     }
 }

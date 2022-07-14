@@ -91,12 +91,7 @@ public class Pathfinding
 
                     CalculateMovesRemaining(unit, currentPathHex, neighbour);                
                 }
-                // else if (newGCost == neighbour.GCost)
-                // {
-                //     // Choose shorter way
-                //     if (currentPathHex == neighbour.CameFromPathHex.CameFromPathHex)
-                //         neighbour.CameFromPathHex = currentPathHex;
-                // }
+                // TODO: choose to stay on the most deffencive hexes
             }
         }
         return GetPathToEndHex(unit, endPathHex);

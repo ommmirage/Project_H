@@ -284,4 +284,15 @@ public class HexMap : MonoBehaviour
             }
         }
     }
+
+    public void ClearMap()
+    {
+        foreach (Transform hexPrefab in transform) 
+        {
+            GameObject.Destroy(hexPrefab.gameObject);
+        }
+        HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
+        GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
+        units = new List<Unit>();
+    }
 }
