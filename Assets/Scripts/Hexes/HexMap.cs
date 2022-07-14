@@ -2,12 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// HexMap scripts is attached to the main game object 
+// on the scene. It generates or loads Hexes, has dictionaries
+// to link Hexes and their GameObjects. HexMap holds the
+// information about all the hexes and units on the map.
+
+// There will be options on the type of the map you want to generate.
+// The only one option for now is "Continents".
+// HexMapContinents is HexMap's derived class for this purpose.
+
+// You should attach hex and forest prefabs and 
+// ocean and grasslands materials to HexMap game object.
+
 public class HexMap : MonoBehaviour
 {
+    // You can setup width and height of the map.
     int width = 85;
     public int Width { get { return width; } }
     int height = 50;
     public int Height { get { return height; } }
+
+    // Each piece of land is a territory of approximately
+    // territorySize hexes.
+    protected int territorySize = 40;
 
     Hex[,] hexes;
     public Hex[,] Hexes { get { return hexes; } }
@@ -17,9 +34,9 @@ public class HexMap : MonoBehaviour
     public Dictionary<GameObject, Hex> GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
     
     [SerializeField] GameObject hexPrefab;
+    [SerializeField] GameObject forestPrefab;
     [SerializeField] Material matOcean;
     [SerializeField] Material matGrasslands;
-    [SerializeField] GameObject forestPrefab;
 
     UnitsPrefabs unitsPrefabs;
 
@@ -82,6 +99,7 @@ public class HexMap : MonoBehaviour
         GameObjectToHexDictionary.Add(hexGameObject, hex);
     }
 
+    // Hex coordinate labels for debug purposes.
     protected void SetLabels()
     {
         for (int x = 0; x < width; x++)
@@ -94,6 +112,7 @@ public class HexMap : MonoBehaviour
         }
     }
 
+    // Update real-world hex positions when camera moves.
     public void UpdateHexPositions()
     {
         for (int x = 0; x < width; x++)
@@ -145,12 +164,6 @@ public class HexMap : MonoBehaviour
 
     public Hex GetHexAt(int x, int y)
     {
-        if (hexes == null)
-        {
-            Debug.LogError("Hexes array is not yet instantiated.");
-            return null;
-        }
-
         if ((y < 0) || (y >= height))
             return null;
 

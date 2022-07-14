@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// The Pathfinding class helps us to find, draw and clear paths
+
 public class Pathfinding
 {
     HexMap hexMap;
@@ -12,11 +14,7 @@ public class Pathfinding
     }
 
     public LinkedList<PathHex> FindPath(Unit unit, Hex startHex, Hex endHex)
-    {
-        // Debug.Log("");
-        // Debug.Log("Find path");
-        // Debug.Log("");
-        
+    {    
         unit.PreparePathMap();
 
         PathHex startPathHex = unit.GetPathHex(startHex);
@@ -65,12 +63,6 @@ public class Pathfinding
                     continue;
                 }
 
-                // if (neighbour == unit.GetPathHexAt(0, 16))
-                // {
-                //     Debug.Log("neighbour: " + neighbour + " " + 
-                //         "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
-                // }
-
                 float turnsToNeighbour = CalculateTurnsToNeighbour(currentPathHex, neighbour, unit);
 
                 float newGCost = currentPathHex.GCost + turnsToNeighbour;
@@ -97,9 +89,6 @@ public class Pathfinding
 
                     CalculateMovesRemaining(unit, currentPathHex, neighbour);                
                 }
-
-                // Debug.Log(neighbour + ". " + "movesRemaining: " + neighbour.MovesRemaining);
-
             }
         }
         return GetPathToEndHex(unit, endPathHex);
@@ -429,20 +418,8 @@ public class Pathfinding
 
     public LinkedList<PathHex> RedrawPath(LinkedList<PathHex> path, Unit unit, Hex endHex)
     {
-        // Debug.Log("old path");
-        // foreach (PathHex hex in path)
-        // {
-        //     Debug.Log(hex);
-        // }
-
         ClearPath(path);
         path = FindPath(unit, unit.GetHex(), endHex);
-
-        // Debug.Log("new path");
-        // foreach (PathHex hex in path)
-        // {
-        //     Debug.Log(hex);
-        // }
 
         DrawPath(path, unit);
 

@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.IO;
-using System.Xml.Serialization;
 using System.Runtime.Serialization;
+
+// SaveSystem is used for saving and loading game states
+// with DataContractSerializer
 
 public class SaveSystem
 {
@@ -14,12 +16,9 @@ public class SaveSystem
 
     public void SaveGame(HexMap hexMap)
     {
-        // XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
-
         GameData gameData = new GameData(hexMap);
 
         string path = Application.persistentDataPath + "/save.sav";
-        // TextWriter writer = new StreamWriter(path);
         FileStream writer = new FileStream(path, FileMode.Create);
 
         DataContractSerializer ser = new DataContractSerializer(typeof(GameData));
@@ -35,7 +34,6 @@ public class SaveSystem
         string path = Application.persistentDataPath + "/save.sav";
         if (File.Exists(path))
         {
-            // XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameData));
             FileStream stream = new FileStream(path, FileMode.Open);
             DataContractSerializer ser = new DataContractSerializer(typeof(GameData));
 
@@ -56,7 +54,6 @@ public class SaveSystem
 
     Hex[,] FillHexes(GameData gameData)
     {
-        // Convert the serializable array into 2d
         Hex[,] hexes = new Hex[hexMap.Width, hexMap.Height];
         foreach (Serializable2d<Hex> hexWithIds in gameData.SerializableArray)
         {

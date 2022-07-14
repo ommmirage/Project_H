@@ -1,3 +1,6 @@
+// We need Serializable2d struct to serialize 2d array
+// in xml. 
+
 [System.Serializable]
 public struct Serializable2d<Hex>
 {

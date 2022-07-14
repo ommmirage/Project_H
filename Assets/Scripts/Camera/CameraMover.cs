@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+// We need to change hexes' real-world coordinates
+// when camera moves.
 
 public class CameraMover : MonoBehaviour
 {

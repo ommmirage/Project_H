@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 using System.Runtime.Serialization;
 
-// The hex class defines the grid position, world position, size,
-// neighbors of a Hex Tile. 
+// The Hex class contains hexes' coordinates and can
+// calculate the world-space position of a hex on a screen.
 
 [DataContract]
 public class Hex

@@ -2,11 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// This class is capable of random generation of
+// map with continents.
+
 public class HexMapContinents : HexMap
 {
+    // You can setup the min and max number of continents
+    // that will be generated.
     int minContinents = 2;
     int maxContinents = 2;
-    int territorySize = 40;
+
+    // Setup the size of a continent in number of territories
+    int minTerritories = 18;
+    int maxTerritories = 23;
 
     int numContinents;
     int territoryNumber = 1;
@@ -42,7 +50,7 @@ public class HexMapContinents : HexMap
     {
         territories = new Queue<Queue<Hex>>();
 
-        int numTerritories = Random.Range(18, 23);
+        int numTerritories = Random.Range(minTerritories, maxTerritories);
 
         int startQ = Width / numContinents * continentNumber;
         int startR = Height / 2;

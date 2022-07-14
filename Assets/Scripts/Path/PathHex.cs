@@ -1,5 +1,8 @@
 using System.Runtime.Serialization;
 
+// We need PathHexes to build units' paths. Every unit has
+// it's PathHexes map
+
 [DataContract]
 public class PathHex
 {

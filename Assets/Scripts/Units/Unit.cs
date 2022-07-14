@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Xml.Serialization;
 using System.Runtime.Serialization;
+
+// Unit is a base class for all the units
 
 [DataContract]
 [KnownType(typeof(Knight))]

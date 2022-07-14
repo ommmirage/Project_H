@@ -8,8 +8,6 @@ public class Knight : Unit
 
     public Knight(HexMap hexMap) : base(hexMap)
     {
-        // Debug.Log(hexMap);
-
         hp = 100;
         strength = 8;
         IsEmbarked = false;

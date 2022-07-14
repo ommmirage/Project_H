@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+// GameData class contains all the data we need 
+// to save (load) a game
+
 [DataContract]
 public class GameData
 {

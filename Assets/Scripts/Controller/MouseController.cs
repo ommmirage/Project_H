@@ -21,7 +21,7 @@ public class MouseController : MonoBehaviour
 	Hex selectedHex = null;
 	public Hex SelectedHex { get { return selectedHex; } }
 	HexMap hexMap;
-	Hex previousEndHex;
+	Hex previousTargetHex;
 	LinkedList<PathHex> path = new LinkedList<PathHex>();
 	Pathfinding pathfinding;
 	public bool OnPause = false;
@@ -57,6 +57,7 @@ public class MouseController : MonoBehaviour
 		{
 			SelectUnit();
 		}
+		// We dragged a map
 		else if ( Input.GetMouseButton(0) && (mousePositionDiff > mouseDragThreshold) )
 		{
 			Update_CurrentFunc = Update_CameraDrag;
@@ -71,37 +72,17 @@ public class MouseController : MonoBehaviour
 
 	void ProceedUnit()
 	{
-		Hex endHex = MouseToHex();
+		Hex targetHex = MouseToHex();
 
-        if (Input.GetMouseButton(1))
+		// If we hold right mouse button and change the target hex
+        if ( (Input.GetMouseButton(1)) && (previousTargetHex != targetHex) )
         {
-			if (unit.FinishedMove)
-            {
-                pathfinding.ClearPath(path);
-
-				// Debug.Log("RB");
-				// Debug.Log(unit.GetHex());
-				// Debug.Log(endHex);
-
-                path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
-
-				// Debug.Log("Path after right button");
-				// foreach (PathHex hex in path)
-				// {
-				// 	Debug.Log(hex);
-				// }
-
-                pathfinding.DrawPath(path, unit);
-            }
-			else if (previousEndHex != endHex)
-			{
-                path = pathfinding.RedrawPath(path, unit, endHex);
-			}
+            path = pathfinding.RedrawPath(path, unit, targetHex);
         }
         else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))
         {
-        	previousEndHex = endHex;
-			path = pathfinding.FindPath(unit, unit.GetHex(), endHex);
+        	previousTargetHex = targetHex;
+			path = pathfinding.FindPath(unit, unit.GetHex(), targetHex);
             MoveUnit();
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
@@ -111,7 +92,6 @@ public class MouseController : MonoBehaviour
             selectedHex.SetSelected(false);
 			selectedHex = null;
             pathfinding.ClearPath(path);
-            return;
         }
 	}
 
@@ -145,7 +125,6 @@ public class MouseController : MonoBehaviour
 		Vector3 p = Camera.main.transform.position;
 
 			// Stop zooming out at a certain distance.
-			// TODO: Maybe you should still slide around at 20 zoom?
 			if (scrollAmount > 0 || p.y < (maxHeight - 0.1f)) {
 				cameraTargetOffset += dir * scrollAmount;
 			}
