@@ -77,6 +77,7 @@ public class MouseController : MonoBehaviour
 		// If we hold right mouse button and change the target hex
         if ( (Input.GetMouseButton(1)) && (previousTargetHex != targetHex) )
         {
+			previousTargetHex = targetHex;
             path = pathfinding.RedrawPath(path, unit, targetHex);
         }
         else if (Input.GetMouseButtonUp(1) && (!unit.FinishedMove))

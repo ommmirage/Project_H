@@ -8,6 +8,8 @@ public class Pathfinding
 {
     HexMap hexMap;
 
+    const float EPS = 0.001f;
+
     public Pathfinding()
     {
         hexMap = Object.FindObjectOfType<HexMap>();
@@ -48,8 +50,8 @@ public class Pathfinding
             
             closedList.Add(currentPathHex);
 
-            // if ( (currentPathHex == unit.GetPathHexAt(23, 23)) 
-            //     || (currentPathHex == unit.GetPathHexAt(24, 22)) )
+            // if ( (currentPathHex == unit.GetPathHexAt(9, 16)) 
+            //     || (currentPathHex == unit.GetPathHexAt(10, 15)) )
             //     Debug.Log("currentPathHex: " + currentPathHex + "; GCost: " + currentPathHex.GCost);
 
             foreach (PathHex neighbour in GetNeighborList(unit, currentPathHex))
@@ -68,8 +70,8 @@ public class Pathfinding
                 float newGCost = currentPathHex.GCost + turnsToNeighbour;
 
 
-                // if ( (neighbour == unit.GetPathHexAt(24, 23)) )
-                //     // || (neighbour == unit.GetPathHexAt(24, 22)) )
+                // if ( (neighbour == unit.GetPathHexAt(10, 16)) )
+                //     // || (neighbour == unit.GetPathHexAt(10, 15)) )
                 // {
                 //     Debug.Log("neighbour: " + neighbour + " " + 
                 //         "GCost: " + neighbour.GCost + "\n" + 
@@ -77,7 +79,7 @@ public class Pathfinding
                 //         "currentPathHex.MovesRemaining: " + currentPathHex.MovesRemaining);
                 // }
 
-                if ( (newGCost < neighbour.GCost) )
+                if (newGCost < neighbour.GCost - EPS)
                 {
                     neighbour.CameFromPathHex = currentPathHex;
                     neighbour.GCost = newGCost;
@@ -89,6 +91,12 @@ public class Pathfinding
 
                     CalculateMovesRemaining(unit, currentPathHex, neighbour);                
                 }
+                // else if (newGCost == neighbour.GCost)
+                // {
+                //     // Choose shorter way
+                //     if (currentPathHex == neighbour.CameFromPathHex.CameFromPathHex)
+                //         neighbour.CameFromPathHex = currentPathHex;
+                // }
             }
         }
         return GetPathToEndHex(unit, endPathHex);
