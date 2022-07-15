@@ -118,37 +118,44 @@ public class MouseController : MonoBehaviour
 		float scrollAmount = Input.GetAxis ("Mouse ScrollWheel");
 		float minHeight = 2;
 		float maxHeight = 20;
+
+		// if (scrollAmount == 0)
+		// 	return;
+
+		// Debug.Log(scrollAmount);
+
 		// Move camera towards hitPos
         Vector3 hitPos = MouseToGroundPlane(Input.mousePosition);
 
+		// Debug.Log(hitPos);
+
 		Vector3 dir = hitPos - Camera.main.transform.position;
 
-		Vector3 p = Camera.main.transform.position;
+		Vector3 cameraPosition = Camera.main.transform.position;
 
-			// Stop zooming out at a certain distance.
-			if (scrollAmount > 0 || p.y < (maxHeight - 0.1f)) {
-				cameraTargetOffset += dir * scrollAmount;
-			}
-			Vector3 lastCameraPosition = Camera.main.transform.position;
-			Camera.main.transform.position = Vector3.Lerp(
-											Camera.main.transform.position, 
-											Camera.main.transform.position + cameraTargetOffset, 
-											Time.deltaTime * 5f
-											);
-			cameraTargetOffset -= Camera.main.transform.position - lastCameraPosition;
+        // Stop zooming out at a certain distance.
+        if (scrollAmount > 0 || cameraPosition.y < maxHeight)
+            cameraTargetOffset += dir * scrollAmount;
 
-		p = Camera.main.transform.position;
-		if ((p.y < minHeight) || (p.y > maxHeight)) 
-		{
+        Vector3 lastCameraPosition = Camera.main.transform.position;
+        Camera.main.transform.position = Vector3.Lerp(
+                                        Camera.main.transform.position,
+                                        Camera.main.transform.position + cameraTargetOffset,
+                                        Time.deltaTime * 5f
+                                        );
+        cameraTargetOffset -= Camera.main.transform.position - lastCameraPosition;
+
+		cameraPosition = Camera.main.transform.position;
+
+		if ( (cameraPosition.y < minHeight) || (cameraPosition.y > maxHeight) ) 
 			Camera.main.transform.position = lastCameraPosition;
-		}
 
 		// Change camera angle
-		float lowZoom = minHeight + 3;
-		float highZoom = maxHeight - 10;
+		float minAngle = 50;
+		float maxAngle = 75;
 
 		Camera.main.transform.rotation = Quaternion.Euler (
-			Mathf.Lerp (30, 75, Camera.main.transform.position.y / maxHeight),
+			Mathf.Lerp (minAngle, maxAngle, Camera.main.transform.position.y / maxHeight),
 			Camera.main.transform.rotation.eulerAngles.y,
 			Camera.main.transform.rotation.eulerAngles.z
 		);
@@ -168,7 +175,9 @@ public class MouseController : MonoBehaviour
 		UnselectPreviousUnit();
 
 		Hex hex = MouseToHex();
-		unit = hex.GetUnit();
+
+		if (hex != null)
+			unit = hex.GetUnit();
 		
 		if (unit != null)
 		{
