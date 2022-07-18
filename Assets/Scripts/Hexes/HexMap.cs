@@ -19,8 +19,9 @@ public class HexMap : MonoBehaviour
     // You can setup width and height of the map.
     int width = 85;
     public int Width { get { return width; } }
-    int height = 50;
+    int height = 56;
     public int Height { get { return height; } }
+    int snowWidth = 3;
 
     // Each piece of land is a territory of approximately
     // territorySize hexes.
@@ -36,7 +37,8 @@ public class HexMap : MonoBehaviour
     [SerializeField] GameObject hexPrefab;
     [SerializeField] GameObject forestPrefab;
     [SerializeField] Material matOcean;
-    [SerializeField] Material matGrasslands;
+    // [SerializeField] Material matGrasslands;
+    [SerializeField] Material matSnow;
 
     UnitsPrefabs unitsPrefabs;
 
@@ -131,13 +133,13 @@ public class HexMap : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = snowWidth; y < height - snowWidth; y++)
             {
                 Hex hex = hexes[x, y];
 
                 GameObject hexGameObject = HexToGameObjectDictionary[hex];
                 MeshRenderer meshRenderer = hexGameObject.GetComponentInChildren<MeshRenderer>();
-                MeshFilter meshFilter = hexGameObject.GetComponentInChildren<MeshFilter>();
+                // MeshFilter meshFilter = hexGameObject.GetComponentInChildren<MeshFilter>();
 
                 if (hex.Elevation < 0)
                 {
@@ -294,5 +296,28 @@ public class HexMap : MonoBehaviour
         HexToGameObjectDictionary = new Dictionary<Hex, GameObject>();
         GameObjectToHexDictionary = new Dictionary<GameObject, Hex>();
         units = new List<Unit>();
+    }
+
+    protected void DrawSnow()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < snowWidth; y++)
+                ProceedSnowHex(x, y);
+    
+            for (int y = height - snowWidth; y < height; y++)
+                ProceedSnowHex(x, y);
+        }
+    }
+
+    void ProceedSnowHex(int x, int y)
+    {
+        Hex hex = hexes[x, y];
+
+        GameObject hexGameObject = HexToGameObjectDictionary[hex];
+        MeshRenderer meshRenderer = hexGameObject.GetComponentInChildren<MeshRenderer>();
+
+        meshRenderer.material = matSnow;
+        hex.IsWalkable = false;
     }
 }

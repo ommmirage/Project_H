@@ -32,6 +32,7 @@ public class HexMapContinents : HexMap
         GenerateContinents();
 
         UpdateHexVisuals();
+        DrawSnow();
         SetLabels();
         DrawBorders();
 
