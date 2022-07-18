@@ -23,7 +23,7 @@ public class KeyboardController : MonoBehaviour
         }
     }
 
-    private void CameraController()
+    void CameraController()
     {
         Vector3 translate = new Vector3(
                     Input.GetAxis("Horizontal"),
@@ -31,6 +31,22 @@ public class KeyboardController : MonoBehaviour
                     Input.GetAxis("Vertical")
                     );
 
-        transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
+		// Vector3 lastCameraPosition = Camera.main.transform.position;
+
+        Ray downRay = Camera.main.ViewportPointToRay(new Vector3());
+		Ray upRay = Camera.main.ViewportPointToRay(new Vector3(0, 1, 0));
+
+		if ( Physics.Raycast(downRay) && Physics.Raycast(upRay) )
+        {
+		    transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
+		}
+        else if ( !Physics.Raycast(downRay) && (translate.z > 0) )
+        {
+			transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
+		}
+        else if ( !Physics.Raycast(upRay) && (translate.z < 0) )
+        {
+			transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
+		}
     }
 }

@@ -114,15 +114,35 @@ public class MouseController : MonoBehaviour
 
 	void Update_Zoom()
 	{
+		float scrollAmount = Input.GetAxis ("Mouse ScrollWheel");
+		float minHeight = 2;
+		float maxHeight = 20;
+		float zoomSpeed = 500;
+
+		if (scrollAmount == 0)
+			return;
+
+		Vector3 lastCameraPosition = Camera.main.transform.position;
+
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        float zoomDistance = zoomSpeed * scrollAmount * Time.deltaTime;
+        
+		Camera.main.transform.Translate(ray.direction * zoomDistance, Space.World);
+		Vector3 cameraPosition = Camera.main.transform.position;
+
+		if ( (cameraPosition.y < minHeight) || (cameraPosition.y > maxHeight) )
+		{
+			Camera.main.transform.position = lastCameraPosition;
+		}
+	}
+
+	void Update_Zoom2()
+	{
 		// Zoom to scrollwheel
 		float scrollAmount = Input.GetAxis ("Mouse ScrollWheel");
 		float minHeight = 2;
 		float maxHeight = 20;
-
-		// if (scrollAmount == 0)
-		// 	return;
-
-		// Debug.Log(scrollAmount);
 
 		// Move camera towards hitPos
         Vector3 hitPos = MouseToGroundPlane(Input.mousePosition);
@@ -137,18 +157,14 @@ public class MouseController : MonoBehaviour
         if (scrollAmount > 0 || cameraPosition.y < maxHeight)
             cameraTargetOffset += dir * scrollAmount;
 
-        Vector3 lastCameraPosition = Camera.main.transform.position;
+        Transform lastCameraTransform = Camera.main.transform;
         Camera.main.transform.position = Vector3.Lerp(
                                         Camera.main.transform.position,
                                         Camera.main.transform.position + cameraTargetOffset,
                                         Time.deltaTime * 5f
                                         );
-        cameraTargetOffset -= Camera.main.transform.position - lastCameraPosition;
+        cameraTargetOffset -= Camera.main.transform.position - lastCameraTransform.position;
 
-		cameraPosition = Camera.main.transform.position;
-
-		if ( (cameraPosition.y < minHeight) || (cameraPosition.y > maxHeight) ) 
-			Camera.main.transform.position = lastCameraPosition;
 
 		// Change camera angle
 		float minAngle = 50;
@@ -159,6 +175,17 @@ public class MouseController : MonoBehaviour
 			Camera.main.transform.rotation.eulerAngles.y,
 			Camera.main.transform.rotation.eulerAngles.z
 		);
+
+		Ray downRay = Camera.main.ViewportPointToRay(new Vector3());
+		Ray upRay = Camera.main.ViewportPointToRay(new Vector3(0, 1, 0));
+		cameraPosition = Camera.main.transform.position;
+
+		if ( !Physics.Raycast(downRay) || !Physics.Raycast(upRay) ||
+			 (cameraPosition.y < minHeight) || (cameraPosition.y > maxHeight) )
+		{
+			Camera.main.transform.position = lastCameraTransform.position;
+			Camera.main.transform.rotation = lastCameraTransform.rotation;
+		}
 	}
 
 	Vector3 MouseToGroundPlane(Vector3 mousePos)
@@ -211,9 +238,14 @@ public class MouseController : MonoBehaviour
     Hex MouseToHex()
 	{
 		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		return RayToHex(mouseRay);
+	}
+
+	Hex RayToHex(Ray ray)
+	{
 		RaycastHit hitInfo;
 
-		if (Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, layerMask.value))
+		if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask.value))
 		{
 			GameObject hexGameObject = hitInfo.transform.parent.gameObject;
 			Hex hex = hexMap.GameObjectToHexDictionary[hexGameObject];
