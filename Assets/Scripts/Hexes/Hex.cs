@@ -29,9 +29,7 @@ public class Hex
 
     [DataMember]
     public bool IsForest = false;
-
-    public bool IsWalkable = true;
-
+    
     HexMap hexMap;
 
     [DataMember]

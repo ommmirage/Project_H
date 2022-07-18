@@ -19,9 +19,10 @@ public class HexMap : MonoBehaviour
     // You can setup width and height of the map.
     int width = 85;
     public int Width { get { return width; } }
-    int height = 56;
+    int height = 50;
     public int Height { get { return height; } }
-    int snowWidth = 3;
+    int snowWidth = 2;
+    public int SnowWidth { get { return snowWidth; } }
 
     // Each piece of land is a territory of approximately
     // territorySize hexes.
@@ -44,6 +45,7 @@ public class HexMap : MonoBehaviour
 
     public void Start()
     {
+        height += 5 * snowWidth;
         unitsPrefabs = Object.FindObjectOfType<UnitsPrefabs>();
     }
 
@@ -305,7 +307,7 @@ public class HexMap : MonoBehaviour
             for (int y = 0; y < snowWidth; y++)
                 ProceedSnowHex(x, y);
     
-            for (int y = height - snowWidth; y < height; y++)
+            for (int y = height - 4 * snowWidth; y < height; y++)
                 ProceedSnowHex(x, y);
         }
     }
@@ -318,6 +320,5 @@ public class HexMap : MonoBehaviour
         MeshRenderer meshRenderer = hexGameObject.GetComponentInChildren<MeshRenderer>();
 
         meshRenderer.material = matSnow;
-        hex.IsWalkable = false;
     }
 }

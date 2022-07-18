@@ -217,21 +217,18 @@ public class Pathfinding
     List<PathHex> GetNeighborList(Unit unit, PathHex hex)
     {
         List<PathHex> neighborList = new List<PathHex>();
-        int q = hex.Q;
-        int r = hex.R;
+        int x = hex.Q;
+        int y = hex.R;
 
-        if (r + 1 < hexMap.Height)
-        {
-            neighborList.Add(unit.GetPathHexAt(q, r + 1));
-            neighborList.Add(unit.GetPathHexAt(q - 1, r + 1));
-        }
-        if (r != 0)
-        {
-            neighborList.Add(unit.GetPathHexAt(q, r - 1));
-            neighborList.Add(unit.GetPathHexAt(q + 1, r - 1));
-        }
-        neighborList.Add(unit.GetPathHexAt(q + 1, r));
-        neighborList.Add(unit.GetPathHexAt(q - 1, r));
+        if ( (y < hexMap.SnowWidth) || (y > hexMap.Height - hexMap.SnowWidth) )
+            return neighborList;
+
+        neighborList.Add(unit.GetPathHexAt(x, y + 1));
+        neighborList.Add(unit.GetPathHexAt(x - 1, y + 1));
+        neighborList.Add(unit.GetPathHexAt(x, y - 1));
+        neighborList.Add(unit.GetPathHexAt(x + 1, y - 1));
+        neighborList.Add(unit.GetPathHexAt(x + 1, y));
+        neighborList.Add(unit.GetPathHexAt(x - 1, y));
 
         return neighborList;
     }

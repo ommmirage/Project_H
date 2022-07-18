@@ -152,11 +152,21 @@ public class Unit
 
     public void PreparePathMap()
     {
-        for (int i = 0; i < hexMap.Width; i++)
+        for (int x = 0; x < hexMap.Width; x++)
         {
-            for (int j = 0; j < hexMap.Height; j++)
+            for (int y = 0; y < hexMap.Height; y++)
             {
-                pathMap[i, j] = new PathHex(hexMap.GetHexAt(i, j));
+                pathMap[x, y] = new PathHex(hexMap.GetHexAt(x, y));
+            }
+            
+            for (int y = 0; y < hexMap.SnowWidth; y++)
+            {
+                pathMap[x, y].IsWalkable = false;
+            }
+            
+            for (int y = hexMap.Height - hexMap.SnowWidth; y < hexMap.Height; y++)
+            {
+                pathMap[x, y].IsWalkable = false;
             }
         }
     }
