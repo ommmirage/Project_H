@@ -220,7 +220,7 @@ public class Pathfinding
         int x = hex.Q;
         int y = hex.R;
 
-        if ( (y < hexMap.SnowWidth) || (y > hexMap.Height - hexMap.SnowWidth) )
+        if ( (y < hexMap.SnowWidthDown) || (y > hexMap.Height - hexMap.SnowWidthUp) )
             return neighborList;
 
         neighborList.Add(unit.GetPathHexAt(x, y + 1));

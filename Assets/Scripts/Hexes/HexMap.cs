@@ -21,8 +21,10 @@ public class HexMap : MonoBehaviour
     public int Width { get { return width; } }
     int height = 50;
     public int Height { get { return height; } }
-    int snowWidth = 2;
-    public int SnowWidth { get { return snowWidth; } }
+    int snowWidthUp = 8;
+    public int SnowWidthUp { get { return snowWidthUp; } }
+    int snowWidthDown = 2;
+    public int SnowWidthDown { get { return snowWidthDown; } }
 
     // Each piece of land is a territory of approximately
     // territorySize hexes.
@@ -45,7 +47,7 @@ public class HexMap : MonoBehaviour
 
     public void Start()
     {
-        height += 5 * snowWidth;
+        height += (snowWidthUp + snowWidthDown);
         unitsPrefabs = Object.FindObjectOfType<UnitsPrefabs>();
     }
 
@@ -135,7 +137,7 @@ public class HexMap : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            for (int y = snowWidth; y < height - snowWidth; y++)
+            for (int y = snowWidthDown; y < height - snowWidthUp; y++)
             {
                 Hex hex = hexes[x, y];
 
@@ -304,10 +306,10 @@ public class HexMap : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < snowWidth; y++)
+            for (int y = 0; y < snowWidthDown; y++)
                 ProceedSnowHex(x, y);
     
-            for (int y = height - 4 * snowWidth; y < height; y++)
+            for (int y = height - snowWidthUp; y < height; y++)
                 ProceedSnowHex(x, y);
         }
     }

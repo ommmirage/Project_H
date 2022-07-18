@@ -159,12 +159,12 @@ public class Unit
                 pathMap[x, y] = new PathHex(hexMap.GetHexAt(x, y));
             }
             
-            for (int y = 0; y < hexMap.SnowWidth; y++)
+            for (int y = 0; y < hexMap.SnowWidthDown; y++)
             {
                 pathMap[x, y].IsWalkable = false;
             }
-            
-            for (int y = hexMap.Height - hexMap.SnowWidth; y < hexMap.Height; y++)
+
+            for (int y = hexMap.Height - hexMap.SnowWidthUp; y < hexMap.Height; y++)
             {
                 pathMap[x, y].IsWalkable = false;
             }

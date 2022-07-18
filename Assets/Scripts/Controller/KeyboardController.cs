@@ -25,28 +25,23 @@ public class KeyboardController : MonoBehaviour
 
     void CameraController()
     {
-        Vector3 translate = new Vector3(
-                    Input.GetAxis("Horizontal"),
-                    0,
-                    Input.GetAxis("Vertical")
-                    );
-
-		// Vector3 lastCameraPosition = Camera.main.transform.position;
+        Vector3 translate = new Vector3(Input.GetAxis("Horizontal"),
+                                        0,
+                                        Input.GetAxis("Vertical"));
 
         Ray downRay = Camera.main.ViewportPointToRay(new Vector3());
 		Ray upRay = Camera.main.ViewportPointToRay(new Vector3(0, 1, 0));
 
-		if ( Physics.Raycast(downRay) && Physics.Raycast(upRay) )
+		if ( ( Physics.Raycast(downRay) && Physics.Raycast(upRay) ) ||
+             ( !Physics.Raycast(downRay) && (translate.z > 0) ) ||
+             ( !Physics.Raycast(upRay) && (translate.z < 0) ) )
         {
 		    transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
 		}
-        else if ( !Physics.Raycast(downRay) && (translate.z > 0) )
+        else if (translate.x != 0)
         {
+            translate.z = 0;
 			transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
-		}
-        else if ( !Physics.Raycast(upRay) && (translate.z < 0) )
-        {
-			transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
-		}
+        }
     }
 }

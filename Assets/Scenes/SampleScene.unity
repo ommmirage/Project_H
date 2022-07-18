@@ -1253,7 +1253,7 @@ MonoBehaviour:
   hexPrefab: {fileID: 451703646889873012, guid: cc173da095e6c6f45b8dd35aeef14f51, type: 3}
   forestPrefab: {fileID: 1638819778573062, guid: 500f568e51516ae49adf4637df6c168e, type: 3}
   matOcean: {fileID: 2100000, guid: f47cb81a50d103546a6271506c42cbb1, type: 2}
-  matGrasslands: {fileID: 2100000, guid: 0971ddc3dcc3f514bb964d389799c7dc, type: 2}
+  matSnow: {fileID: 2100000, guid: 7decb2c8aaa64b443bb7b9cae511bfce, type: 2}
 --- !u!4 &1412781723
 Transform:
   m_ObjectHideFlags: 0
