@@ -56,6 +56,7 @@ public class HexMap : MonoBehaviour
         LoadTiles(hexes);
 
         UpdateHexVisuals();
+        DrawSnow();
         SetLabels();
         DrawBorders();
         SpawnUnits(gameData.Units);

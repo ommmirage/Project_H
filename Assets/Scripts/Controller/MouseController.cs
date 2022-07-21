@@ -112,6 +112,7 @@ public class MouseController : MonoBehaviour
 		lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
     }
 
+	// Light version of zoom
 	void Update_Zoom()
 	{
 		float scrollAmount = Input.GetAxis ("Mouse ScrollWheel");
@@ -137,7 +138,8 @@ public class MouseController : MonoBehaviour
 		}
 	}
 
-	void Update_Zoom2()
+	// Nicer zoom, but calls every frame
+	/*void Update_Zoom2()
 	{
 		// Zoom to scrollwheel
 		float scrollAmount = Input.GetAxis ("Mouse ScrollWheel");
@@ -165,7 +167,6 @@ public class MouseController : MonoBehaviour
                                         );
         cameraTargetOffset -= Camera.main.transform.position - lastCameraTransform.position;
 
-
 		// Change camera angle
 		float minAngle = 50;
 		float maxAngle = 75;
@@ -186,7 +187,7 @@ public class MouseController : MonoBehaviour
 			Camera.main.transform.position = lastCameraTransform.position;
 			Camera.main.transform.rotation = lastCameraTransform.rotation;
 		}
-	}
+	}*/
 
 	Vector3 MouseToGroundPlane(Vector3 mousePos)
 	{
@@ -194,7 +195,7 @@ public class MouseController : MonoBehaviour
 
 		// What is the point at which the mouse ray intersects Y=0
 		float rayLength = mouseRay.origin.y / mouseRay.direction.y;
-		return mouseRay.origin - (mouseRay.direction * rayLength);
+		return mouseRay.origin - mouseRay.direction * rayLength;
 	}
 
     void SelectUnit()
